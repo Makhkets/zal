@@ -81,12 +81,13 @@ class CatalogRepository:
                     (to_iso_utc(old_dt + offsets[row["cinema_id"]]), row["id"]),
                 )
 
-    def list_sessions(self, cinema_id: str, *, future_only: bool = True) -> list[Session]:
+    def list_sessions(self, cinema_id: str, *, future_only: bool = True, include_demo: bool = False) -> list[Session]:
         now_iso = utc_now_iso()
+        demo_filter = "" if include_demo else " AND s.id != 'session_payment_test_1r'"
         with self._db.read_connection() as conn:
             if future_only:
                 rows = conn.execute(
-                    """
+                    f"""
                     SELECT
                         s.id, s.cinema_id, s.hall_id, s.starts_at, s.format, s.currency,
                         COALESCE(
@@ -97,14 +98,14 @@ class CatalogRepository:
                         m.duration_minutes, m.age_rating, m.poster_url
                     FROM sessions s
                     JOIN movies m ON m.id = s.movie_id
-                    WHERE s.cinema_id = ? AND s.starts_at > ?
+                    WHERE s.cinema_id = ? AND s.starts_at > ?{demo_filter}
                     ORDER BY s.starts_at ASC, s.id ASC;
                     """,
                     (cinema_id, now_iso),
                 ).fetchall()
             else:
                 rows = conn.execute(
-                    """
+                    f"""
                     SELECT
                         s.id, s.cinema_id, s.hall_id, s.starts_at, s.format, s.currency,
                         COALESCE(
@@ -115,7 +116,7 @@ class CatalogRepository:
                         m.duration_minutes, m.age_rating, m.poster_url
                     FROM sessions s
                     JOIN movies m ON m.id = s.movie_id
-                    WHERE s.cinema_id = ?
+                    WHERE s.cinema_id = ?{demo_filter}
                     ORDER BY s.starts_at ASC, s.id ASC;
                     """,
                     (cinema_id,),

@@ -73,7 +73,7 @@ class CatalogIntegrationTests(unittest.TestCase):
             total = 0
             for cinema in cinemas:
                 sessions = client.get("/api/v1/sessions", params={"cinema_id": cinema["id"]}).json()["items"]
-                self.assertEqual(len(sessions), 17 if cinema["id"] == "cinema_aurora" else 16)
+                self.assertEqual(len(sessions), 16)
                 total += len(sessions)
                 for session in sessions:
                     movie_ids.add(session["movie"]["id"])
@@ -84,7 +84,7 @@ class CatalogIntegrationTests(unittest.TestCase):
                     self.assertEqual(hall["dimensions"], {"width": 31.0, "height": 11.8, "depth": 23.0})
                     self.assertEqual({s["id"] for s in hall["seats"]}, {s["seat_id"] for s in availability["seats"]})
                     self.assertEqual(session["price_from_minor"], min(s["price_minor"] for s in availability["seats"]))
-            self.assertEqual(total, 33)
+            self.assertEqual(total, 32)
             self.assertEqual(len(movie_ids), 8)
             for path, status, code in [
                 ("/api/v1/sessions", 422, "VALIDATION_ERROR"),
@@ -132,9 +132,9 @@ class CatalogIntegrationTests(unittest.TestCase):
         for hall in halls["items"]:
             hall["seats"] = hall["seats"][:152]
             by_hall[hall["id"]] = {seat["id"] for seat in hall["seats"]}
-        catalog = json.loads((FIXTURES / "catalog.json").read_text())
+        catalog = json.loads((FIXTURES / "catalog.json").read_text(encoding="utf-8"))
         hall_by_session = {s["id"]: s["hall_id"] for s in catalog["sessions"]}
-        availability = json.loads((FIXTURES / "availability.json").read_text())
+        availability = json.loads((FIXTURES / "availability.json").read_text(encoding="utf-8"))
         for session in availability["items"]:
             ids = by_hall[hall_by_session[session["session_id"]]]
             session["seats"] = [s for s in session["seats"] if s["seat_id"] in ids]
@@ -161,14 +161,14 @@ class CatalogIntegrationTests(unittest.TestCase):
     def test_expired_schedule_keeps_relative_days_and_each_cinema_recovers(self) -> None:
         app = self.app()
         repo = app.state.container.catalog_repo
-        before = repo.list_sessions("cinema_aurora")
+        before = repo.list_sessions("cinema_aurora", include_demo=True)
         with app.state.container.db.immediate_transaction() as conn:
             for session in before:
                 past = datetime.fromisoformat(session.starts_at.replace("Z", "+00:00")) - timedelta(days=365)
                 conn.execute("UPDATE sessions SET starts_at=? WHERE id=?", (past.isoformat().replace("+00:00", "Z"), session.id))
         # Orbita still has future sessions; Aurora must nevertheless be recovered independently.
         repo.ensure_future_schedule()
-        after = repo.list_sessions("cinema_aurora")
+        after = repo.list_sessions("cinema_aurora", include_demo=True)
         self.assertEqual(len(after), 17)
         def times(items):
             return [datetime.fromisoformat(s.starts_at.replace("Z", "+00:00")) for s in items]

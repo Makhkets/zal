@@ -111,6 +111,6 @@ export default function RoomChat({ sessionId }: { sessionId: string }) {
       </form>
       <footer className="room-chat-footnote">Последние 50 сообщений · история до перезапуска</footer>
     </section>}
-    <button ref={launcher} type="button" className="room-chat-launcher" aria-label={open ? 'Свернуть чат сеанса' : 'Открыть чат сеанса'} aria-expanded={open} aria-controls="room-chat-panel" onClick={() => open ? close() : expand()}><PanelRightOpen size={20}/><span>Чат сеанса</span></button>
+    <button ref={launcher} type="button" className="room-chat-launcher" aria-label={open ? 'Свернуть чат сеанса' : 'Открыть чат сеанса'} aria-expanded={open} aria-controls="room-chat-panel" onClick={() => open ? close() : expand()}><PanelRightOpen size={20}/><span>Чат сеанса</span>{participants ? <b className="room-chat-count">{participants}</b> : null}</button>
   </aside>;
 }

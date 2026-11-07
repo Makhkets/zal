@@ -6,7 +6,7 @@ import { api } from '../lib/api';
 import { useApp } from '../lib/AppContext';
 import type { Availability, Hall, Seat, Session } from '../lib/types';
 import { money, sessionDate, sessionTime } from '../lib/format';
-import { DEMO_TRAILER, getMovieMedia } from '../lib/catalogMedia';
+import { getMovieMedia, screenTrailer } from '../lib/catalogMedia';
 import '../styles/session-v2.css';
 import SeatMap from '../components/SeatMap';
 import SeatFinder from '../components/SeatFinder';
@@ -152,7 +152,7 @@ export default function SessionPage() {
       return <div className={'compare-slot' + (!seat ? ' is-empty' : '')} key={index}><b>{index ? 'B' : 'A'}</b>{seat ? <><span>Ряд {seat.row} · место {seat.number}</span><button aria-label={'Убрать место ' + (index ? 'B' : 'A')} onClick={() => setCompareIds(ids => ids.filter(id => id !== seat.id))}><X size={14}/></button></> : <span>Выберите ещё одно</span>}</div>;
     })}</div><button className="button button--primary" disabled={compareIds.length !== 2} onClick={() => setPreviewIds(compareIds)}>Сравнить ракурсы<ArrowRight size={16}/></button></div>}
     <RoomChat sessionId={session.id}/>
-    {previewIds.length > 0 && <PreviewDialog trailer={DEMO_TRAILER} hall={hall} availability={availability} seats={previewIds.flatMap(id => { const seat = hall.seats.find(s => s.id === id); return seat ? [seat] : []; })} onClose={() => setPreviewIds([])} onSelect={select} onBuy={expired ? undefined : seat => { select(seat); setCheckout(true); }}/>}
+    {previewIds.length > 0 && <PreviewDialog trailer={screenTrailer(session.movie)} hall={hall} availability={availability} seats={previewIds.flatMap(id => { const seat = hall.seats.find(s => s.id === id); return seat ? [seat] : []; })} onClose={() => setPreviewIds([])} onSelect={select} onBuy={expired ? undefined : seat => { select(seat); setCheckout(true); }}/>}
     {checkout && selected && selectedState && <CheckoutDialog session={session} seat={selected} priceMinor={selectedState.price_minor} cinema={cinema} onClose={() => setCheckout(false)} onConflict={conflict}/>}
     {selected && selectedState && <div className="mobile-seat-bar"><button className="mobile-seat-detail" onClick={() => setPreviewIds([selected.id])}><Eye size={18}/><span><strong>Ряд {selected.row} · {selected.type === 'sofa' ? 'диван' : 'место'} {selected.number}</strong><small>Посмотреть с места</small></span></button><button className="button button--primary" disabled={selectedState.status !== 'available' || expired} onClick={() => setCheckout(true)}>{selectedState.status === 'available' ? money(selectedState.price_minor) : 'Занято'}<ArrowRight size={17}/><span className="sr-only"> — Купить билет</span></button></div>}
   </div>;
