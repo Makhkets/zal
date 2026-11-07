@@ -87,7 +87,7 @@ function Footer() {
       <div className="wrap footer-main">
         <Brand compact />
         <p>Кино начинается с вашего места.</p>
-        <Link to="/presentation">О проекте <ArrowUpRight size={16} aria-hidden="true" /></Link>
+        <Link to="/present">О проекте <ArrowUpRight size={16} aria-hidden="true" /></Link>
       </div>
       <div className="wrap footer-bottom">
         <span>ZAL · Билет с видом на экран</span>
@@ -100,7 +100,7 @@ function Footer() {
 function AppFrame() {
   const { pathname } = useLocation();
   const { mode } = useApp();
-  const presentation = pathname === '/presentation';
+  const presentation = ['/present', '/presentation'].includes(pathname.replace(/\/$/, ''));
   const routeContent = (
     <ErrorBoundary key={pathname}>
       <Suspense fallback={<Loading label="Открываем следующий кадр…" />}>
@@ -112,6 +112,7 @@ function AppFrame() {
           <Route path="/tickets" element={<MyTicketsPage />} />
           <Route path="/tickets/:token" element={<PublicTicketPage />} />
           <Route path="/presentation" element={<PresentationPage />} />
+          <Route path="/present" element={<PresentationPage />} />
           <Route path="*" element={<div className="page-shell feedback empty-state"><span className="eyebrow">СТРАНИЦА НЕ НАЙДЕНА</span><h1>Этот кадр потерялся.</h1><p>Вернитесь к афише — там начинается ваша история.</p><Link className="button button--primary" to="/">Открыть афишу</Link></div>} />
         </Routes>
       </Suspense>

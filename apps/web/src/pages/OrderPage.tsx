@@ -6,6 +6,7 @@ import type { Order, OrderPricing, Session, Seat, Ticket } from '../lib/types';
 import { money, sessionDate, sessionTime } from '../lib/format';
 import TicketCard from '../components/TicketCard';
 import PaymentQr from '../components/PaymentQr';
+import { paymentQrTarget } from '../lib/paymentQr';
 import '../styles/checkout.css';
 
 function readToken(id: string) {
@@ -31,15 +32,6 @@ function remaining(expiresAt: string | null, clock: number) {
   if (!Number.isFinite(seconds)) return null;
   if (seconds <= 0) return 'Проверяем срок оплаты';
   return Math.floor(seconds / 60).toString().padStart(2, '0') + ':' + (seconds % 60).toString().padStart(2, '0');
-}
-
-function safeQrUrl(value: string | null | undefined) {
-  if (!value || value.length > 2048 || /[\s\x00-\x1f]/.test(value)) return null;
-  try {
-    const url = new URL(value);
-    return url.protocol === 'https:' && url.hostname === 'qr.nspk.ru' && !url.username &&
-      !url.password && !url.port && !url.hash && url.pathname.length > 1 ? value : null;
-  } catch { return null; }
 }
 
 const COPY = {
@@ -188,6 +180,7 @@ export default function OrderPage() {
   const terminal = order && ['canceled', 'expired', 'refunded'].includes(order.status);
   const countdown = order ? remaining(order.expires_at, clock) : null;
   const paymentExpired = Boolean(order?.expires_at && new Date(order.expires_at).getTime() <= clock);
+  const qrTarget = paymentQrTarget(order?.payment.qr_url, paymentUrl);
   const showQr = order?.status === 'pending_payment' && order.payment.provider === 'platega' && hasPaymentQuote && !paymentExpired;
 
   return (
@@ -220,7 +213,7 @@ export default function OrderPage() {
                   paymentExpired ? 'Срок QR истёк. Уточняем итоговый статус у банка — повторно платить не нужно.' :
                   showQr ? 'Оплатите по QR, сохранив эту страницу открытой.' : 'Откройте платёжную форму. Эта страница автоматически проверит результат.'}</p>
 
-                {showQr && <PaymentQr url={safeQrUrl(order.payment.qr_url)} />}
+                {showQr && <PaymentQr target={qrTarget} />}
 
                 {order.status === 'pending_payment' && priceBreakdown && <p className="order-payment-quote">Место {money(priceBreakdown.seat_price_minor)} · комиссия {money(priceBreakdown.service_fee_minor)}{priceBreakdown.insurance_upsell_minor > 0 ? ` · страхование ${money(priceBreakdown.insurance_upsell_minor)}` : ''}</p>}
                 {order.status === 'pending_payment' && !paymentExpired && paymentUrl && hasPaymentQuote && <a className="button button--primary order-payment-link" href={paymentUrl} target="_blank" rel="noopener noreferrer">
