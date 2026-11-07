@@ -5,7 +5,7 @@ import { useReducedMotion } from 'motion/react';
 import { useApp } from '../lib/AppContext';
 import { api } from '../lib/api';
 import { money, sessionDate, sessionTime } from '../lib/format';
-import { CINEMA_HERO, DEMO_TRAILER, getMovieMedia } from '../lib/catalogMedia';
+import { CINEMA_HERO, DEMO_TRAILER, getMovieMedia, type CinemaTrailer } from '../lib/catalogMedia';
 import type { Availability, Hall, Movie, Session } from '../lib/types';
 import FilmArt from '../components/FilmArt';
 import ExternalCatalog from '../components/ExternalCatalog';
@@ -13,7 +13,7 @@ import { EmptyState, ErrorState, Loading } from '../components/Feedback';
 import '../styles/home-v2.css';
 
 const CinemaScene = lazy(() => import('../components/CinemaScene'));
-type Trailer = { src: string; title: string; poster?: string; credit?: string };
+type Trailer = CinemaTrailer;
 
 function TrailerDialog({ trailer, session, onClose }: { trailer: Trailer; session?: Session; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -38,8 +38,8 @@ function TrailerDialog({ trailer, session, onClose }: { trailer: Trailer; sessio
   return <dialog ref={dialog} className="home-trailer-dialog" aria-labelledby="home-trailer-title" onCancel={onClose} onClick={event => { if (event.target === dialog.current) onClose(); }}>
     <div className="home-trailer-heading"><div><span>ТРЕЙЛЕР</span><h2 id="home-trailer-title">{trailer.title}</h2></div><button className="icon-button" onClick={onClose} aria-label="Закрыть трейлер"><X size={22}/></button></div>
     {error ? <div className="home-trailer-error" role="alert"><p>Не получилось загрузить трейлер.</p><button className="button button--secondary" onClick={() => setError(false)}>Попробовать ещё раз</button></div> : <video ref={video} src={trailer.src} poster={trailer.poster} controls autoPlay playsInline preload="metadata" onError={() => setError(true)} aria-label={'Трейлер: ' + trailer.title}/>}
-    {trailer.credit && <p className="home-trailer-credit">{trailer.credit}</p>}
-    <div className="home-trailer-footer"><p><Headphones size={17}/>В 3D-зале можно послушать этот ролик с разных мест.</p>{session && <Link className="button button--primary" to={'/sessions/' + session.id} onClick={onClose}>Войти в зал<ArrowUpRight size={18}/></Link>}</div>
+    {trailer.credit && <p className="home-trailer-credit">{trailer.sourceUrl ? <a href={trailer.sourceUrl} target="_blank" rel="noreferrer">{trailer.credit}</a> : trailer.credit}</p>}
+    <div className="home-trailer-footer"><p><Headphones size={17}/>В 3D-зале можно послушать трейлер фильма с разных мест.</p>{session && <Link className="button button--primary" to={'/sessions/' + session.id} onClick={onClose}>Войти в зал<ArrowUpRight size={18}/></Link>}</div>
   </dialog>;
 }
 
@@ -55,7 +55,7 @@ function FilmCard({ movie, sessions, timezone, onTrailer }: { movie: Movie; sess
     </div>
     <div className="reel-caption"><h3><Link to={'/sessions/' + sessions[0].id}>{movie.title}</Link></h3><p>{media?.genres?.slice(0, 2).join(' · ') || 'Кино'}<span>·</span>{movie.duration_minutes} мин<span>·</span>{movie.age_rating}</p></div>
     <div className="reel-sessions">{sessions.slice(0, 3).map(session => <Link key={session.id} to={'/sessions/' + session.id} aria-label={movie.title + ', ' + sessionDate(session.starts_at, timezone) + ', ' + sessionTime(session.starts_at, timezone)}><strong>{sessionTime(session.starts_at, timezone)}</strong><span>{sessionDate(session.starts_at, timezone)}</span></Link>)}</div>
-    <div className="reel-bottom"><span>от {money(Math.min(...sessions.map(session => session.price_from_minor)))}</span><Link to={'/sessions/' + sessions[0].id}><Eye size={14}/>Выбор места в 3D</Link></div>
+    <div className="reel-bottom"><span>от {money(Math.min(...sessions.map(session => session.price_from_minor)))}</span><Link to={'/sessions/' + sessions[0].id}><Eye size={14}/>Выбрать место</Link></div>
   </article>;
 }
 

@@ -1,12 +1,12 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Box, Clock3, Eye, GitCompareArrows, Grid2X2, MapPin, MousePointer2, RotateCcw, ShieldCheck, Sparkles, Ticket, Users, Volume2, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Box, Clock3, Eye, GitCompareArrows, Grid2X2, MapPin, MousePointer2, RotateCcw, ShieldCheck, Ticket, Users, Volume2, X } from 'lucide-react';
 import { api } from '../lib/api';
 import { useApp } from '../lib/AppContext';
 import type { Availability, Hall, Seat, Session } from '../lib/types';
 import { money, sessionDate, sessionTime } from '../lib/format';
-import { DEMO_TRAILER, getMovieMedia } from '../lib/catalogMedia';
+import { getMovieMedia } from '../lib/catalogMedia';
 import '../styles/session-v2.css';
 import LightSwitch from '../components/LightSwitch';
 import SeatLab from '../components/SeatLab';
@@ -39,22 +39,20 @@ export default function SessionPage() {
   const [error, setError] = useState('');
   const [refreshError, setRefreshError] = useState(false);
   const [version, setVersion] = useState(0);
-  const [hallMode, setHallMode] = useState<'3d' | '2d'>('3d');
+  const [hallMode, setHallMode] = useState<'3d' | '2d'>('2d');
   const [cameraView, setCameraView] = useState<'overview' | 'front' | 'back' | 'top' | 'sofas'>('overview');
   const [cameraRevision, setCameraRevision] = useState(0);
   const [sceneError, setSceneError] = useState(false);
   const [lightsOn, setLightsOn] = useState(() => { try { return localStorage.getItem('zal:lights') !== 'off'; } catch { return true; } });
-  const [comfortMap, setComfortMap] = useState(false);
   const [insights, setInsights] = useState<SessionInsights | null>(null);
   const [insightError, setInsightError] = useState(false);
-  const comfortScores = useMemo(() => new Map(insights?.session_id === sessionId ? insights.seats.filter(s => Number.isFinite(s.comfort_score)).map(s => [s.seat_id, s.comfort_score]) : []), [insights, sessionId]);
   useEffect(() => { try { localStorage.setItem('zal:lights', lightsOn ? 'on' : 'off'); } catch { /* optional preference */ } }, [lightsOn]);
   useEffect(() => {
     if (!hall || !availability) return;
     const controller = new AbortController();
     api.insights(sessionId, controller.signal).then(data => {
       if (!controller.signal.aborted && data.session_id === sessionId && data.hall_id === hall.id) { setInsights(data); setInsightError(false); }
-    }).catch(() => { if (!controller.signal.aborted) { setInsightError(true); setInsights(null); setComfortMap(false); } });
+    }).catch(() => { if (!controller.signal.aborted) { setInsightError(true); setInsights(null); } });
     return () => controller.abort();
   }, [hall, sessionId, availability?.updated_at]);
   const [audience, setAudience] = useState(true);
@@ -65,8 +63,9 @@ export default function SessionPage() {
   const reduce = useReducedMotion();
   useEffect(() => {
     const controller = new AbortController();
+    setHallMode('2d'); setSceneError(false);
     setLoading(true); setError(''); setSession(null); setHall(null); setAvailability(null);
-    setInsights(null); setInsightError(false); setComfortMap(false); setSelectedId(null); setCompareIds([]); setPreviewIds([]); setCheckout(false);
+    setInsights(null); setInsightError(false); setSelectedId(null); setCompareIds([]); setPreviewIds([]); setCheckout(false);
     api.session(sessionId, controller.signal).then(async info => {
       const [geometry, states] = await Promise.all([api.hall(info.hall_id, controller.signal), api.seats(info.id, controller.signal)]);
       if (!controller.signal.aborted) {
@@ -126,6 +125,8 @@ export default function SessionPage() {
   }
   if (loading) return <div className="page-shell"><Loading label="Открываем двери в зал…"/></div>;
   if (error || !session || !hall || !availability) return <div className="page-shell"><Link className="back-link" to="/#sessions"><ArrowLeft size={16}/>К афише</Link><ErrorState message={error || 'Этот сеанс не найден.'} onRetry={() => setVersion(v => v + 1)}/></div>;
+  const movieMedia = getMovieMedia(session.movie);
+  const moviePoster = movieMedia.poster ?? session.movie.poster_url ?? undefined;
   const expired = new Date(session.starts_at).getTime() <= Date.now();
   return <div className="page-shell session-page session-v2">
     <div className="session-topline"><Link className="back-link" to="/#sessions"><ArrowLeft size={16}/>К афише</Link><ol className="booking-steps" aria-label="Этапы покупки"><li className="is-current" aria-current="step">01<span>Место</span></li><li>02<span>Оплата</span></li><li>03<span>Билет</span></li></ol></div>
@@ -134,15 +135,14 @@ export default function SessionPage() {
     {refreshError && <div className="inline-notice" role="status">Не удалось обновить места. Доступность проверится ещё раз при покупке.</div>}
     <div className="booking-layout">
       <div ref={hallFullscreenRef} className={'hall-panel' + (hallFullscreen.active ? ' is-fullscreen' : '')} data-fullscreen-mode={hallFullscreen.mode} role={hallFullscreen.active ? 'dialog' : undefined} aria-modal={hallFullscreen.active || undefined} aria-label={hallFullscreen.active ? 'Зал на весь экран' : undefined}>
-        <div className="hall-panel-head"><div><h2>{hall.name}</h2><span className="hall-name">{hall.seats.length} мест · 3 ценовые зоны</span></div><div className="hall-panel-actions"><div className="hall-mode-toggle" role="group" aria-label="Отображение зала"><button aria-pressed={hallMode === '3d'} onClick={() => setHallMode('3d')}><Box size={16}/>3D-зал</button><button aria-pressed={hallMode === '2d'} onClick={() => setHallMode('2d')}><Grid2X2 size={16}/>Схема</button></div><FullscreenButton active={hallFullscreen.active} busy={hallFullscreen.busy} onToggle={hallFullscreen.toggle} label="Развернуть зал на весь экран" /></div></div>
+        <div className="hall-panel-head"><div><h2>{hall.name}</h2><span className="hall-name">{hall.seats.length} мест · 3 ценовые зоны</span></div><div className="hall-panel-actions"><div className="hall-mode-toggle" role="group" aria-label="Отображение зала"><button aria-pressed={hallMode === '2d'} onClick={() => setHallMode('2d')}><Grid2X2 size={16}/>Схема</button><button aria-pressed={hallMode === '3d'} onClick={() => setHallMode('3d')}><Box size={16}/>3D-зал</button></div><FullscreenButton active={hallFullscreen.active} busy={hallFullscreen.busy} onToggle={hallFullscreen.toggle} label="Развернуть зал на весь экран" /></div></div>
         {hallMode === '3d' ? <div className="interactive-hall">
           <div className="hall-interaction-hint"><MousePointer2 size={13}/><span>Перетаскивайте для обзора · выберите кресло</span></div>
-          <Suspense fallback={<Loading label="Включаем свет в зале…"/>}><CinemaScene key={cameraRevision} hall={hall} seat={selected} availability={availability} overview interactive videoPoster="/media/screen-still.jpg" onSeatSelect={select} onHoverSeat={setHoveredSeat} audience={audience} lightsOn={lightsOn} comfortScores={comfortMap ? comfortScores : undefined} view={cameraView} paused={previewIds.length > 0 || checkout} onError={() => { setSceneError(true); setHallMode('2d'); }}/></Suspense>
+          <Suspense fallback={<Loading label="Включаем свет в зале…"/>}><CinemaScene key={cameraRevision} hall={hall} seat={selected} availability={availability} overview interactive videoPoster={movieMedia.trailer?.poster ?? moviePoster} onSeatSelect={select} onHoverSeat={setHoveredSeat} audience={audience} lightsOn={lightsOn} view={cameraView} paused={previewIds.length > 0 || checkout} onError={() => { setSceneError(true); setHallMode('2d'); }}/></Suspense>
           {hoveredSeat && <div className="hall-hover-card" aria-hidden="true"><strong>Ряд {hoveredSeat.row} · {hoveredSeat.type === 'sofa' ? 'диван' : 'место'} {hoveredSeat.number}</strong><span>{hoveredState ? money(hoveredState.price_minor) : ''} · {hoveredState?.status === 'available' ? 'Свободно' : hoveredState?.status === 'held' ? 'Бронь' : 'Занято'}</span></div>}
-          <div className="hall-experience-controls"><LightSwitch on={lightsOn} onToggle={() => setLightsOn(value => !value)}/><button className="comfort-toggle" aria-pressed={comfortMap} disabled={!comfortScores.size} title={insightError ? 'Оценки пока недоступны' : 'Показать расчётный комфорт свободных мест'} onClick={() => setComfortMap(value => !value)}><Sparkles size={15} aria-hidden="true"/><span>Комфорт</span></button><button className="audience-toggle" aria-pressed={audience} onClick={() => setAudience(value => !value)}><Users size={15}/><span>Зрители</span><i/></button></div>
-          {comfortMap && <div className="hall-comfort-legend">Расчётный комфорт · свободные места<div><span>0</span><i/><span>100</span></div></div>}
+          <div className="hall-experience-controls"><LightSwitch on={lightsOn} onToggle={() => setLightsOn(value => !value)}/><button className="audience-toggle" aria-pressed={audience} onClick={() => setAudience(value => !value)}><Users size={15}/><span>Зрители</span><i/></button></div>
           <div className="hall-camera-bar" role="group" aria-label="Ракурс камеры">{([{ value: 'overview', label: 'Весь зал' }, { value: 'front', label: 'От экрана' }, { value: 'back', label: 'Сзади' }, { value: 'top', label: 'Сверху' }, { value: 'sofas', label: 'Диваны' }] as const).map(view => <button key={view.value} aria-pressed={cameraView === view.value} onClick={() => setCameraView(view.value)}>{view.label}</button>)}<button className="camera-reset" aria-label="Сбросить камеру" onClick={() => { setCameraView('overview'); setCameraRevision(v => v + 1); }}><RotateCcw size={16}/></button></div>
-        </div> : <><div className="map-comfort-controls"><button className="comfort-toggle" aria-pressed={comfortMap} disabled={!comfortScores.size} onClick={() => setComfortMap(value => !value)}><Sparkles size={15} aria-hidden="true"/>Комфорт</button>{comfortMap && <span>Цвет — расчётная оценка свободных мест: 0–100</span>}</div><SeatMap comfortScores={comfortMap ? comfortScores : undefined} hall={hall} availability={availability} selectedId={selectedId} compareIds={compareIds} onSelect={select}/>{sceneError && <p className="map-hint" role="status">3D недоступен в этом браузере. Все места можно выбрать на схеме.</p>}</>}
+        </div> : <><SeatMap hall={hall} availability={availability} selectedId={selectedId} compareIds={compareIds} onSelect={select}/>{sceneError && <p className="map-hint" role="status">3D недоступен в этом браузере. Все места можно выбрать на схеме.</p>}</>}
         <div className="price-tiers">{tiers.map(t => <div key={t.zone}><span className={'tier-symbol tier-' + t.zone}/><div><strong>{money(t.price)}</strong><span>{t.zone === 'front' ? 'Стандарт · ткань' : t.zone === 'middle' ? 'Premium · кожа' : 'VIP · диваны'}</span></div></div>)}</div>
         {hallFullscreen.active && <div className="fullscreen-seat-bar">{selected && selectedState ? <><div><strong>Ряд {selected.row} · {selected.type === 'sofa' ? 'диван' : 'место'} {selected.number}</strong><span>{money(selectedState.price_minor)}{selectedState.status !== 'available' ? ' · Занято' : ''}</span></div><button className="button button--primary" onClick={async () => { await hallFullscreen.exit(); setPreviewIds([selected.id]); }}><Eye size={17} aria-hidden="true"/>Вид и звук с места</button></> : <p>Выберите кресло, чтобы посмотреть на экран со своего места.</p>}</div>}
       </div>
@@ -171,7 +171,7 @@ export default function SessionPage() {
       return <div className={'compare-slot' + (!seat ? ' is-empty' : '')} key={index}><b>{index ? 'B' : 'A'}</b>{seat ? <><span>Ряд {seat.row} · место {seat.number}</span><button aria-label={'Убрать место ' + (index ? 'B' : 'A')} onClick={() => setCompareIds(ids => ids.filter(id => id !== seat.id))}><X size={14}/></button></> : <span>Выберите ещё одно</span>}</div>;
     })}</div><button className="button button--primary" disabled={compareIds.length !== 2} onClick={() => setPreviewIds(compareIds)}>Сравнить ракурсы<ArrowRight size={16}/></button></div>}
     <RoomChat sessionId={session.id}/>
-    {previewIds.length > 0 && <PreviewDialog lightsOn={lightsOn} onToggleLights={() => setLightsOn(value => !value)} trailer={DEMO_TRAILER} hall={hall} availability={availability} seats={previewIds.flatMap(id => { const seat = hall.seats.find(s => s.id === id); return seat ? [seat] : []; })} onClose={() => setPreviewIds([])} onSelect={select} onBuy={expired ? undefined : seat => { select(seat); setCheckout(true); }}/>}
+    {previewIds.length > 0 && <PreviewDialog lightsOn={lightsOn} onToggleLights={() => setLightsOn(value => !value)} trailer={movieMedia.trailer} movieTitle={session.movie.title} poster={moviePoster} hall={hall} availability={availability} seats={previewIds.flatMap(id => { const seat = hall.seats.find(s => s.id === id); return seat ? [seat] : []; })} onClose={() => setPreviewIds([])} onSelect={select} onBuy={expired ? undefined : seat => { select(seat); setCheckout(true); }}/>}
     {checkout && selected && selectedState && <CheckoutDialog session={session} seat={selected} priceMinor={selectedState.price_minor} cinema={cinema} onClose={() => setCheckout(false)} onConflict={conflict}/>}
     {selected && selectedState && <div className="mobile-seat-bar"><button className="mobile-seat-detail" onClick={() => setPreviewIds([selected.id])}><Eye size={18}/><span><strong>Ряд {selected.row} · {selected.type === 'sofa' ? 'диван' : 'место'} {selected.number}</strong><small>Посмотреть с места</small></span></button><button className="button button--primary" disabled={selectedState.status !== 'available' || expired} onClick={() => setCheckout(true)}>{selectedState.status === 'available' ? money(selectedState.price_minor) : 'Занято'}<ArrowRight size={17}/><span className="sr-only"> — Купить билет</span></button></div>}
   </div>;

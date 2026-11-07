@@ -40,3 +40,7 @@ https://creativecommons.org/licenses/by/3.0/
 SVG-копия: https://commons.wikimedia.org/wiki/File:Faster_Payment_System_Russia_logo.svg
 Файл: https://upload.wikimedia.org/wikipedia/commons/b/bc/Faster_Payment_System_Russia_logo.svg
 Знак размещён без перерисовки; товарный знак принадлежит правообладателю.
+
+### Видеопревью выбранных фильмов · 2026-11-07
+
+Прямые ссылки Apple TV/iTunes, точные названия и годы релиза, а также широкоформатные обложки находятся в `src/lib/catalogMedia.ts`. Видео и обложки не копируются в репозиторий; загружаются с Apple CDN. Ссылка на страницу каждого фильма доступна под плеером. Полные фильмы не транслируются.
