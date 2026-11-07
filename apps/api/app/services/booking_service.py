@@ -240,6 +240,8 @@ class BookingService:
         return OrderPriceBreakdownResponse(
             order_id=record.order.id,
             seat_price_minor=record.requested_amount_minor,
+            catalog_price_minor=record.catalog_price_minor,
+            demo_discount_minor=max(0, record.catalog_price_minor - record.requested_amount_minor),
             service_fee_minor=max(0, record.order.total_minor - record.requested_amount_minor),
             insurance_upsell_minor=0,
             total_minor=record.order.total_minor,

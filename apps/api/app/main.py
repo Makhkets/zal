@@ -55,7 +55,7 @@ def build_container(
     catalog_repo = CatalogRepository(db)
     catalog_repo.ensure_future_schedule()
 
-    booking_repo = BookingRepository(db, token_manager, settings.public_app_url)
+    booking_repo = BookingRepository(db, token_manager, settings.public_app_url, demo_checkout_minor=settings.demo_checkout_minor)
     realtime = RealtimeSeatBroker()
 
     if provider_override is not None:

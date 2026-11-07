@@ -1,5 +1,5 @@
 export interface Vector3 { x: number; y: number; z: number }
-export interface Health { status: 'ok'; mode: 'mock' | 'live'; api_version: string }
+export interface Health { status: 'ok'; mode: 'mock' | 'live'; api_version: string; demo_checkout_minor?: number }
 export interface Cinema { id: string; name: string; address: string; timezone: string }
 export interface Movie { id: string; title: string; duration_minutes: number; age_rating: string; poster_url: string | null }
 export interface Session { id: string; cinema_id: string; hall_id: string; movie: Movie; starts_at: string; format: string; currency: 'RUB'; price_from_minor: number }
@@ -25,7 +25,7 @@ export interface Order {
   total_minor: number; currency: 'RUB'; created_at: string; expires_at: string | null; payment: Payment; ticket_id: string | null;
 }
 export interface OrderPricing {
-  order_id: string; seat_price_minor: number; service_fee_minor: number; insurance_upsell_minor: number;
+  order_id: string; seat_price_minor: number; catalog_price_minor?: number; demo_discount_minor?: number; service_fee_minor: number; insurance_upsell_minor: number;
   total_minor: number; currency: 'RUB'; zero_hidden_fees: boolean; refund_policy_ru: string;
   can_cancel_unpaid_hold: boolean; session_starts_at: string;
 }

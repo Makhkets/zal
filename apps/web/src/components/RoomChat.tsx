@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { ChevronDown, MessageCircle, SendHorizontal, Smile, Users, WifiOff, X } from 'lucide-react';
+import { PanelRightClose, PanelRightOpen, MessageCircle, SendHorizontal, Smile, Users, WifiOff, X } from 'lucide-react';
 import { chatApi, chatIdentity, safeEmoteUrl, type ChatEmote, type ChatMessage, type ChatSnapshot } from '../lib/chatApi';
 import '../styles/room-chat.css';
 
@@ -9,7 +9,10 @@ const appendMessage = (list: ChatMessage[], next: ChatMessage) => list.some(item
 
 export default function RoomChat({ sessionId }: { sessionId: string }) {
   const [visitor] = useState(chatIdentity);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => {
+    try { const saved = localStorage.getItem('zal:chat:open'); return saved === null ? window.innerWidth >= 1200 : saved === 'true'; }
+    catch { return window.innerWidth >= 1200; }
+  });
   const [connected, setConnected] = useState(false);
   const [participants, setParticipants] = useState<number | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -63,7 +66,9 @@ export default function RoomChat({ sessionId }: { sessionId: string }) {
 
   useEffect(() => { if (history.current) history.current.scrollTop = history.current.scrollHeight; }, [messages.length, open]);
   useEffect(() => { try { localStorage.setItem('zal:chat:nickname', nickname); } catch { /* Optional preference only. */ } }, [nickname]);
-  const close = () => { setOpen(false); setPicker(false); launcher.current?.focus(); };
+  useEffect(() => { try { localStorage.setItem('zal:chat:open', String(open)); } catch { /* Optional preference. */ } }, [open]);
+  const close = () => { setOpen(false); setPicker(false); requestAnimationFrame(() => launcher.current?.focus()); };
+  const expand = () => { setOpen(true); requestAnimationFrame(() => composer.current?.focus({ preventScroll: true })); };
 
   async function send(event: FormEvent) {
     event.preventDefault();
@@ -88,7 +93,7 @@ export default function RoomChat({ sessionId }: { sessionId: string }) {
 
   return <aside className={'room-chat' + (open ? ' room-chat--open' : '')} aria-label="Чат сеанса">
     {open && <section className="room-chat-panel" id="room-chat-panel" aria-label="Сообщения зрителей" onKeyDown={event => { if (event.key === 'Escape') { event.stopPropagation(); picker ? setPicker(false) : close(); } }}>
-      <header className="room-chat-header"><div className="room-chat-heading"><span className="room-chat-mark"><MessageCircle size={19}/></span><div><h2>Чат сеанса</h2><span className="room-chat-presence" role="status">{connected ? <><Users size={12}/>{participants ?? 0} в чате</> : <><WifiOff size={12}/>Подключаемся…</>}</span></div></div><button type="button" className="icon-button" onClick={close} aria-label="Свернуть чат"><ChevronDown size={20}/></button></header>
+      <header className="room-chat-header"><div className="room-chat-heading"><span className="room-chat-mark"><MessageCircle size={19}/></span><div><h2>Чат сеанса</h2><span className="room-chat-presence" role="status">{connected ? <><Users size={12}/>{participants ?? 0} в чате</> : <><WifiOff size={12}/>Подключаемся…</>}</span></div></div><button type="button" className="icon-button" onClick={close} aria-label="Свернуть чат"><PanelRightClose size={20}/></button></header>
       <label className="room-chat-name"><span>Ваше имя</span><input aria-label="Имя в чате" maxLength={24} value={nickname} onChange={event => setNickname(event.target.value)} autoComplete="nickname"/></label>
       <div className="room-chat-history" ref={history} role="log" aria-label="История сообщений" aria-live="polite" aria-relevant="additions text">
         {messages.length === 0 && <div className="room-chat-empty"><span aria-hidden="true">🍿</span><strong>Есть кто с попкорном?</strong><p>Обсудите фильм и места в зале.<br/>Первое сообщение может быть вашим.</p></div>}
@@ -106,6 +111,6 @@ export default function RoomChat({ sessionId }: { sessionId: string }) {
       </form>
       <footer className="room-chat-footnote">Последние 50 сообщений · история до перезапуска</footer>
     </section>}
-    <button ref={launcher} type="button" className="room-chat-launcher" aria-label={open ? 'Свернуть чат сеанса' : 'Открыть чат сеанса'} aria-expanded={open} aria-controls="room-chat-panel" onClick={() => open ? close() : setOpen(true)}><MessageCircle size={20}/><span>Чат сеанса</span></button>
+    <button ref={launcher} type="button" className="room-chat-launcher" aria-label={open ? 'Свернуть чат сеанса' : 'Открыть чат сеанса'} aria-expanded={open} aria-controls="room-chat-panel" onClick={() => open ? close() : expand()}><PanelRightOpen size={20}/><span>Чат сеанса</span></button>
   </aside>;
 }

@@ -324,6 +324,55 @@ class PaymentFlowTests(unittest.IsolatedAsyncioTestCase):
         self.assert_state(paid.order.id, OrderStatus.PAID, "sold", TicketStatus.VALID)
         self.assertEqual(self.repo.get_ticket_by_order_id(paid.order.id).paid_minor, 92700)
 
+    def enable_demo_checkout(self):
+        self.repo = BookingRepository(self.db, self.tokens, "https://tickets.example.test", demo_checkout_minor=100)
+        broker = RealtimeSeatBroker()
+        self.payments = PaymentService(settings=self.settings, booking_repo=self.repo, provider=self.provider, realtime=broker)
+        self.booking = BookingService(booking_repo=self.repo, catalog_repo=CatalogRepository(self.db), token_manager=self.tokens, provider=self.provider, payment_service=self.payments, realtime=broker)
+
+    async def test_demo_charge_preserves_catalog_and_issues_exact_quoted_ticket(self):
+        self.enable_demo_checkout()
+        self.provider.quoted_minor = 103
+        record = await self.create()
+        self.assertEqual(record.requested_amount_minor, 100)
+        self.assertGreaterEqual(record.catalog_price_minor, 35000)
+        with self.db.read_connection() as conn:
+            price = conn.execute("SELECT price_minor FROM session_seats WHERE session_id=? AND seat_id=?", (record.order.session_id, record.order.seat_id)).fetchone()[0]
+        self.assertEqual(price, record.catalog_price_minor)
+        token = self.tokens.derive_order_access_token(record.order.id, record.token_nonce)
+        pricing = self.booking.get_price_breakdown(record.order.id, token)
+        self.assertEqual((pricing.seat_price_minor, pricing.service_fee_minor, pricing.total_minor), (100, 3, 103))
+        self.assertEqual(pricing.demo_discount_minor, price - 100)
+        await self.confirm(record)
+        self.assert_state(record.order.id, OrderStatus.PAID, 'sold', TicketStatus.VALID)
+        ticket = await self.booking.get_order_ticket(record.order.id, token)
+        self.assertEqual(ticket.paid_minor, 103)
+        restarted = BookingRepository(self.db, self.tokens, "https://tickets.example.test")
+        saved = restarted.get_order_record(record.order.id)
+        self.assertEqual((saved.catalog_price_minor, saved.requested_amount_minor, saved.order.total_minor), (price, 100, 103))
+
+    async def test_enabling_demo_does_not_reprice_existing_payment_on_replay(self):
+        original = await self.create()
+        self.enable_demo_checkout()
+        replay = await self.create()
+        self.assertEqual(replay.order.id, original.order.id)
+        self.assertEqual(replay.order.total_minor, original.order.total_minor)
+        self.assertEqual(self.provider.create_calls, 1)
+
+    async def test_legacy_one_ruble_slot_catalog_repair_keeps_order_and_hold(self):
+        self.payload = CreateOrderRequest(session_id='session_payment_test_1r', seat_id='h1-r01-s03', customer_email='test@example.test')
+        with self.db.immediate_transaction() as conn:
+            conn.execute("UPDATE session_seats SET price_minor=100 WHERE session_id='session_payment_test_1r'")
+            conn.execute("UPDATE sessions SET price_from_minor=100 WHERE id='session_payment_test_1r'")
+        old = await self.create()
+        seed_from_fixtures(self.db, FIXTURES)
+        seed_from_fixtures(self.db, FIXTURES)
+        self.assertEqual(self.repo.get_order_record(old.order.id).order.total_minor, 100)
+        self.assert_state(old.order.id, OrderStatus.PENDING_PAYMENT, 'held')
+        with self.db.read_connection() as conn:
+            prices = {r[0] for r in conn.execute("SELECT price_minor FROM session_seats WHERE session_id='session_payment_test_1r'")}
+        self.assertEqual(prices, {35000, 55000, 90000})
+
     async def test_one_ruble_quote_is_103_kopeks_and_mismatch_still_fails(self):
         with self.db.immediate_transaction() as conn:
             conn.execute("UPDATE session_seats SET price_minor=100 WHERE session_id=? AND seat_id=?", (self.payload.session_id, self.payload.seat_id))

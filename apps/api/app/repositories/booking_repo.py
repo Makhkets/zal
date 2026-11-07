@@ -36,6 +36,7 @@ class StoredOrderRecord:
     last_reconciled_at: str | None
     provider_request_sent: bool
     requested_amount_minor: int
+    catalog_price_minor: int
     provider_response: dict[str, Any] | None
 
 
@@ -62,7 +63,10 @@ class PaymentEventRow:
 
 
 class BookingRepository:
-    def __init__(self, db: Database, token_manager: TokenManager, public_app_url: str) -> None:
+    def __init__(self, db: Database, token_manager: TokenManager, public_app_url: str, *, demo_checkout_minor: int = 0) -> None:
+        if demo_checkout_minor not in (0, 100):
+            raise ValueError("Invalid demo checkout amount")
+        self._demo_checkout_minor = demo_checkout_minor
         self._db = db
         self._tokens = token_manager
         self._public_app_url = public_app_url.rstrip("/")
@@ -70,6 +74,9 @@ class BookingRepository:
 
     def _ensure_attempt_columns(self) -> None:
         with self._db.immediate_transaction() as conn:
+            order_cols = {str(r["name"]) for r in conn.execute("PRAGMA table_info(orders);")}
+            if "catalog_price_minor" not in order_cols:
+                conn.execute("ALTER TABLE orders ADD COLUMN catalog_price_minor INTEGER;")
             cols = {
                 str(r["name"])
                 for r in conn.execute("PRAGMA table_info(payment_attempts);").fetchall()
@@ -142,7 +149,8 @@ class BookingRepository:
             if str(seat_row["status"]) != SeatStatus.AVAILABLE.value:
                 raise seat_unavailable_error()
 
-            price_minor = int(seat_row["price_minor"])
+            catalog_price_minor = int(seat_row["price_minor"])
+            price_minor = min(catalog_price_minor, self._demo_checkout_minor) if self._demo_checkout_minor else catalog_price_minor
             order_id = str(uuid.uuid4())
             attempt_id = str(uuid.uuid4())
             token_nonce = self._tokens.generate_nonce()
@@ -184,6 +192,8 @@ class BookingRepository:
                     now_iso,
                 ),
             )
+
+            conn.execute("UPDATE orders SET catalog_price_minor=? WHERE id=?", (catalog_price_minor, order_id))
 
             cur = conn.execute(
                 """
@@ -1019,7 +1029,7 @@ class BookingRepository:
             SELECT
                 o.id, o.session_id, o.seat_id, o.customer_id, o.customer_email,
                 o.status, o.total_minor, o.currency, o.token_nonce, o.provider,
-                o.created_at, o.expires_at, o.last_reconciled_at,
+                o.created_at, o.expires_at, o.last_reconciled_at, o.catalog_price_minor,
                 pa.status AS payment_status,
                 pa.payment_url AS payment_url,
                 pa.provider_transaction_id AS transaction_id,
@@ -1062,6 +1072,7 @@ class BookingRepository:
             last_reconciled_at=row["last_reconciled_at"],
             provider_request_sent=bool(row["request_sent"]),
             requested_amount_minor=int(row["requested_amount_minor"]),
+            catalog_price_minor=int(row["catalog_price_minor"] if row["catalog_price_minor"] is not None else row["requested_amount_minor"]),
             provider_response=json.loads(row["provider_response"]) if row["provider_response"] else None,
         )
 

@@ -45,6 +45,7 @@ async def get_health(container: AppContainer = Depends(get_container)) -> Health
         status="ok",
         mode=container.settings.mode,
         api_version="1.0.0",
+        demo_checkout_minor=container.settings.demo_checkout_minor,
     )
 
 
