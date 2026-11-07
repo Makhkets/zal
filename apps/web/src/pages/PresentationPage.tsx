@@ -6,14 +6,15 @@ import {
   Printer, ScanLine, ShieldCheck, StickyNote, Ticket, View,
 } from 'lucide-react';
 import '../styles/presentation.css';
+import { useFullscreen } from '../hooks/useFullscreen';
 
 const notes = [
-  'Открытие, 20 секунд. ZAL позволяет до покупки посмотреть на экран с конкретного кресла. На опубликованном сайте два демонстрационных кинотеатра, восемь фильмов и 33 сеанса, включая отдельный платёжный тест. Демонстрационные площадки не являются партнёрами, кассы реальных кинотеатров не подключены. Покупка, полноценность продукта и 3D дают до 15 из 24 базовых баллов; начинаем показ с основного пути.',
-  'Ракурс, 25 секунд. На слайде схематичные иллюстрации, а не скриншоты. В приложении покажите ряд 1 / место 3 — крупный экран сбоку; ряд 6 / место 12 — вид ближе к центру; ряд 10 / диван 7 — экран меньше. Зрители находятся только на проданных местах. На контрольных местах головы не перекрывают изображение; в среднем и заднем рядах они ниже кромки экрана. Выберите произвольное кресло: камера берёт его координаты из общей со схемой геометрии, FOV при просмотре с места постоянный. В каждом окне можно оглядеться, не двигаясь с кресла. Разверните зал, просмотр или сравнение на весь экран. Подберите место по обзору, близости экрана, балансу звука или цене; один трейлер воспроизводится в двух ракурсах, точка прослушивания переключается без перезапуска.',
-  'Путь, 25 секунд. Кинотеатр → сеанс → место → 3D → СБП → билет. Цена и доступность приходят с API. Есть подбор свободных мест по предпочтениям и чат конкретного сеанса. Афишу дополняет внешний каталог iTunes в режиме только чтения; это информация о фильмах, а не интеграция с кассами настоящих кинотеатров. Продемонстрируйте возврат к выбору и оформление другого места без потери доступа к прежнему заказу.',
-  'Оплата, 30 секунд. Заказ и доступ к нему сохраняются, затем сервер получает точную сумму от Platega. Перед переходом в банк интерфейс показывает цену места, комиссию платёжной системы и итог. В демопокупке тариф 1 ₽, комиссия 0,03 ₽, к оплате 1,03 ₽. Создание счёта и доступность страницы Platega с этой суммой и QR проверены без списания. Это ещё не подтверждённая банковская покупка. Её завершает человек; до ручной оплаты и проверенного paid не называйте счёт оплаченным. Возврат из банка сам по себе не выдаёт билет.',
-  'Архитектура, 30 секунд. React, SVG и Three.js используют единый Hall.seats. FastAPI отвечает за цены, бронь и проверку платежа; SQLite хранит заказы и билеты. Контракт OpenAPI связывает обе части. Новый зал добавляется через данные. iTunes подключён отдельно как каталог только для чтения, кассовых интеграций с реальными площадками нет. Секрет Platega остаётся на сервере, QR на финальном слайде содержит только публичный адрес ZAL.',
-  'Живой показ, 60–90 секунд. Жюри может открыть cinema.makhkets.ru камерой телефона через QR. Покажите контрольные места, полноэкранный обзор, подбор, сравнение со звуком и чат сеанса. Для проверки СБП выберите любое свободное место: демопокупка 1 ₽ плюс комиссия провайдера. Реальную оплату подтверждает человек в банковском приложении; билет показывайте только после серверного paid. Пока ручного подтверждения нет, честно показывайте ожидающий оплаты счёт. 24 + 7 — максимум критериев, а не заявленный результат команды.',
+  'Открытие, 20 секунд. ZAL помогает выбрать впечатление до покупки: посмотреть на экран с конкретного кресла и послушать трейлер. Два демонстрационных кинотеатра, восемь фильмов, залы по 282 места. Реальные кассы площадок не подключены. Начните с проблемы: одинаковая цена не означает одинаковый ракурс.',
+  'Ракурс, 30 секунд. На слайде реальные снимки виртуального зала: один фильм, постоянный FOV и три положения камеры. В приложении покажите ряд 1 / место 3, ряд 6 / место 12 и ряд 10 / диван 7. Камера берёт координаты кресла из общей со схемой геометрии. Перетащите изображение, чтобы оглядеться. В A/B один трейлер выбранного фильма воспроизводится синхронно; переключение точки прослушивания меняет звук по расстоянию до колонок. Это упрощённая акустическая модель. Выключите свет компактным тумблером.',
+  'Путь, 25 секунд. Кинотеатр → сеанс → схема → место → 3D → СБП → билет. Схема открывается первой. Цена и доступность приходят с API. Покажите паспорт места и поиск двух соседних кресел: учитываются проходы, ряд, зона и занятость. Каждый билет оформляется отдельно. Есть чат сеанса с реакциями и внешняя афиша iTunes: только каталог, без чужих касс.',
+  'Оплата, 30 секунд. Сервер бронирует место и получает точную котировку Platega. Обычные тарифы — 350 / 550 / 900 ₽; демопокупка — от 1 ₽ до комиссии. На сервере есть подтверждённый платёж и действующий билет. Новую оплату подтверждает человек в банковском приложении. Прямой QR СБП показывается, когда его вернула Platega; QR ссылки на платёжную форму обозначается отдельно. Не называйте QR ссылки банковским QR. Сайт опрашивает статус и выдаёт билет после проверки суммы, валюты и заказа. Возврат из банка сам по себе оплату не подтверждает.',
+  'Архитектура, 25 секунд. React, SVG и Three.js используют единый Hall.seats. FastAPI отвечает за цены, атомарную бронь и проверку платежа; SQLite хранит заказы и билеты. OpenAPI связывает обе части. Новый зал добавляется через данные. iTunes даёт каталог и видеопревью; кассовых интеграций с реальными площадками нет. Секреты Platega остаются на сервере.',
+  'Живой показ, 60–90 секунд. Жюри открывает cinema.makhkets.ru камерой телефона через QR. Покажите контрольные места, полный экран, тумблер света, пару соседних мест, сравнение со звуком и чат. Для новой покупки демотариф — 1 ₽ плюс комиссия, реальную оплату подтверждает человек. Покажите ранее оплаченный билет или дождитесь серверного paid. QR презентации содержит только публичный адрес. 24 + 7 — максимум задания, а не заявленная оценка команды.',
 ];
 
 const DEMO_URL = 'https://cinema.makhkets.ru';
@@ -54,81 +55,6 @@ function SlideMeta({ number, label }: { number: number; label: string }) {
   return <div className="deck-slide-meta"><DeckBrand /><span>{label}</span><span>{String(number).padStart(2, '0')} / 06</span></div>;
 }
 
-function SeatIllustration({ angle = 'middle' }: { angle?: 'front' | 'middle' | 'back' }) {
-  const screen = angle === 'front'
-    ? '-52,8 353,73 337,254 -68,242'
-    : angle === 'back'
-      ? '111,65 263,48 265,147 111,163'
-      : '62,39 298,39 298,180 62,180';
-  return (
-    <svg viewBox="0 0 360 300" className="deck-perspective-art" role="img"
-      aria-label={angle === 'front' ? 'Схема вида: крупный экран под боковым углом в первом ряду' : angle === 'back' ? 'Схема вида: меньший экран под углом из заднего ряда' : 'Схема вида: экран перед зрителем в середине зала'}>
-      <rect width="360" height="300" fill="#191a16" />
-      <path d="M0 0H360L299 205H61Z" fill="#23241e" />
-      <path d="M0 0L61 205V300H0Z" fill="#2c2d25" />
-      <path d="M360 0L299 205V300H360Z" fill="#292a23" />
-      <path d="M61 205H299L360 300H0Z" fill="#161713" />
-      <polygon points={screen} fill="#f6f3e9" />
-      <g opacity=".6" stroke="#2a2a24" fill="none" strokeWidth="1">
-        <path d={angle === 'front' ? 'M91 29L91 248M-55 135L345 165' : angle === 'back' ? 'M187 57L188 156M111 113L264 96' : 'M180 39V180M62 110H298'} />
-      </g>
-      <circle cx={angle === 'front' ? 164 : angle === 'back' ? 189 : 180} cy={angle === 'front' ? 138 : angle === 'back' ? 106 : 110}
-        r={angle === 'front' ? 62 : angle === 'back' ? 28 : 45} fill="#ff4b2b" />
-      <circle cx={angle === 'front' ? 164 : angle === 'back' ? 189 : 180} cy={angle === 'front' ? 138 : angle === 'back' ? 106 : 110}
-        r={angle === 'front' ? 73 : angle === 'back' ? 34 : 53} fill="none" stroke="#2c2d27" strokeWidth="1.3" />
-      {angle !== 'front' && [0, 1, 2].map((row) => (
-        <g key={row} transform={'translate(0 ' + ((angle === 'middle' ? 192 : 211) + row * 23) + ')'}>
-          {Array.from({ length: 9 }, (_, index) => {
-            const width = 24 + row * 9;
-            const x = 180 + (index - 4.5) * (width + 5);
-            const height = 25 + row * 10;
-            return <g key={index}>
-              <rect x={x} y={0} width={width} height={height} rx={5 + row} fill={row === 0 ? '#10110e' : '#20211b'} stroke="#414236" strokeWidth=".8" />
-              {(index + row) % 3 === 0 && <ellipse cx={x + width / 2} cy={-3} rx={5 + row * 2} ry={7 + row * 3} fill="#10110e" />}
-            </g>;
-          })}
-        </g>
-      ))}
-      {angle === 'front' && <path d="M0 275Q40 248 82 275Q119 252 157 275Q202 246 245 275Q294 246 360 277V300H0Z" fill="#11120f" />}
-    </svg>
-  );
-}
-
-function HallGraphic() {
-  return (
-    <svg viewBox="0 0 660 430" className="deck-hall-graphic" aria-hidden="true">
-      <defs>
-        <linearGradient id="deck-screen-light" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f6f3e9" stopOpacity=".09" />
-          <stop offset="1" stopColor="#f6f3e9" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path d="M180 44Q330 14 480 44L651 401H9Z" fill="url(#deck-screen-light)" />
-      <path d="M180 44Q330 14 480 44" fill="none" stroke="#f6f3e9" strokeWidth="7" strokeLinecap="round" />
-      {Array.from({ length: 8 }, (_, row) => (
-        <g key={row} transform={'translate(0 ' + (84 + row * 40) + ')'}>
-          {Array.from({ length: 12 }, (_, column) => {
-            const scale = .63 + row * .065;
-            const offset = column < 6 ? -9 : 9;
-            const x = 330 + (column - 5.5) * (35 + row * 1.3) + offset;
-            const y = Math.abs(column - 5.5) * -1.9;
-            const selected = row === 4 && column === 7;
-            return (
-              <g key={column} transform={'translate(' + x + ' ' + y + ') scale(' + scale + ')'}>
-                <rect x="-15" y="-11" width="30" height="29" rx="8" fill={selected ? '#ff4b2b' : '#282a22'} stroke={selected ? '#ff6b4e' : '#5a5b4a'} strokeWidth="1.3" />
-                <path d="M-19 3V21H19V3M-12 22v6M12 22v6" fill="none" stroke={selected ? '#ff4b2b' : '#555646'} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-              </g>
-            );
-          })}
-        </g>
-      ))}
-      <path d="M403 238L330 39" stroke="#ff4b2b" strokeWidth="1" strokeDasharray="4 6" opacity=".7" />
-      <circle cx="403" cy="238" r="29" fill="none" stroke="#ff4b2b" opacity=".4" />
-      <circle cx="403" cy="238" r="38" fill="none" stroke="#ff4b2b" opacity=".15" />
-    </svg>
-  );
-}
-
 function Step({ number, icon, title, children }: { number: string; icon: ReactNode; title: string; children: ReactNode }) {
   return (
     <div className="deck-step">
@@ -143,9 +69,8 @@ function Step({ number, icon, title, children }: { number: string; icon: ReactNo
 export default function PresentationPage() {
   const [current, setCurrent] = useState(0);
   const [showNotes, setShowNotes] = useState(false);
-  const [fullScreen, setFullScreen] = useState(false);
-  const [notice, setNotice] = useState('');
   const shell = useRef<HTMLDivElement>(null);
+  const fullscreen = useFullscreen(shell);
   const move = useCallback((delta: number) => setCurrent((index) => Math.max(0, Math.min(5, index + delta))), []);
 
   useEffect(() => {
@@ -159,24 +84,16 @@ export default function PresentationPage() {
       if (event.key === 'Home') { event.preventDefault(); setCurrent(0); }
       if (event.key === 'End') { event.preventDefault(); setCurrent(5); }
     };
-    const handleFullScreen = () => setFullScreen(Boolean(document.fullscreenElement));
     window.addEventListener('keydown', handleKey);
-    document.addEventListener('fullscreenchange', handleFullScreen);
     return () => {
       window.removeEventListener('keydown', handleKey);
-      document.removeEventListener('fullscreenchange', handleFullScreen);
     };
   }, [move]);
 
-  const toggleFullScreen = async () => {
-    try {
-      if (document.fullscreenElement) await document.exitFullscreen();
-      else if (shell.current?.requestFullscreen) await shell.current.requestFullscreen();
-      else setNotice('Полноэкранный режим недоступен в этом браузере.');
-    } catch {
-      setNotice('Браузер не разрешил полноэкранный режим. Презентацию можно смотреть в окне.');
-    }
-  };
+  useEffect(() => {
+    shell.current?.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [current]);
 
   const slideProps = (index: number) => ({
     'data-active': current === index,
@@ -185,7 +102,7 @@ export default function PresentationPage() {
   });
 
   return (
-    <div className="presentation-page" ref={shell}>
+    <div className={"presentation-page" + (fullscreen.active ? " is-fullscreen" : "")} ref={shell} data-fullscreen-mode={fullscreen.mode}>
       <header className="deck-toolbar">
         <a href="/" className="deck-home"><ArrowLeft size={17} /> В приложение</a>
         <span className="deck-toolbar-title">ZAL <span>/</span> презентация проекта</span>
@@ -197,8 +114,8 @@ export default function PresentationPage() {
           <button type="button" onClick={() => window.print()} title="Распечатать все шесть слайдов или сохранить PDF">
             <Printer size={18} /><span>Сохранить PDF</span>
           </button>
-          <button type="button" onClick={toggleFullScreen} aria-label={fullScreen ? 'Выйти из полноэкранного режима' : 'На весь экран'}>
-            {fullScreen ? <Minimize size={18} /> : <Maximize size={18} />}
+          <button type="button" onClick={fullscreen.toggle} disabled={fullscreen.busy} aria-label={fullscreen.active ? 'Выйти из полноэкранного режима' : 'На весь экран'}>
+            {fullscreen.active ? <Minimize size={18} /> : <Maximize size={18} />}
           </button>
         </div>
       </header>
@@ -211,7 +128,7 @@ export default function PresentationPage() {
             <h1>Билет с видом<br /><span>на экран.</span></h1>
             <p className="deck-lead">Посмотрите на экран со своего кресла.<br />И только потом покупайте билет.</p>
           </div>
-          <div className="deck-cover-art"><HallGraphic /></div>
+          <div className="deck-cover-art"><img src="/media/presentation/seat-back.jpg" alt="Вид на экран из виртуального зала ZAL" /></div>
           <div className="deck-cover-bottom">
             <span><View /> Вид с любого места</span>
             <span className="deck-bottom-line" />
@@ -223,23 +140,23 @@ export default function PresentationPage() {
           <SlideMeta number={2} label="Выбор места" />
           <div className="deck-heading-row">
             <h2>У каждого места<br /><span>свой ракурс.</span></h2>
-            <p>Один экран. Разные расстояние,<br />угол и видимость.</p>
+            <p>Трейлер выбранного фильма.<br />Ваш ракурс. Ваш звук.</p>
           </div>
           <div className="deck-views">
             <article className="deck-view-card">
-              <SeatIllustration angle="front" />
+              <img className="deck-perspective-art" src="/media/presentation/seat-front.jpg" alt="Вид из первого ряда виртуального зала, место 3" />
               <div><span className="deck-view-index">01</span><h3>Первый ряд, сбоку</h3><p>Ряд 1 · место 3</p></div>
             </article>
             <article className="deck-view-card">
-              <SeatIllustration />
+              <img className="deck-perspective-art" src="/media/presentation/seat-middle.jpg" alt="Вид из шестого ряда виртуального зала, место 12" />
               <div><span className="deck-view-index">02</span><h3>Середина зала</h3><p>Ряд 6 · место 12</p></div>
             </article>
             <article className="deck-view-card">
-              <SeatIllustration angle="back" />
+              <img className="deck-perspective-art" src="/media/presentation/seat-back.jpg" alt="Вид с дивана 7 в последнем ряду виртуального зала" />
               <div><span className="deck-view-index">03</span><h3>Последний ряд</h3><p>Ряд 10 · диван 7</p></div>
             </article>
           </div>
-          <div className="deck-rule-note"><span className="deck-small-dot" /> 282 места · полный экран · подбор по предпочтениям · сравнение A/B со звуком</div>
+          <div className="deck-rule-note"><span className="deck-small-dot" /> 282 места · сравнение A/B · звук по расстоянию до колонок · выключение света</div>
         </section>
 
         <section className="deck-slide" {...slideProps(2)}>
@@ -248,13 +165,13 @@ export default function PresentationPage() {
           <div className="deck-steps">
             <Step number="01" icon={<MapPin />} title="Кинотеатр">Выбрать площадку</Step>
             <Step number="02" icon={<CalendarDays />} title="Сеанс">Найти своё время</Step>
-            <Step number="03" icon={<Armchair />} title="Место и 3D">Посмотреть на экран</Step>
-            <Step number="04" icon={<ScanLine />} title="Оплата">Перейти к СБП</Step>
+            <Step number="03" icon={<Armchair />} title="Схема и 3D">Примерить своё кресло</Step>
+            <Step number="04" icon={<ScanLine />} title="Оплата">СБП и проверка статуса</Step>
             <Step number="05" icon={<Ticket />} title="Билет">Открыть и сохранить</Step>
           </div>
           <div className="deck-flow-bottom">
-            <div><span className="deck-small-dot" /> 33 сеанса · цена и доступность с сервера</div>
-            <div>Подбор места · чат сеанса · каталог iTunes</div>
+            <div><span className="deck-small-dot" /> 8 фильмов · цена и доступность с сервера</div>
+            <div>Соседние места · паспорт кресла · чат сеанса</div>
           </div>
         </section>
 
@@ -272,7 +189,7 @@ export default function PresentationPage() {
             <div className="deck-chain-line"><span /></div>
             <div className="deck-payment-node deck-payment-node-final"><span><Check /></span><div><strong>Билет выдан</strong><small>Место занято · билет с QR</small></div><Ticket /></div>
           </div>
-          <p className="deck-integration-note">Тестовый счёт: 1 ₽ + 0,03 ₽ комиссия = 1,03 ₽. Билет — после подтверждения оплаты.</p>
+          <p className="deck-integration-note">Демопокупка от 1 ₽ + комиссия Platega. Билет — только после подтверждения банка.</p>
         </section>
 
         <section className="deck-slide" {...slideProps(4)}>
@@ -326,7 +243,6 @@ export default function PresentationPage() {
         </div>
       </footer>
       <aside className="deck-notes" id="deck-notes" hidden={!showNotes}><strong>Заметки к слайду {current + 1}</strong><p>{notes[current]}</p></aside>
-      {notice && <p className="deck-notice" role="status">{notice}</p>}
     </div>
   );
 }
