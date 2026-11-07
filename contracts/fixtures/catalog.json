@@ -1,0 +1,98 @@
+{
+  "cinemas": [
+    {
+      "id": "cinema_aurora",
+      "name": "Аврора · демозал",
+      "address": "Демонстрационная площадка, зал 1",
+      "timezone": "Europe/Moscow"
+    },
+    {
+      "id": "cinema_orbita",
+      "name": "Орбита · демозал",
+      "address": "Демонстрационная площадка, зал 2",
+      "timezone": "Europe/Moscow"
+    }
+  ],
+  "movies": [
+    {
+      "id": "movie_orbit",
+      "title": "За пределами орбиты",
+      "duration_minutes": 112,
+      "age_rating": "12+",
+      "poster_url": null
+    },
+    {
+      "id": "movie_city",
+      "title": "Город после заката",
+      "duration_minutes": 98,
+      "age_rating": "16+",
+      "poster_url": null
+    }
+  ],
+  "sessions": [
+    {
+      "id": "session_aurora_1",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_orbit",
+        "title": "За пределами орбиты",
+        "duration_minutes": 112,
+        "age_rating": "12+",
+        "poster_url": null
+      },
+      "starts_at": "2026-11-08T12:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_2",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_city",
+        "title": "Город после заката",
+        "duration_minutes": 98,
+        "age_rating": "16+",
+        "poster_url": null
+      },
+      "starts_at": "2026-11-08T15:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_1",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_orbit",
+        "title": "За пределами орбиты",
+        "duration_minutes": 112,
+        "age_rating": "12+",
+        "poster_url": null
+      },
+      "starts_at": "2026-11-08T13:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_2",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_city",
+        "title": "Город после заката",
+        "duration_minutes": 98,
+        "age_rating": "16+",
+        "poster_url": null
+      },
+      "starts_at": "2026-11-08T16:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    }
+  ]
+}

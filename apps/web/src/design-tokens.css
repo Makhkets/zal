@@ -1,0 +1,24 @@
+:root {
+  color-scheme: dark;
+  --background: #10100e;
+  --surface: #1b1b17;
+  --surface-raised: #2e2d26;
+  --text: #f6f3e9;
+  --muted: #aaa89c;
+  --accent: #ff4b2b;
+  --border: #3b3a32;
+  --occupied: #36362e;
+  --radius: 12px;
+  --space: 8px;
+  font-family: Inter, Arial, sans-serif;
+  color: var(--text);
+  background: var(--background);
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input { font: inherit; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}

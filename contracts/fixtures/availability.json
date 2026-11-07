@@ -1,0 +1,3676 @@
+{
+  "items": [
+    {
+      "session_id": "session_aurora_1",
+      "updated_at": "2026-11-07T08:40:46.135054Z",
+      "seats": [
+        {
+          "seat_id": "h1-r01-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s07",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s08",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s09",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s07",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s08",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s09",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s07",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s08",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s09",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s10",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s11",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s12",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s04",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s05",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s06",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s01",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s02",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s03",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s04",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s05",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s06",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s07",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s08",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        }
+      ]
+    },
+    {
+      "session_id": "session_aurora_2",
+      "updated_at": "2026-11-07T08:40:46.135112Z",
+      "seats": [
+        {
+          "seat_id": "h1-r01-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s07",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s08",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s09",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r01-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s07",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s08",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s09",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r02-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s07",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s08",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s09",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r03-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s10",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r04-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s11",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s12",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r05-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r06-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s04",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r07-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s05",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r08-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s06",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r09-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s01",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s02",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s03",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s04",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s05",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s06",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s07",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h1-r10-s08",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        }
+      ]
+    },
+    {
+      "session_id": "session_orbita_1",
+      "updated_at": "2026-11-07T08:40:46.135164Z",
+      "seats": [
+        {
+          "seat_id": "h2-r01-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s07",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s08",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s09",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s07",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s08",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s09",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s07",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s08",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s09",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s10",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s11",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s12",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s04",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s05",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s06",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s01",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s02",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s03",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s04",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s05",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s06",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s07",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s08",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        }
+      ]
+    },
+    {
+      "session_id": "session_orbita_2",
+      "updated_at": "2026-11-07T08:40:46.135227Z",
+      "seats": [
+        {
+          "seat_id": "h2-r01-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s07",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s08",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s09",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r01-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s07",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s08",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s09",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r02-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s01",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s02",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s03",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s04",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s05",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s06",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s07",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s08",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s09",
+          "status": "sold",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s10",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s11",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s12",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s13",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s14",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s15",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r03-s16",
+          "status": "available",
+          "price_minor": 35000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s10",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r04-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s11",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s12",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r05-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r06-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s04",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r07-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s05",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s06",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r08-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s01",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s02",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s03",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s04",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s05",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s06",
+          "status": "sold",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s07",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s08",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s09",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s10",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s11",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s12",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s13",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s14",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s15",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r09-s16",
+          "status": "available",
+          "price_minor": 55000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s01",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s02",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s03",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s04",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s05",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s06",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s07",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        },
+        {
+          "seat_id": "h2-r10-s08",
+          "status": "available",
+          "price_minor": 90000,
+          "currency": "RUB"
+        }
+      ]
+    }
+  ]
+}

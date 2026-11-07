@@ -1,0 +1,32 @@
+name: Starter checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python scripts/check_contract.py
+      - run: python scripts/smoke_mock.py
+      - name: Validate OpenAPI
+        run: |
+          python -m pip install openapi-spec-validator==0.7.2
+          python -m openapi_spec_validator contracts/openapi.json
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run build
