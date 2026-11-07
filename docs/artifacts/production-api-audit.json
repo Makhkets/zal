@@ -87,6 +87,39 @@
     "platega_readonly_authorization": {
       "pass": true,
       "status": 200
+    },
+    "https_health": {
+      "pass": true,
+      "status": 200,
+      "certificate_verified": true
+    },
+    "https_catalog": {
+      "pass": true,
+      "status": 200,
+      "cinemas": 2
+    },
+    "https_sessions": {
+      "pass": true,
+      "sessions": 32
+    },
+    "https_no_token_denied": {
+      "pass": true,
+      "status": 401,
+      "no_store": true,
+      "no_referrer": true
+    },
+    "https_wrong_callback_secret": {
+      "pass": true,
+      "status": 401
+    },
+    "https_mock_disabled": {
+      "pass": true,
+      "status": 404
+    },
+    "https_frontend": {
+      "pass": true,
+      "status": 200
     }
-  }
+  },
+  "public_https_checked_at_utc": "2026-11-07T10:18:33.993810+00:00"
 }

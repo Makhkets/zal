@@ -37,15 +37,15 @@ cd apps/api
 
 CI выполняет backend-тесты с временными SQLite-базами и фейковыми провайдерами, проверку общего контракта и сборку frontend. Автоматические проверки не создают реальные платежи и не выполняют возвраты.
 
-## Целевая production-схема
+## Production — размещено
 
-Развёртывание выполняется отдельно. Таблица ниже фиксирует согласованную конфигурацию, а не подтверждение доступности сервера.
+7 ноября 2026, 10:18 UTC: https://cinema.makhkets.ru отвечает HTTP/2 200 с действующим сертификатом. `/api/v1/health` возвращает `mode=live`. Проверены 26 пунктов серверной и публичной приёмки: [отчёт](artifacts/production-api-audit.json). Авторизация Platega с сервера — HTTP 200; реальная банковская покупка пока ожидает ручного подтверждения владельцем.
 
 | Параметр | Значение |
 | --- | --- |
 | Домен приложения | `https://cinema.makhkets.ru` |
 | Сервер | `31.59.190.14`, Ubuntu 24.04 |
-| HTTP/TLS | nginx; при занятых стандартных портах предусмотрены 8080/8081 |
+| HTTP/TLS | Существующий TLS-сервис на 443 → nginx 127.0.0.1:8080/8081 → API 8100 |
 | Процесс приложения | systemd, один Uvicorn worker, `127.0.0.1:8100` |
 | Файл конфигурации | `/etc/zal/zal.env`, доступ только владельцу сервиса/root |
 | Постоянная SQLite-база | `/var/lib/zal/zal.db` |
@@ -54,13 +54,13 @@ CI выполняет backend-тесты с временными SQLite-база
 
 В `/etc/zal/zal.env` требуются `APP_ENV=production`, `PAYMENT_PROVIDER=platega`, `DATABASE_PATH=/var/lib/zal/zal.db`, `PUBLIC_APP_URL=https://cinema.makhkets.ru`, `PUBLIC_API_URL=https://cinema.makhkets.ru`, `CORS_ORIGINS=https://cinema.makhkets.ru`, `ENABLE_BACKGROUND_RECONCILER=1`, а также приватные `PLATEGA_MERCHANT_ID`, `PLATEGA_API_KEY` и постоянный `ORDER_TOKEN_SECRET`. Значения секретов здесь намеренно не приводятся. Дополнительная сеть для внешних каталогов продукту не требуется: `ENABLE_EXTERNAL_MEDIA_NETWORK=0`.
 
-Образец команды systemd, где `<APP_ROOT>` заменяется фактическим каталогом release:
+Сервис работает от системного пользователя `zal`; конфигурация читается systemd из root-only файла. Полный unit: [deploy/zal.service](../deploy/zal.service). Текущий release выбирается симлинком `/opt/zal/current`:
 
 ```ini
 [Service]
-WorkingDirectory=<APP_ROOT>/apps/api
+WorkingDirectory=/opt/zal/current/apps/api
 EnvironmentFile=/etc/zal/zal.env
-ExecStart=<APP_ROOT>/apps/api/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8100 --workers 1 --no-access-log
+ExecStart=/opt/zal/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8100 --workers 1 --no-access-log
 Restart=on-failure
 RestartSec=3
 ```
@@ -83,3 +83,19 @@ RestartSec=3
 6. Перезапустить systemd-сервис, повторно открыть заказ и проверить QR. Повторная обработка статуса не должна выпускать второй билет.
 
 Публичный HTTPS, действующий production callback и реальная покупка считаются проверенными только после отдельной приёмки на размещённом сервере. Демонстрационные площадки в каталоге не обещают право входа в настоящий коммерческий кинотеатр.
+
+## Выпуск следующей версии
+
+Из чистого checkout проверенного `main`:
+
+```sh
+npm ci --prefix apps/web
+npm run build --prefix apps/web
+deploy/release.sh root@31.59.190.14
+```
+
+Скрипт отправляет только приложение, fixtures и собранный frontend. Секреты и базы не входят в архив. Он создаёт отдельный release, записывает Git SHA в `REVISION`, переключает симлинк, перезапускает только `zal.service` и проверяет health. При неуспехе возвращает предыдущий код; `/var/lib/zal/zal.db` не перезаписывается. Вход по SSH может использовать ключ либо приватный файл пароля через `ZAL_SSH_PASSWORD_FILE` и установленный `sshpass`. Файл пароля не хранится в репозитории.
+
+Конфигурация nginx — [deploy/nginx.conf](../deploy/nginx.conf). Существующий сервис TLS сохранён: его сертификат теперь содержит IP и `cinema.makhkets.ru`; acme.sh автоматически обновляет оба имени по действующему cron. Сертификат подхватывается горячим обновлением, сторонний сервис не перезапускался. Резервная копия прежнего сертификата хранится только у root в `/root/zal-deploy-backups`.
+
+Callback мерчанта не изменялся. Заказы регулярно сверяются через серверный GET Platega; один worker выполняет сверку каждые 15 секунд, страница заказа также запрашивает актуальный статус.

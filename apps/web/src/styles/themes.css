@@ -9,3 +9,4 @@
 @media(max-width:600px){.theme-toggle{width:38px;height:38px;margin-left:auto}.header-inner:has(.theme-toggle){gap:11px}.header-inner:has(.theme-toggle) .header-ticket{padding:9px 11px}.header-inner:has(.theme-toggle) .brand{gap:7px}}
 @media print{.theme-toggle{display:none!important}}
 :root[data-theme=light] .booking-steps .is-current{color:#40392c}:root[data-theme=light] .session-v2 .availability-chip{color:#62573e}:root[data-theme=light] .session-v2 .hall-mode-toggle button:not([aria-pressed=true]){color:#5c5445}:root[data-theme=light] .session-v2 .seat-tip>span{color:#71614b}:root[data-theme=light] .footer-main>p,:root[data-theme=light] .footer-bottom{color:#625c4f}
+:root[data-theme=light] .session-v2 .selection-kicker .eyebrow{color:#6b624f}
