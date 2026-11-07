@@ -209,6 +209,13 @@ def seed_from_fixtures(db: Database, fixtures_dir: Path) -> dict[str, int]:
                     )
                     inserted_counts["session_seats"] += cur.rowcount
 
+        conn.execute("UPDATE sessions SET price_from_minor=35000, format='2D · Dolby Atmos' WHERE id='session_payment_test_1r' AND price_from_minor=100")
+        conn.execute("""UPDATE session_seats SET price_minor = CASE
+            WHEN seat_id IN (SELECT seat_id FROM hall_seats WHERE hall_id=(SELECT hall_id FROM sessions WHERE id=session_seats.session_id) AND zone='front') THEN 35000
+            WHEN seat_id IN (SELECT seat_id FROM hall_seats WHERE hall_id=(SELECT hall_id FROM sessions WHERE id=session_seats.session_id) AND zone='middle') THEN 55000
+            ELSE 90000 END
+            WHERE session_id='session_payment_test_1r' AND price_minor=100""")
+
     return inserted_counts
 
 

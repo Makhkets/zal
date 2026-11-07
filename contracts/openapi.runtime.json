@@ -2515,6 +2515,12 @@
             "const": "1.0.0",
             "title": "Api Version",
             "default": "1.0.0"
+          },
+          "demo_checkout_minor": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Demo Checkout Minor",
+            "default": 0
           }
         },
         "additionalProperties": false,
@@ -2850,6 +2856,15 @@
             "type": "integer",
             "title": "Seat Price Minor"
           },
+          "catalog_price_minor": {
+            "type": "integer",
+            "title": "Catalog Price Minor"
+          },
+          "demo_discount_minor": {
+            "type": "integer",
+            "title": "Demo Discount Minor",
+            "default": 0
+          },
           "service_fee_minor": {
             "type": "integer",
             "title": "Service Fee Minor",
@@ -2893,6 +2908,7 @@
         "required": [
           "order_id",
           "seat_price_minor",
+          "catalog_price_minor",
           "total_minor",
           "refund_policy_ru",
           "can_cancel_unpaid_hold",

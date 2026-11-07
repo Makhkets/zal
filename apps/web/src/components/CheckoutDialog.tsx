@@ -48,6 +48,7 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
   const [error, setError] = useState('');
   const [lockedIntent, setLockedIntent] = useState(Boolean(intentRef.current));
   const [isMock, setIsMock] = useState(false);
+  const [demoPrice, setDemoPrice] = useState(0);
   const previousIntent = intentRef.current;
   const differentIntent = lockedIntent && Boolean(previousIntent && (
     previousIntent.body.session_id !== session.id || previousIntent.body.seat_id !== seat.id
@@ -73,7 +74,7 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
 
   useEffect(() => {
     let active = true;
-    api.health().then((health) => { if (active) setIsMock(health.mode === 'mock'); }).catch(() => {});
+    api.health().then((health) => { if (active) { setIsMock(health.mode === 'mock'); setDemoPrice(health.demo_checkout_minor || 0); } }).catch(() => {});
     return () => { active = false; };
   }, []);
 
@@ -217,6 +218,7 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
             <div className="checkout-summary__total"><span>Стоимость места</span><strong>{money(priceMinor)}</strong></div>
           </div>
         </div>
+        {demoPrice > 0 && demoPrice < priceMinor && <div className="checkout-demo-price"><div><span>Демопокупка</span><strong>{money(demoPrice)}</strong></div><p>Для демонстрации любое место — за {money(demoPrice)}. Комиссию и точный итог покажем перед переходом в банк.</p></div>}
         <p className="checkout-fee-note">Итог с комиссией платёжной системы покажем перед оплатой.</p>
 
         <form className="checkout-form" onSubmit={submit} noValidate>

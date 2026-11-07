@@ -7,1693 +7,1693 @@
         {
           "seat_id": "h1-r01-s01",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s02",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s03",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s04",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s05",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s06",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s07",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s08",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s09",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s10",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s11",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s12",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s13",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s14",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s15",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s16",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s17",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s18",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s19",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s20",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s21",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s22",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s23",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s24",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s25",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s26",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s27",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s28",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s29",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r01-s30",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s01",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s02",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s03",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s04",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s05",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s06",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s07",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s08",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s09",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s10",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s11",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s12",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s13",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s14",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s15",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s16",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s17",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s18",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s19",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s20",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s21",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s22",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s23",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s24",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s25",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s26",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s27",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s28",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s29",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r02-s30",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s01",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s02",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s03",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s04",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s05",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s06",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s07",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s08",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s09",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s10",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s11",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s12",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s13",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s14",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s15",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s16",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s17",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s18",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s19",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s20",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s21",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s22",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s23",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s24",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s25",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s26",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s27",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s28",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s29",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r03-s30",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 35000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s01",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s02",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s03",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s04",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s05",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s06",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s07",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s08",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s09",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s10",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s11",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s12",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s13",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s14",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s15",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s16",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s17",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s18",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s19",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s20",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s21",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s22",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s23",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s24",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s25",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s26",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s27",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s28",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s29",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r04-s30",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s01",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s02",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s03",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s04",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s05",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s06",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s07",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s08",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s09",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s10",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s11",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s12",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s13",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s14",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s15",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s16",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s17",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s18",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s19",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s20",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s21",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s22",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s23",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s24",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s25",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s26",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s27",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s28",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s29",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r05-s30",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s01",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s02",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s03",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s04",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s05",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s06",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s07",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s08",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s09",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s10",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s11",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s12",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s13",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s14",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s15",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s16",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s17",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s18",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s19",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s20",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s21",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s22",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s23",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s24",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s25",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s26",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s27",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s28",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s29",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r06-s30",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s01",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s02",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s03",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s04",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s05",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s06",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s07",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s08",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s09",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s10",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s11",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s12",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s13",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s14",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s15",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s16",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s17",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s18",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s19",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s20",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s21",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s22",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s23",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s24",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s25",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s26",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s27",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s28",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s29",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r07-s30",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s01",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s02",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s03",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s04",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s05",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s06",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s07",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s08",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s09",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s10",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s11",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s12",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s13",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s14",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s15",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s16",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s17",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s18",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s19",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s20",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s21",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s22",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s23",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s24",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s25",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s26",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s27",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s28",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s29",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r08-s30",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s01",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s02",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s03",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s04",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s05",
           "status": "held",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s06",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s07",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s08",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s09",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s10",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s11",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s12",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s13",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s14",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s15",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s16",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s17",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s18",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s19",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s20",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s21",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s22",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s23",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s24",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s25",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s26",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s27",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s28",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s29",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r09-s30",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 55000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s01",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s02",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s03",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s04",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s05",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s06",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s07",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s08",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s09",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s10",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s11",
           "status": "sold",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         },
         {
           "seat_id": "h1-r10-s12",
           "status": "available",
-          "price_minor": 100,
+          "price_minor": 90000,
           "currency": "RUB"
         }
       ]

@@ -44,6 +44,7 @@ class Settings:
     order_token_secret: str = ""
     payment_reconcile_seconds: float = 15.0
     enable_background_reconciler: bool = True
+    demo_checkout_minor: int = 0
     rate_limit_orders_per_minute: int = 30
     rate_limit_tickets_per_minute: int = 90
 
@@ -80,6 +81,10 @@ def load_settings(env_file: Path | None = None) -> Settings:
     if provider_raw not in ("mock", "platega"):
         raise ValueError(f"Unsupported PAYMENT_PROVIDER={provider_raw!r}; expected 'mock' or 'platega'.")
 
+    demo_checkout_minor = int(os.getenv("DEMO_CHECKOUT_MINOR", "0"))
+    if demo_checkout_minor not in (0, 100):
+        raise ValueError("DEMO_CHECKOUT_MINOR must be 0 (catalog price) or 100 (one-ruble demo).")
+
     db_raw = os.getenv("DATABASE_PATH", "./data/zal.db").strip()
     db_path = Path(db_raw)
     if not db_path.is_absolute():
@@ -107,6 +112,7 @@ def load_settings(env_file: Path | None = None) -> Settings:
         ticket_rate_limit = 90
 
     return Settings(
+        demo_checkout_minor=demo_checkout_minor,
         app_env=os.getenv("APP_ENV", "development").strip() or "development",
         payment_provider=provider_raw,  # type: ignore[arg-type]
         database_path=db_path,

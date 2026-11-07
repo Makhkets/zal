@@ -54,7 +54,7 @@ function FilmCard({ movie, sessions, timezone, onTrailer }: { movie: Movie; sess
       {media?.trailer && <button className="reel-play" onClick={() => onTrailer(media.trailer!, sessions[0])} aria-label={'Смотреть трейлер «' + movie.title + '»'}><Play size={17} fill="currentColor"/></button>}
     </div>
     <div className="reel-caption"><h3><Link to={'/sessions/' + sessions[0].id}>{movie.title}</Link></h3><p>{media?.genres?.slice(0, 2).join(' · ') || 'Кино'}<span>·</span>{movie.duration_minutes} мин<span>·</span>{movie.age_rating}</p></div>
-    <div className="reel-sessions">{sessions.slice(0, 3).map(session => <Link key={session.id} to={'/sessions/' + session.id} aria-label={movie.title + ', ' + sessionDate(session.starts_at, timezone) + ', ' + sessionTime(session.starts_at, timezone)}><strong>{sessionTime(session.starts_at, timezone)}</strong><span>{session.format === 'Тестовый билет' ? 'Тест · ' + money(session.price_from_minor) : sessionDate(session.starts_at, timezone)}</span></Link>)}</div>
+    <div className="reel-sessions">{sessions.slice(0, 3).map(session => <Link key={session.id} to={'/sessions/' + session.id} aria-label={movie.title + ', ' + sessionDate(session.starts_at, timezone) + ', ' + sessionTime(session.starts_at, timezone)}><strong>{sessionTime(session.starts_at, timezone)}</strong><span>{sessionDate(session.starts_at, timezone)}</span></Link>)}</div>
     <div className="reel-bottom"><span>от {money(Math.min(...sessions.map(session => session.price_from_minor)))}</span><Link to={'/sessions/' + sessions[0].id}><Eye size={14}/>Выбор места в 3D</Link></div>
   </article>;
 }

@@ -227,7 +227,8 @@ export default function OrderPage() {
                   <div><span>{seat?.type === 'sofa' ? 'Диван' : 'Место'}</span><strong>{seat ? seat.number.toString().padStart(2, '0') : '—'}</strong></div>
                 </div>
                 {priceBreakdown && <dl className="order-price-breakdown" aria-label="Состав суммы к оплате">
-                  <div><dt>Стоимость места</dt><dd>{money(priceBreakdown.seat_price_minor)}</dd></div>
+                  {(priceBreakdown.demo_discount_minor ?? 0) > 0 && <><div><dt>Цена в афише</dt><dd>{money(priceBreakdown.catalog_price_minor!)}</dd></div><div><dt>Скидка для демопокупки</dt><dd>−{money(priceBreakdown.demo_discount_minor!)}</dd></div></>}
+                  <div><dt>{(priceBreakdown.demo_discount_minor ?? 0) > 0 ? 'Демопокупка' : 'Стоимость места'}</dt><dd>{money(priceBreakdown.seat_price_minor)}</dd></div>
                   <div><dt>Комиссия платёжной системы</dt><dd>{money(priceBreakdown.service_fee_minor)}</dd></div>
                   {priceBreakdown.insurance_upsell_minor > 0 && <div><dt>Страхование</dt><dd>{money(priceBreakdown.insurance_upsell_minor)}</dd></div>}
                 </dl>}

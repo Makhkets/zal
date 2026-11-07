@@ -254,3 +254,5 @@
 [data-theme="light"] .order-summary-panel{background:#28231a05}
 [data-theme="light"] .order-auto-check,[data-theme="light"] .order-reference{color:#6b6759}
 [data-theme="light"] .ticket-card{filter:drop-shadow(0 14px 35px #55442a15);border:1px solid #ded6c5}
+
+.checkout-demo-price{padding:16px 20px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--accent) 7%,var(--surface));margin-top:16px}.checkout-demo-price>div{display:flex;justify-content:space-between;align-items:center;gap:16px}.checkout-demo-price strong{font-size:24px;letter-spacing:-.04em}.checkout-demo-price span{font-size:14px;font-weight:700}.checkout-demo-price p{font-size:12px;line-height:1.6;color:var(--muted);margin:8px 0 0}

@@ -49,6 +49,21 @@ class CatalogIntegrationTests(unittest.TestCase):
         self.assertEqual(response.json()["order"]["total_minor"], seat["price_minor"])
         return response.json(), payload, key
 
+    def test_demo_checkout_api_keeps_catalog_prices_and_rejects_client_amount(self):
+        app = self.app(replace(self.settings, demo_checkout_minor=100))
+        with TestClient(app) as client:
+            self.assertEqual(client.get('/api/v1/health').json()['demo_checkout_minor'], 100)
+            payload = {'session_id': 'session_payment_test_1r', 'seat_id': 'h1-r06-s12', 'customer_email': 'demo@example.org'}
+            availability = client.get('/api/v1/sessions/session_payment_test_1r/seats').json()
+            self.assertEqual({s['price_minor'] for s in availability['seats']}, {35000, 55000, 90000})
+            self.assertEqual(client.post('/api/v1/orders', json=payload | {'total_minor': 1}, headers={'Idempotency-Key': str(uuid4())}).status_code, 422)
+            result = client.post('/api/v1/orders', json=payload, headers={'Idempotency-Key': str(uuid4())})
+            self.assertEqual(result.status_code, 201, result.text)
+            data = result.json()
+            self.assertEqual(data['order']['total_minor'], 100)
+            pricing = client.get('/api/v1/orders/' + data['order']['id'] + '/pricing', headers={'Authorization': 'Bearer ' + data['access_token']}).json()
+            self.assertEqual((pricing['catalog_price_minor'], pricing['demo_discount_minor'], pricing['seat_price_minor']), (55000, 54900, 100))
+
     def test_catalog_geometry_and_contract_errors(self) -> None:
         with TestClient(self.app()) as client:
             self.assertEqual(client.get("/api/v1/health").json()["mode"], "mock")

@@ -32,6 +32,7 @@ class HealthResponse(StrictModel):
     status: Literal["ok"] = "ok"
     mode: Literal["mock", "live"]
     api_version: Literal["1.0.0"] = "1.0.0"
+    demo_checkout_minor: int = Field(default=0, ge=0)
 
 
 class Cinema(StrictModel):
@@ -279,6 +280,8 @@ class SeatRecommendationsResponse(StrictModel):
 class OrderPriceBreakdownResponse(StrictModel):
     order_id: str
     seat_price_minor: int
+    catalog_price_minor: int
+    demo_discount_minor: int = 0
     service_fee_minor: int = 0
     insurance_upsell_minor: int = 0
     total_minor: int
