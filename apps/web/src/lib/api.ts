@@ -1,3 +1,4 @@
+import type { SessionInsights } from './seatExperience';
 import type { Availability, Cinema, CreateOrderRequest, CreateOrderResponse, Hall, Health, Order, OrderPricing, Session, Ticket } from './types';
 
 export class ApiError extends Error {
@@ -31,6 +32,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 const auth = (token: string) => ({ Authorization: 'Bearer ' + token });
 export const api = {
+  insights: (id: string, signal?: AbortSignal) => request<SessionInsights>('/sessions/' + encodeURIComponent(id) + '/insights', { signal }),
   health: (signal?: AbortSignal) => request<Health>('/health', { signal }),
   cinemas: (signal?: AbortSignal) => request<{ items: Cinema[] }>('/cinemas', { signal }),
   sessions: (cinemaId: string, signal?: AbortSignal) => request<{ items: Session[] }>('/sessions?cinema_id=' + encodeURIComponent(cinemaId), { signal }),

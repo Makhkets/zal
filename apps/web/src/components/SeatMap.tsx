@@ -2,10 +2,11 @@ import { useMemo, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Minus, Plus, RotateCcw } from 'lucide-react';
 import type { Availability, Hall, Seat } from '../lib/types';
+import { comfortColor } from '../lib/seatExperience';
 import { money } from '../lib/format';
 
-interface Props { hall: Hall; availability: Availability; selectedId: string | null; compareIds: string[]; onSelect: (seat: Seat) => void }
-export default function SeatMap({ hall, availability, selectedId, compareIds, onSelect }: Props) {
+interface Props { comfortScores?: ReadonlyMap<string, number>; hall: Hall; availability: Availability; selectedId: string | null; compareIds: string[]; onSelect: (seat: Seat) => void }
+export default function SeatMap({ comfortScores, hall, availability, selectedId, compareIds, onSelect }: Props) {
   const [zoom, setZoom] = useState(1);
   const states = useMemo(() => new Map(availability.seats.map(s => [s.seat_id, s])), [availability]);
   const rows = useMemo(() => Array.from(new Set(hall.seats.map(s => s.row))), [hall]);
@@ -42,11 +43,11 @@ export default function SeatMap({ hall, availability, selectedId, compareIds, on
           const selected = seat.id === selectedId;
           const comparison = compareIds.indexOf(seat.id);
           const status = state?.status ?? 'held';
-          const label = (seat.type === 'sofa' ? 'VIP, ' : seat.zone === 'front' ? 'Стандарт, ' : 'Premium, ') + 'Ряд ' + seat.row + ', ' + (seat.type === 'sofa' ? 'диван ' : 'место ') + seat.number + ', ' + (status === 'available' ? 'свободно' : status === 'held' ? 'забронировано' : 'занято') + (state ? ', ' + money(state.price_minor) : '');
+          const label = (seat.type === 'sofa' ? 'VIP, ' : seat.zone === 'front' ? 'Стандарт, ' : 'Premium, ') + 'Ряд ' + seat.row + ', ' + (seat.type === 'sofa' ? 'диван ' : 'место ') + seat.number + ', ' + (status === 'available' ? 'свободно' : status === 'held' ? 'забронировано' : 'занято') + (state ? ', ' + money(state.price_minor) : '') + (comfortScores?.has(seat.id) ? ', расчётный комфорт ' + comfortScores.get(seat.id) + ' из 100' : '');
           const w = seat.width * scale;
           return <g key={seat.id} id={'seat-' + seat.id} role="button" aria-label={label} aria-pressed={selected} tabIndex={selected || (!selectedId && seat.id === first) ? 0 : -1} onClick={() => onSelect(seat)} onKeyDown={e => keyboard(e, seat)} className={'seat seat-zone-' + seat.zone + ' seat--' + status + (selected ? ' is-selected' : '') + (comparison >= 0 ? ' is-compared' : '')} transform={'translate(' + projectX(seat.position.x) + ' ' + projectZ(seat.position.z) + ') rotate(' + (-seat.rotation_y * 180 / Math.PI) + ')'}>
             <title>{label}</title><rect className="seat-hit" x={-w / 2 - 2} y="-22" width={w + 4} height="44" rx="9"/>
-            <rect className="seat-back" x={-w / 2} y="-16" width={w} height="25" rx="5"/>
+            <rect style={status === 'available' && !selected && comparison < 0 && comfortScores?.has(seat.id) ? { fill: comfortColor(comfortScores.get(seat.id)!) } : undefined} className="seat-back" x={-w / 2} y="-16" width={w} height="25" rx="5"/>
             <path className="seat-bottom" d={'M' + (-w / 2 + 4) + ' 7H' + (w / 2 - 4)} strokeLinecap="round"/>
             {selected ? <path d="m-5-4 4 4 7-8" className="seat-check" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/> : comparison >= 0 ? <text className="seat-letter" y="1">{comparison === 0 ? 'A' : 'B'}</text> : status === 'held' ? <circle className="seat-held-dot" r="2" cy="-3"/> : null}
           </g>;
