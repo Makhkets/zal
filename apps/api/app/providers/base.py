@@ -52,6 +52,7 @@ class ProviderTransactionSnapshot:
     refund_id: str | None = None
     refund_status: str | None = None
     refunded_amount_minor: int | None = None
+    qr_url: str | None = None
 
 
 class PaymentProvider(Protocol):

@@ -906,6 +906,13 @@
                 "type": "null"
               }
             ]
+          },
+          "qr_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Verified bank SBP URI (qr.nspk.ru), only while pending. Null until provider supplies it."
           }
         },
         "required": [

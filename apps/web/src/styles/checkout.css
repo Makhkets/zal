@@ -256,3 +256,20 @@
 [data-theme="light"] .ticket-card{filter:drop-shadow(0 14px 35px #55442a15);border:1px solid #ded6c5}
 
 .checkout-demo-price{padding:16px 20px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--accent) 7%,var(--surface));margin-top:16px}.checkout-demo-price>div{display:flex;justify-content:space-between;align-items:center;gap:16px}.checkout-demo-price strong{font-size:24px;letter-spacing:-.04em}.checkout-demo-price span{font-size:14px;font-weight:700}.checkout-demo-price p{font-size:12px;line-height:1.6;color:var(--muted);margin:8px 0 0}
+
+/* Keep the bank QR crisp and readable in either theme, including its quiet zone. */
+.order-status-orbit--compact { width: 100%; height: 40px; margin-bottom: 20px; }
+.order-status-orbit--compact > span, .order-status-orbit--compact::after { display: none; }
+.payment-qr { width: min(100%, 320px); margin: -8px 0 24px; }
+.payment-qr-code { width: min(100%, 256px); aspect-ratio: 1; margin: 0 auto; background: #fff; border-radius: 16px; padding: 0; overflow: hidden; border: 1px solid #e8e8ec; }
+.payment-qr-code img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.payment-qr-wait { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; color: #555563; font-size: 13px; }
+.payment-qr p { margin: 16px 0 8px; color: var(--muted); font-size: 13px; line-height: 1.7; text-wrap: balance; }
+.payment-qr-save { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; font-size: 12px; color: var(--text); text-underline-offset: 4px; }
+.payment-qr-save:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+.order-page--payment { padding-top: 24px; }
+.order-page--payment .order-back-link { margin-bottom: 12px; }
+.order-page--payment .order-heading { margin-bottom: 24px; }
+.order-page--payment .order-heading h1 { font-size: clamp(30px, 4vw, 44px); margin: 10px 0; }
+.order-page--payment .order-payment-panel { padding: 24px 22px; }
+.order-page--payment .order-payment-panel > p { margin-bottom: 18px; }

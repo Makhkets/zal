@@ -293,6 +293,7 @@ class PaymentService:
             verified_amount_minor=snapshot.amount_minor,
             verified_currency=snapshot.currency,
             refunded_amount_minor=eff_refunded_minor,
+            qr_url=snapshot.qr_url,
             refund_confirmed=refund_confirmed,
         )
         self._repo.update_payment_event_status(event_id, "processed")
@@ -402,6 +403,7 @@ class PaymentService:
             verified_amount_minor=snapshot.amount_minor,
             verified_currency=snapshot.currency,
             refunded_amount_minor=snapshot.refunded_amount_minor,
+            qr_url=snapshot.qr_url,
             refund_confirmed=refund_confirmed,
         )
         if seat_changed is not None:

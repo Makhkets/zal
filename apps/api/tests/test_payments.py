@@ -112,6 +112,34 @@ class PaymentFlowTests(unittest.IsolatedAsyncioTestCase):
         self.provider.snapshots[tx] = replace(self.provider.snapshots[tx], status=Status.CONFIRMED)
         return await self.payments.reconcile_order(record, force=True)
 
+    async def test_qr_persists_and_polling_replaces_it_with_one_ticket(self):
+        record = await self.create()
+        tx = record.order.payment.transaction_id
+        qr = 'https://qr.nspk.ru/test-payment?sum=55000&cur=RUB'
+        self.provider.snapshots[tx] = replace(self.provider.snapshots[tx], qr_url=qr)
+        record = await self.payments.reconcile_order(record, force=True)
+        reopened = BookingRepository(self.db, self.tokens, 'https://tickets.example.test')
+        self.assertEqual(reopened.get_order_record(record.order.id).order.payment.qr_url, qr)
+        self.assert_state(record.order.id, OrderStatus.PENDING_PAYMENT, 'held')
+        await self.confirm(record)
+        token = self.tokens.derive_order_access_token(record.order.id, record.token_nonce)
+        order = await self.booking.get_order(record.order.id, token)
+        self.assertIsNone(order.payment.qr_url)
+        self.assertEqual(order.status, OrderStatus.PAID)
+        ticket = await self.booking.get_order_ticket(record.order.id, token)
+        self.assertEqual(ticket.order_id, order.id)
+        await self.confirm(record)
+        self.assert_state(order.id, OrderStatus.PAID, 'sold', TicketStatus.VALID)
+        self.assertEqual(self.provider.create_calls, 1)
+
+    async def test_mismatched_qr_snapshot_is_never_exposed(self):
+        record = await self.create()
+        tx = record.order.payment.transaction_id
+        self.provider.snapshots[tx] = replace(self.provider.snapshots[tx], qr_url='https://qr.nspk.ru/wrong', amount_minor=1)
+        checked = await self.payments.reconcile_order(record, force=True)
+        self.assertIsNone(checked.order.payment.qr_url)
+        self.assertEqual(checked.order.status, OrderStatus.PAYMENT_REVIEW)
+
     async def test_concurrent_idempotency_dispatches_exactly_one_post(self):
         self.provider.gate = asyncio.Event()
         first = asyncio.create_task(self.booking.create_order(idempotency_key=self.key, payload=self.payload))
@@ -429,6 +457,22 @@ class PaymentFlowTests(unittest.IsolatedAsyncioTestCase):
 
 
 class AdapterTests(unittest.IsolatedAsyncioTestCase):
+    async def test_qr_only_accepts_direct_nspk_https_uri(self):
+        cases = [('https://qr.nspk.ru/valid?sum=103&cur=RUB', True),
+                 (None, False), ('javascript:alert(1)', False),
+                 ('https://qr.nspk.ru.evil.test/pay', False),
+                 ('https://user@qr.nspk.ru/pay', False),
+                 ('https://qr.nspk.ru:444/pay', False),
+                 ('https://qr.nspk.ru/pay\n', False),
+                 ('<svg onload="alert(1)"/>', False)]
+        for qr, valid in cases:
+            with self.subTest(qr=qr):
+                provider = self.adapter(lambda request: httpx.Response(200, json={
+                    'id': 'tx-qr', 'status': 'PENDING', 'payload': 'order-qr',
+                    'paymentDetails': {'amount': '1.03', 'currency': 'RUB'}, 'qr': qr}))
+                snapshot = await provider.get_transaction('tx-qr')
+                self.assertEqual(snapshot.qr_url, qr if valid else None)
+
     def adapter(self, handler):
         client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
         self.addAsyncCleanup(client.aclose)
