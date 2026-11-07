@@ -39,7 +39,8 @@ def run():
         assert request("/api/v1/health", schema="Health")[1]["mode"] == "mock"
         assert len(request("/api/v1/cinemas")[1]["items"]) == 2
         sessions = request("/api/v1/sessions?cinema_id=cinema_aurora")[1]["items"]
-        assert len(sessions) == 2
+        assert len(sessions) >= 2
+        assert all(s["cinema_id"] == "cinema_aurora" for s in sessions)
         assert request("/api/v1/sessions")[0] == 422
         session = request("/api/v1/sessions/session_aurora_1", schema="Session")[1]
         assert request("/api/v1/halls/" + session["hall_id"], schema="Hall")[0] == 200

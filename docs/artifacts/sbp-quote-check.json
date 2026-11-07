@@ -1,0 +1,24 @@
+{
+  "checked_at_utc": "2026-11-07T10:30:06.864595+00:00",
+  "provider": "platega",
+  "operation": "one authorized SBP invoice creation",
+  "post_orders_calls": 1,
+  "http_status": 201,
+  "order_status": "pending_payment",
+  "provider_status": "PENDING",
+  "seat_price_minor": 100,
+  "provider_fee_minor": 3,
+  "total_minor": 103,
+  "currency": "RUB",
+  "payment_url_host": "pay.platega.io",
+  "pricing_http_status": 200,
+  "existing_order_repaired_without_repost": {
+    "base_minor": 90000,
+    "quoted_total_minor": 92700,
+    "status": "pending_payment"
+  },
+  "bank_payment_executed": false,
+  "ticket_issued": false,
+  "isolated_backend_tests_passed": 41,
+  "contains_secrets": false
+}

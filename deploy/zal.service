@@ -1,0 +1,24 @@
+[Unit]
+Description=ZAL cinema booking API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=zal
+Group=zal
+WorkingDirectory=/opt/zal/current/apps/api
+EnvironmentFile=/etc/zal/zal.env
+ExecStart=/opt/zal/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8100 --workers 1 --proxy-headers --forwarded-allow-ips 127.0.0.1 --no-access-log
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/zal
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

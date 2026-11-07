@@ -406,6 +406,43 @@
           }
         }
       }
+    },
+    "/orders/{order_id}/pricing": {
+      "get": {
+        "operationId": "getOrderPricing",
+        "responses": {
+          "200": {
+            "description": "Успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPriceBreakdown"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "security": [
+          {
+            "OrderToken": []
+          }
+        ],
+        "summary": "Seat price and quoted payment provider fee"
+      }
     }
   },
   "components": {
@@ -900,7 +937,8 @@
           },
           "total_minor": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Exact payable amount in kopeks including the customer fee quoted by authenticated provider POST. GET status must match this stored quote. See /pricing for original seat price and fee."
           },
           "currency": {
             "type": "string",
@@ -1163,6 +1201,62 @@
           "ok"
         ],
         "additionalProperties": false
+      },
+      "OrderPriceBreakdown": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "order_id",
+          "currency",
+          "zero_hidden_fees",
+          "refund_policy_ru",
+          "can_cancel_unpaid_hold",
+          "session_starts_at",
+          "seat_price_minor",
+          "service_fee_minor",
+          "insurance_upsell_minor",
+          "total_minor"
+        ],
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "RUB"
+            ]
+          },
+          "zero_hidden_fees": {
+            "type": "boolean"
+          },
+          "refund_policy_ru": {
+            "type": "string"
+          },
+          "can_cancel_unpaid_hold": {
+            "type": "boolean"
+          },
+          "session_starts_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "seat_price_minor": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "service_fee_minor": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "insurance_upsell_minor": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_minor": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
       }
     },
     "responses": {

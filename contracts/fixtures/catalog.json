@@ -16,32 +16,106 @@
   "movies": [
     {
       "id": "movie_orbit",
-      "title": "За пределами орбиты",
-      "duration_minutes": 112,
-      "age_rating": "12+",
-      "poster_url": null
+      "title": "Интерстеллар",
+      "duration_minutes": 169,
+      "age_rating": "PG-13",
+      "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
     },
     {
       "id": "movie_city",
-      "title": "Город после заката",
-      "duration_minutes": 98,
-      "age_rating": "16+",
-      "poster_url": null
+      "title": "Бегущий по лезвию 2049",
+      "duration_minutes": 164,
+      "age_rating": "R",
+      "poster_url": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"
+    },
+    {
+      "id": "movie_dune",
+      "title": "Дюна: Часть вторая",
+      "duration_minutes": 167,
+      "age_rating": "PG-13",
+      "poster_url": "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+    },
+    {
+      "id": "movie_inception",
+      "title": "Начало",
+      "duration_minutes": 148,
+      "age_rating": "PG-13",
+      "poster_url": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
+    },
+    {
+      "id": "movie_batman",
+      "title": "Бэтмен",
+      "duration_minutes": 176,
+      "age_rating": "PG-13",
+      "poster_url": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg"
+    },
+    {
+      "id": "movie_spiderverse",
+      "title": "Человек-паук: Паутина вселенных",
+      "duration_minutes": 140,
+      "age_rating": "PG",
+      "poster_url": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"
+    },
+    {
+      "id": "movie_oppenheimer",
+      "title": "Оппенгеймер",
+      "duration_minutes": 180,
+      "age_rating": "R",
+      "poster_url": "https://image.tmdb.org/t/p/w500/ptpr0kGAckfQkJeJIt8st5dglvd.jpg"
+    },
+    {
+      "id": "movie_insideout",
+      "title": "Головоломка 2",
+      "duration_minutes": 96,
+      "age_rating": "PG",
+      "poster_url": "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg"
     }
   ],
   "sessions": [
+    {
+      "id": "session_payment_test_1r",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_orbit",
+        "title": "Интерстеллар",
+        "duration_minutes": 169,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
+      },
+      "starts_at": "2026-11-08T06:00:00Z",
+      "format": "Тестовый билет",
+      "currency": "RUB",
+      "price_from_minor": 100
+    },
     {
       "id": "session_aurora_1",
       "cinema_id": "cinema_aurora",
       "hall_id": "hall_1",
       "movie": {
         "id": "movie_orbit",
-        "title": "За пределами орбиты",
-        "duration_minutes": 112,
-        "age_rating": "12+",
-        "poster_url": null
+        "title": "Интерстеллар",
+        "duration_minutes": 169,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
       },
-      "starts_at": "2026-11-08T12:00:00Z",
+      "starts_at": "2026-11-08T07:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_1b",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_orbit",
+        "title": "Интерстеллар",
+        "duration_minutes": 169,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
+      },
+      "starts_at": "2026-11-08T14:00:00Z",
       "format": "2D",
       "currency": "RUB",
       "price_from_minor": 35000
@@ -52,12 +126,220 @@
       "hall_id": "hall_1",
       "movie": {
         "id": "movie_city",
-        "title": "Город после заката",
-        "duration_minutes": 98,
-        "age_rating": "16+",
-        "poster_url": null
+        "title": "Бегущий по лезвию 2049",
+        "duration_minutes": 164,
+        "age_rating": "R",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"
       },
-      "starts_at": "2026-11-08T15:00:00Z",
+      "starts_at": "2026-11-08T10:30:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_2b",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_city",
+        "title": "Бегущий по лезвию 2049",
+        "duration_minutes": 164,
+        "age_rating": "R",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"
+      },
+      "starts_at": "2026-11-08T17:30:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_3",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_dune",
+        "title": "Дюна: Часть вторая",
+        "duration_minutes": 167,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+      },
+      "starts_at": "2026-11-09T07:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_3b",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_dune",
+        "title": "Дюна: Часть вторая",
+        "duration_minutes": 167,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+      },
+      "starts_at": "2026-11-09T14:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_4",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_inception",
+        "title": "Начало",
+        "duration_minutes": 148,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
+      },
+      "starts_at": "2026-11-09T10:30:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_4b",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_inception",
+        "title": "Начало",
+        "duration_minutes": 148,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
+      },
+      "starts_at": "2026-11-09T17:30:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_5",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_batman",
+        "title": "Бэтмен",
+        "duration_minutes": 176,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg"
+      },
+      "starts_at": "2026-11-10T07:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_5b",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_batman",
+        "title": "Бэтмен",
+        "duration_minutes": 176,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg"
+      },
+      "starts_at": "2026-11-10T14:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_6",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_spiderverse",
+        "title": "Человек-паук: Паутина вселенных",
+        "duration_minutes": 140,
+        "age_rating": "PG",
+        "poster_url": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"
+      },
+      "starts_at": "2026-11-10T10:30:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_6b",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_spiderverse",
+        "title": "Человек-паук: Паутина вселенных",
+        "duration_minutes": 140,
+        "age_rating": "PG",
+        "poster_url": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"
+      },
+      "starts_at": "2026-11-10T17:30:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_7",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_oppenheimer",
+        "title": "Оппенгеймер",
+        "duration_minutes": 180,
+        "age_rating": "R",
+        "poster_url": "https://image.tmdb.org/t/p/w500/ptpr0kGAckfQkJeJIt8st5dglvd.jpg"
+      },
+      "starts_at": "2026-11-11T07:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_7b",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_oppenheimer",
+        "title": "Оппенгеймер",
+        "duration_minutes": 180,
+        "age_rating": "R",
+        "poster_url": "https://image.tmdb.org/t/p/w500/ptpr0kGAckfQkJeJIt8st5dglvd.jpg"
+      },
+      "starts_at": "2026-11-11T14:00:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_8",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_insideout",
+        "title": "Головоломка 2",
+        "duration_minutes": 96,
+        "age_rating": "PG",
+        "poster_url": "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg"
+      },
+      "starts_at": "2026-11-11T10:30:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_aurora_8b",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_insideout",
+        "title": "Головоломка 2",
+        "duration_minutes": 96,
+        "age_rating": "PG",
+        "poster_url": "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg"
+      },
+      "starts_at": "2026-11-11T17:30:00Z",
       "format": "2D",
       "currency": "RUB",
       "price_from_minor": 35000
@@ -68,12 +350,28 @@
       "hall_id": "hall_2",
       "movie": {
         "id": "movie_orbit",
-        "title": "За пределами орбиты",
-        "duration_minutes": 112,
-        "age_rating": "12+",
-        "poster_url": null
+        "title": "Интерстеллар",
+        "duration_minutes": 169,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
       },
-      "starts_at": "2026-11-08T13:00:00Z",
+      "starts_at": "2026-11-08T07:15:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_1b",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_orbit",
+        "title": "Интерстеллар",
+        "duration_minutes": 169,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
+      },
+      "starts_at": "2026-11-08T14:15:00Z",
       "format": "2D",
       "currency": "RUB",
       "price_from_minor": 35000
@@ -84,12 +382,220 @@
       "hall_id": "hall_2",
       "movie": {
         "id": "movie_city",
-        "title": "Город после заката",
-        "duration_minutes": 98,
-        "age_rating": "16+",
-        "poster_url": null
+        "title": "Бегущий по лезвию 2049",
+        "duration_minutes": 164,
+        "age_rating": "R",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"
       },
-      "starts_at": "2026-11-08T16:00:00Z",
+      "starts_at": "2026-11-08T10:45:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_2b",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_city",
+        "title": "Бегущий по лезвию 2049",
+        "duration_minutes": 164,
+        "age_rating": "R",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"
+      },
+      "starts_at": "2026-11-08T17:45:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_3",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_dune",
+        "title": "Дюна: Часть вторая",
+        "duration_minutes": 167,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+      },
+      "starts_at": "2026-11-09T07:15:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_3b",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_dune",
+        "title": "Дюна: Часть вторая",
+        "duration_minutes": 167,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"
+      },
+      "starts_at": "2026-11-09T14:15:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_4",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_inception",
+        "title": "Начало",
+        "duration_minutes": 148,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
+      },
+      "starts_at": "2026-11-09T10:45:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_4b",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_inception",
+        "title": "Начало",
+        "duration_minutes": 148,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
+      },
+      "starts_at": "2026-11-09T17:45:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_5",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_batman",
+        "title": "Бэтмен",
+        "duration_minutes": 176,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg"
+      },
+      "starts_at": "2026-11-10T07:15:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_5b",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_batman",
+        "title": "Бэтмен",
+        "duration_minutes": 176,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg"
+      },
+      "starts_at": "2026-11-10T14:15:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_6",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_spiderverse",
+        "title": "Человек-паук: Паутина вселенных",
+        "duration_minutes": 140,
+        "age_rating": "PG",
+        "poster_url": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"
+      },
+      "starts_at": "2026-11-10T10:45:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_6b",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_spiderverse",
+        "title": "Человек-паук: Паутина вселенных",
+        "duration_minutes": 140,
+        "age_rating": "PG",
+        "poster_url": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"
+      },
+      "starts_at": "2026-11-10T17:45:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_7",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_oppenheimer",
+        "title": "Оппенгеймер",
+        "duration_minutes": 180,
+        "age_rating": "R",
+        "poster_url": "https://image.tmdb.org/t/p/w500/ptpr0kGAckfQkJeJIt8st5dglvd.jpg"
+      },
+      "starts_at": "2026-11-11T07:15:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_7b",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_oppenheimer",
+        "title": "Оппенгеймер",
+        "duration_minutes": 180,
+        "age_rating": "R",
+        "poster_url": "https://image.tmdb.org/t/p/w500/ptpr0kGAckfQkJeJIt8st5dglvd.jpg"
+      },
+      "starts_at": "2026-11-11T14:15:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_8",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_insideout",
+        "title": "Головоломка 2",
+        "duration_minutes": 96,
+        "age_rating": "PG",
+        "poster_url": "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg"
+      },
+      "starts_at": "2026-11-11T10:45:00Z",
+      "format": "2D",
+      "currency": "RUB",
+      "price_from_minor": 35000
+    },
+    {
+      "id": "session_orbita_8b",
+      "cinema_id": "cinema_orbita",
+      "hall_id": "hall_2",
+      "movie": {
+        "id": "movie_insideout",
+        "title": "Головоломка 2",
+        "duration_minutes": 96,
+        "age_rating": "PG",
+        "poster_url": "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg"
+      },
+      "starts_at": "2026-11-11T17:45:00Z",
       "format": "2D",
       "currency": "RUB",
       "price_from_minor": 35000
