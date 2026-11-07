@@ -42,9 +42,9 @@ export default function SeatMap({ hall, availability, selectedId, compareIds, on
           const selected = seat.id === selectedId;
           const comparison = compareIds.indexOf(seat.id);
           const status = state?.status ?? 'held';
-          const label = 'Ряд ' + seat.row + ', ' + (seat.type === 'sofa' ? 'диван ' : 'место ') + seat.number + ', ' + (status === 'available' ? 'свободно' : status === 'held' ? 'забронировано' : 'занято') + (state ? ', ' + money(state.price_minor) : '');
+          const label = (seat.type === 'sofa' ? 'VIP, ' : seat.zone === 'front' ? 'Стандарт, ' : 'Premium, ') + 'Ряд ' + seat.row + ', ' + (seat.type === 'sofa' ? 'диван ' : 'место ') + seat.number + ', ' + (status === 'available' ? 'свободно' : status === 'held' ? 'забронировано' : 'занято') + (state ? ', ' + money(state.price_minor) : '');
           const w = seat.width * scale;
-          return <g key={seat.id} id={'seat-' + seat.id} role="button" aria-label={label} aria-pressed={selected} tabIndex={selected || (!selectedId && seat.id === first) ? 0 : -1} onClick={() => onSelect(seat)} onKeyDown={e => keyboard(e, seat)} className={'seat seat--' + status + (selected ? ' is-selected' : '') + (comparison >= 0 ? ' is-compared' : '')} transform={'translate(' + projectX(seat.position.x) + ' ' + projectZ(seat.position.z) + ') rotate(' + (-seat.rotation_y * 180 / Math.PI) + ')'}>
+          return <g key={seat.id} id={'seat-' + seat.id} role="button" aria-label={label} aria-pressed={selected} tabIndex={selected || (!selectedId && seat.id === first) ? 0 : -1} onClick={() => onSelect(seat)} onKeyDown={e => keyboard(e, seat)} className={'seat seat-zone-' + seat.zone + ' seat--' + status + (selected ? ' is-selected' : '') + (comparison >= 0 ? ' is-compared' : '')} transform={'translate(' + projectX(seat.position.x) + ' ' + projectZ(seat.position.z) + ') rotate(' + (-seat.rotation_y * 180 / Math.PI) + ')'}>
             <title>{label}</title><rect className="seat-hit" x={-w / 2 - 2} y="-22" width={w + 4} height="44" rx="9"/>
             <rect className="seat-back" x={-w / 2} y="-16" width={w} height="25" rx="5"/>
             <path className="seat-bottom" d={'M' + (-w / 2 + 4) + ' 7H' + (w / 2 - 4)} strokeLinecap="round"/>

@@ -3,7 +3,9 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
-import { toCreasedNormals } from 'three/addons/utils/BufferGeometryUtils.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { addLuxurySeating, makeLeatherTexture, seatFamily, upholstery } from '../lib/cinemaInterior';
 import type { Availability, Hall, Seat } from '../lib/types';
 import './cinema-scene.css';
 
@@ -28,10 +30,8 @@ interface CinemaSceneProps {
 }
 
 const ACCENT = new THREE.Color('#ff4b2b');
-const UPHOLSTERY = new THREE.Color('#514941');
 const OCCUPIED = new THREE.Color('#24282d');
 const HOVER = new THREE.Color('#dfb091');
-const TERRACOTTA = new THREE.Color('#815244');
 
 function makeScreenTexture() {
   const canvas = document.createElement('canvas');
@@ -94,25 +94,6 @@ function makeFabricTexture() {
   return texture;
 }
 
-function makeChairBack(width: number, height: number, depth: number) {
-  const shape = new THREE.Shape();
-  const x = width / 2; const y = height / 2;
-  const topRadius = width * 0.23; const bottomRadius = width * 0.08;
-  shape.moveTo(-x + bottomRadius, -y);
-  shape.lineTo(x - bottomRadius, -y);
-  shape.quadraticCurveTo(x, -y, x, -y + bottomRadius);
-  shape.lineTo(x, y - topRadius);
-  shape.quadraticCurveTo(x, y, x - topRadius, y);
-  shape.lineTo(-x + topRadius, y);
-  shape.quadraticCurveTo(-x, y, -x, y - topRadius);
-  shape.lineTo(-x, -y + bottomRadius);
-  shape.quadraticCurveTo(-x, -y, -x + bottomRadius, -y);
-  const geometry = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelSize: 0.035, bevelThickness: 0.045, bevelSegments: 3, curveSegments: 7, steps: 1 });
-  geometry.translate(0, 0, -depth / 2);
-  geometry.rotateX(0.06);
-  return toCreasedNormals(geometry, Math.PI / 3);
-}
-
 /** The scene and the seat map consume the same Hall positions, in metres. */
 export default function CinemaScene({
   hall,
@@ -169,6 +150,13 @@ export default function CinemaScene({
     host.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const environmentScene = new RoomEnvironment();
+    const environment = pmrem.fromScene(environmentScene, 0.05, 0.1, 100);
+    scene.environment = environment.texture;
+    scene.environmentIntensity = 0.3;
+    environmentScene.dispose();
+    pmrem.dispose();
     scene.background = new THREE.Color('#090c11');
     scene.fog = new THREE.Fog('#090c11', hall.dimensions.depth * 1.65, hall.dimensions.depth * 4);
     const camera = new THREE.PerspectiveCamera(hall.camera.fov_degrees, 1, hall.camera.near, hall.camera.far * 2);
@@ -232,11 +220,12 @@ export default function CinemaScene({
     const fabricTexture = makeFabricTexture();
     const floorMaterial = new THREE.MeshStandardMaterial({ color: '#191c21', roughness: 0.98, bumpMap: fabricTexture, bumpScale: 0.012 });
     const edgeMaterial = new THREE.MeshStandardMaterial({ color: '#101317', roughness: 0.38, metalness: 0.7 });
-    const wallMaterial = new THREE.MeshStandardMaterial({ color: '#161b22', roughness: 0.95 });
-    const panelMaterial = new THREE.MeshStandardMaterial({ color: '#292827', roughness: 0.92, bumpMap: fabricTexture, bumpScale: 0.025 });
+    const wallMaterial = new THREE.MeshStandardMaterial({ color: '#1e1c1b', roughness: 0.95 });
+    const panelMaterial = new THREE.MeshStandardMaterial({ color: '#39312a', roughness: 0.92, bumpMap: fabricTexture, bumpScale: 0.025 });
     const revealMaterial = new THREE.MeshStandardMaterial({ color: '#07090d', roughness: 0.7 });
-    const glowMaterial = new THREE.MeshBasicMaterial({ color: '#ff873f', toneMapped: false });
-    const ceilingLightMaterial = new THREE.MeshBasicMaterial({ color: '#e9d7bc', toneMapped: false });
+    const bronzeMaterial = new THREE.MeshStandardMaterial({ color: '#786049', roughness: 0.38, metalness: 0.75 });
+    const glowMaterial = new THREE.MeshBasicMaterial({ color: '#ffd09a', toneMapped: false });
+    const ceilingLightMaterial = new THREE.MeshBasicMaterial({ color: '#ffe4bc', toneMapped: false });
     const room = new THREE.Group();
     const backWall = new THREE.Group();
     const ceiling = new THREE.Group();
@@ -257,6 +246,11 @@ export default function CinemaScene({
       for (let z = 1; z < roomDepth; z += 1.65) {
         cube(room, side * (roomWidth / 2 - 0.15), roomHeight * 0.46, z, 0.18, roomHeight * 0.73, 1.45, panelMaterial);
         cube(room, side * (roomWidth / 2 - 0.255), roomHeight * 0.46, z + 0.7, 0.02, roomHeight * 0.73, 0.025, revealMaterial);
+        // Relief ribs break up the acoustic fabric and catch the wall wash.
+        for (const offset of [-0.5, -0.25, 0, 0.25, 0.5]) {
+          cube(room, side * (roomWidth / 2 - 0.27), roomHeight * 0.46, z + offset, 0.045, roomHeight * 0.73, 0.025, revealMaterial);
+        }
+        cube(room, side * (roomWidth / 2 - 0.28), roomHeight * 0.46, z - 0.73, 0.05, roomHeight * 0.73, 0.035, bronzeMaterial);
       }
       cube(room, side * (roomWidth / 2 - 0.27), roomHeight * 0.88, roomDepth / 2, 0.025, 0.025, roomDepth, glowMaterial);
       cube(room, side * (roomWidth / 2 - 0.27), 0.16, roomDepth / 2, 0.025, 0.035, roomDepth, glowMaterial);
@@ -265,8 +259,9 @@ export default function CinemaScene({
         cube(room, side * (roomWidth / 2 - 0.37), roomHeight * 0.42, z, 0.03, 1.1, 0.08, ceilingLightMaterial);
       }
       cube(ceiling, side * (roomWidth * 0.38), roomHeight - 0.12, roomDepth / 2, 0.075, 0.025, roomDepth - 0.8, ceilingLightMaterial);
+      cube(ceiling, side * (roomWidth * 0.38), roomHeight - 0.06, roomDepth / 2, 0.22, 0.09, roomDepth - 0.8, bronzeMaterial);
       for (let z = 3; z < roomDepth; z += 6) {
-        const warm = new THREE.PointLight('#ff7a3d', 10, 7, 2);
+        const warm = new THREE.PointLight('#ffbd7e', 22, 9, 2);
         warm.position.set(side * (roomWidth / 2 - 0.7), 1.5, z);
         scene.add(warm);
       }
@@ -278,6 +273,14 @@ export default function CinemaScene({
     cube(backWall, 0, roomHeight * 0.74, roomDepth - 0.01, 2.3, 0.8, 0.12, edgeMaterial);
     cube(ceiling, 0, roomHeight + 0.06, roomDepth / 2, roomWidth, 0.16, roomDepth + 0.8, wallMaterial);
     for (let z = 2; z < roomDepth; z += 3) cube(ceiling, 0, roomHeight - 0.15, z, roomWidth, 0.16, 0.28, revealMaterial);
+    for (let x = -roomWidth * 0.3; x <= roomWidth * 0.3; x += 3.1) {
+      cube(ceiling, x, roomHeight - 0.16, roomDepth / 2, 0.065, 0.08, roomDepth, revealMaterial);
+      for (let z = 3.5; z < roomDepth; z += 5) {
+        cube(ceiling, x, roomHeight - 0.23, z, 0.18, 0.035, 0.18, bronzeMaterial);
+        cube(ceiling, x, roomHeight - 0.25, z, 0.085, 0.02, 0.085, ceilingLightMaterial);
+      }
+    }
+    for (const z of [1.2, roomDepth - 1]) cube(ceiling, 0, roomHeight - 0.12, z, roomWidth * 0.76, 0.025, 0.075, ceilingLightMaterial);
     cube(stage, 0, roomHeight / 2, -0.7, roomWidth, roomHeight, 0.2, revealMaterial);
     cube(stage, 0, -0.05, 0.55, roomWidth, 0.12, 1.8, edgeMaterial);
     cube(stage, 0, 0.025, 1.35, roomWidth - 0.6, 0.02, 0.035, glowMaterial);
@@ -293,6 +296,9 @@ export default function CinemaScene({
       cube(scene, 0, y / 2 - 0.06, (z - 0.55 + back) / 2, platformWidth, y + 0.12, back - z + 0.55, floorMaterial);
       const minX = Math.min(...seats.map(s => s.position.x - s.width / 2));
       const maxX = Math.max(...seats.map(s => s.position.x + s.width / 2));
+      // Continuous warm nosing along each raised row, with a dark riser below it.
+      cube(scene, 0, y - 0.035, z - 0.54, maxX - minX, 0.08, 0.035, edgeMaterial);
+      cube(scene, 0, y + 0.012, z - 0.56, maxX - minX, 0.018, 0.022, glowMaterial);
       for (const side of [-1, 1]) {
         const aisleX = side < 0 ? minX - 0.4 : maxX + 0.4;
         cube(scene, aisleX, y + 0.025, z - 0.36, Math.max(0.3, roomWidth / 2 - Math.abs(aisleX) - 0.4), 0.025, 0.035, glowMaterial);
@@ -311,54 +317,26 @@ export default function CinemaScene({
       }
     }
 
-    const chairMaterial = new THREE.MeshPhysicalMaterial({ color: 'white', roughness: 0.72, metalness: 0, sheen: 0.65, sheenColor: '#ddc9b3', sheenRoughness: 0.8, bumpMap: fabricTexture, bumpScale: 0.006 });
-    const chairTrimMaterial = new THREE.MeshStandardMaterial({ color: '#151619', roughness: 0.38, metalness: 0.62 });
-    const seamMaterial = new THREE.MeshStandardMaterial({ color: '#c7ae8e', roughness: 0.88 });
-    const chairMeshes: THREE.InstancedMesh[] = [];
-    type ChairPart = { dimensions: number[]; position: number[]; radius: number; material: THREE.Material; curvedBack?: boolean; family?: 'standard' | 'sofa'; tint?: number };
-    const chairParts: ChairPart[] = [
-      // A soft shell, inset lumbar cushion and rounded headrest give each chair depth from every angle.
-      { dimensions: [0.84, 0.66, 0.18], position: [0, 0.78, 0.25], radius: 0.11, material: chairMaterial, curvedBack: true, family: 'standard' },
-      { dimensions: [0.71, 0.43, 0.12], position: [0, 0.77, 0.115], radius: 0.075, material: chairMaterial, family: 'standard', tint: 1.12 },
-      { dimensions: [0.61, 0.18, 0.14], position: [0, 1.035, 0.18], radius: 0.075, material: chairMaterial, family: 'standard', tint: 1.16 },
-      { dimensions: [0.82, 0.22, 0.65], position: [0, 0.49, -0.075], radius: 0.09, material: chairMaterial, family: 'standard', tint: 1.05 },
-      { dimensions: [0.15, 0.16, 0.73], position: [-0.46, 0.67, -0.045], radius: 0.065, material: chairMaterial, family: 'standard' },
-      { dimensions: [0.15, 0.16, 0.73], position: [0.46, 0.67, -0.045], radius: 0.065, material: chairMaterial, family: 'standard' },
-      { dimensions: [0.62, 0.27, 0.48], position: [0, 0.255, 0.035], radius: 0.04, material: chairTrimMaterial },
-      // Sofas have two separate cushions and slender side arms, rather than a stretched single chair.
-      { dimensions: [0.87, 0.56, 0.2], position: [0, 0.76, 0.25], radius: 0.08, material: chairMaterial, family: 'sofa' },
-      ...[-1, 1].flatMap(side => [
-        { dimensions: [0.405, 0.4, 0.13], position: [side * 0.213, 0.79, 0.105], radius: 0.055, material: chairMaterial, family: 'sofa' as const, tint: 1.12 },
-        { dimensions: [0.405, 0.22, 0.68], position: [side * 0.213, 0.49, -0.07], radius: 0.055, material: chairMaterial, family: 'sofa' as const, tint: 1.06 },
-        { dimensions: [0.08, 0.22, 0.77], position: [side * 0.477, 0.64, -0.035], radius: 0.036, material: chairMaterial, family: 'sofa' as const },
-      ]),
-    ];
-    for (const part of chairParts) {
-      const geometry = part.curvedBack ? makeChairBack(part.dimensions[0], part.dimensions[1], part.dimensions[2]) : new RoundedBoxGeometry(part.dimensions[0], part.dimensions[1], part.dimensions[2], 2, part.radius);
-      geometry.translate(part.position[0], part.position[1], part.position[2]);
-      const mesh = new THREE.InstancedMesh(geometry, part.material, hall.seats.length);
-      mesh.userData.family = part.family;
-      mesh.userData.tint = part.tint || 1;
-      mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-      mesh.castShadow = part.curvedBack || part.material === chairTrimMaterial;
-      mesh.receiveShadow = true;
-      mesh.frustumCulled = false;
-      chairMeshes.push(mesh);
-      scene.add(mesh);
-    }
-    // Brass cup rims and a recessed dark centre make the armrests legible from above.
-    for (const side of [-1, 1]) {
-      for (const family of ['standard', 'sofa'] as const) {
-        const geometry = new THREE.TorusGeometry(family === 'sofa' ? 0.019 : 0.044, 0.006, 6, 16);
-        geometry.rotateX(Math.PI / 2);
-        geometry.translate(side * (family === 'sofa' ? 0.477 : 0.46), family === 'sofa' ? 0.756 : 0.756, -0.23);
-        const mesh = new THREE.InstancedMesh(geometry, seamMaterial, hall.seats.length);
-        mesh.userData.family = family;
-        mesh.userData.tint = 1.1;
-        mesh.frustumCulled = false;
-        chairMeshes.push(mesh);
-        scene.add(mesh);
-      }
+    const leatherTexture = makeLeatherTexture();
+    const chairMeshes = addLuxurySeating(scene, hall, leatherTexture, fabricTexture);
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = shadowCanvas.height = 64;
+    const shadowContext = shadowCanvas.getContext('2d');
+    const contactTexture = new THREE.CanvasTexture(shadowCanvas);
+    if (shadowContext) {
+      const gradient = shadowContext.createRadialGradient(32, 32, 9, 32, 32, 32);
+      gradient.addColorStop(0, 'rgba(0,0,0,0.65)');
+      gradient.addColorStop(0.6, 'rgba(0,0,0,0.3)');
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      shadowContext.fillStyle = gradient; shadowContext.fillRect(0, 0, 64, 64);
+      const contact = new THREE.InstancedMesh(new THREE.PlaneGeometry(1.35, 1.3), new THREE.MeshBasicMaterial({ map: contactTexture, transparent: true, depthWrite: false, toneMapped: false }), hall.seats.length);
+      hall.seats.forEach((s, i) => {
+        matrixObject.position.set(s.position.x, s.position.y + 0.008, s.position.z);
+        matrixObject.rotation.set(-Math.PI / 2, 0, -s.rotation_y);
+        matrixObject.scale.set(s.width, s.depth / 0.72, 1);
+        matrixObject.updateMatrix(); contact.setMatrixAt(i, matrixObject.matrix);
+      });
+      scene.add(contact);
     }
     const headMaterial = new THREE.MeshStandardMaterial({ color: 'white', roughness: 0.96, transparent: true, opacity: 0.94 });
     const bodyMaterial = new THREE.MeshStandardMaterial({ color: 'white', roughness: 0.92 });
@@ -388,8 +366,8 @@ export default function CinemaScene({
     for (const speaker of hall.speakers) {
       cube(scene, speaker.position.x, speaker.position.y, speaker.position.z, 0.6, 1.2, 0.5, speakersMaterial);
     }
-    scene.add(new THREE.HemisphereLight('#d9dde2', '#201b17', 0.85));
-    const keyLight = new THREE.DirectionalLight('#ffdec0', 1.8);
+    scene.add(new THREE.HemisphereLight('#d9dde2', '#282018', 0.48));
+    const keyLight = new THREE.DirectionalLight('#ffe2c2', 1.45);
     keyLight.position.set(-roomWidth * 0.22, roomHeight + 5, roomDepth * 0.5);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.set(1024, 1024);
@@ -399,10 +377,16 @@ export default function CinemaScene({
     keyLight.target.position.set(0, 0, roomDepth * 0.5);
     scene.add(keyLight, keyLight.target);
     RectAreaLightUniformsLib.init();
-    const screenLight = new THREE.RectAreaLight('#d7e4f5', 3, hall.screen.width, hall.screen.height);
+    const screenLight = new THREE.RectAreaLight('#e4e9ef', 2.3, hall.screen.width, hall.screen.height);
     screenLight.position.set(screenCenter.x, screenCenter.y, screenCenter.z + 0.15);
     screenLight.lookAt(screenCenter.x, screenCenter.y, screenCenter.z + 5);
     scene.add(screenLight);
+    for (const side of [-1, 1]) {
+      const cove = new THREE.RectAreaLight('#ffd5a3', 2.2, roomDepth * 0.75, 1.1);
+      cove.position.set(side * (roomWidth / 2 - 0.4), roomHeight * 0.7, roomDepth * 0.52);
+      cove.lookAt(0, 0, roomDepth * 0.52);
+      scene.add(cove);
+    }
     const accentLight = new THREE.PointLight('#ff4b2b', 4.5, 5, 2);
     scene.add(accentLight);
 
@@ -425,6 +409,30 @@ export default function CinemaScene({
     const selectionRing = new THREE.Mesh(new THREE.RingGeometry(0.58, 0.61, 48), new THREE.MeshBasicMaterial({ color: '#ff6a43', transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false }));
     selectionRing.rotation.x = -Math.PI / 2;
     scene.add(selectionRing);
+
+    // Hundreds of architectural details share a few static draws. Keep visibility
+    // groups separate so the roof/back wall still open for the overview camera.
+    const architecture = new Map<string, { parent: THREE.Object3D; material: THREE.Material; parts: THREE.BufferGeometry[]; sources: THREE.Mesh[] }>();
+    scene.traverse(object => {
+      if (!(object instanceof THREE.Mesh) || object.geometry !== box || !object.parent || Array.isArray(object.material)) return;
+      const key = object.parent.uuid + object.material.uuid;
+      const group = architecture.get(key) ?? { parent: object.parent, material: object.material, parts: [] as THREE.BufferGeometry[], sources: [] as THREE.Mesh[] };
+      object.updateMatrix();
+      group.parts.push(box.clone().applyMatrix4(object.matrix));
+      group.sources.push(object);
+      architecture.set(key, group);
+    });
+    for (const group of architecture.values()) {
+      const geometry = mergeGeometries(group.parts);
+      if (geometry) {
+        group.sources.forEach(mesh => mesh.removeFromParent());
+        const mesh = new THREE.Mesh(geometry, group.material);
+        mesh.receiveShadow = true;
+        group.parent.add(mesh);
+      }
+      group.parts.forEach(part => part.dispose());
+    }
+    box.dispose();
 
     function framingScale(aspect: number) {
       if (propsRef.current.interactive && propsRef.current.view !== 'top') return 1;
@@ -575,10 +583,16 @@ export default function CinemaScene({
         matrixObject.updateMatrix();
         chairTransform.copy(matrixObject.matrix);
         for (const mesh of chairMeshes) {
-          mesh.setMatrixAt(index, hideOwnSeat || (mesh.userData.family && mesh.userData.family !== currentSeat.type) ? hiddenMatrix : chairTransform);
-          const fabricColor = currentSeat.type === 'sofa' || currentSeat.row % 3 === 0 ? TERRACOTTA : UPHOLSTERY;
-          chairColor.copy(isSelected ? ACCENT : hoveredId === currentSeat.id ? HOVER : statuses.get(currentSeat.id) === 'sold' ? OCCUPIED : fabricColor).multiplyScalar(mesh.userData.tint || 1);
-          mesh.setColorAt(index, chairColor);
+          const slot = (mesh.userData.seatSlots as Map<string, number>).get(currentSeat.id);
+          if (slot === undefined) continue;
+          mesh.setMatrixAt(slot, hideOwnSeat ? hiddenMatrix : chairTransform);
+          if (mesh.userData.upholstery) {
+            const fabricColor = upholstery[seatFamily(currentSeat)];
+            chairColor.copy(isSelected ? ACCENT : hoveredId === currentSeat.id ? HOVER : fabricColor);
+            if (!isSelected && hoveredId !== currentSeat.id && statuses.get(currentSeat.id) === 'sold') chairColor.lerp(OCCUPIED, 0.45);
+            chairColor.multiplyScalar(mesh.userData.tint || 1);
+            mesh.setColorAt(slot, chairColor);
+          }
         }
         const occupied = current.audience && statuses.get(currentSeat.id) === 'sold' && !hideOwnSeat;
         matrixObject.scale.set(1, 1.08, 1);
@@ -667,8 +681,11 @@ export default function CinemaScene({
       if (import.meta.env.DEV) {
         renderer.domElement.dataset.cameraPosition = camera.position.toArray().map(value => value.toFixed(3)).join(',');
         renderer.domElement.dataset.cameraDirection = camera.getWorldDirection(force).toArray().map(value => value.toFixed(3)).join(',');
+        renderer.domElement.dataset.cameraFov = String(camera.fov);
         renderer.domElement.dataset.cameraMode = isOverview ? propsRef.current.view : 'seated';
         renderer.domElement.dataset.renderCount = String(renderedFrames);
+        renderer.domElement.dataset.drawCalls = String(renderer.info.render.calls);
+        renderer.domElement.dataset.triangles = String(renderer.info.render.triangles);
       }
       const playingVideo = video && !video.paused && !video.ended && video.readyState >= 2 && !propsRef.current.paused;
       if (interactiveMode) {
@@ -695,7 +712,7 @@ export default function CinemaScene({
       pointer.set(((event.clientX - bounds.left) / bounds.width) * 2 - 1, -((event.clientY - bounds.top) / bounds.height) * 2 + 1);
       raycaster.setFromCamera(pointer, camera);
       const hit = raycaster.intersectObjects(chairMeshes, false)[0];
-      return hit?.instanceId === undefined ? undefined : hall.seats[hit.instanceId];
+      return hit?.instanceId === undefined ? undefined : (hit.object.userData.seats as Seat[])[hit.instanceId];
     }
     function onPointerDown(event: PointerEvent) {
       if ((!interactiveMode && !lookMode) || propsRef.current.paused) return;
@@ -861,6 +878,9 @@ export default function CinemaScene({
       materials.forEach((material) => material.dispose());
       screenTexture?.dispose();
       fabricTexture?.dispose();
+      leatherTexture?.dispose();
+      contactTexture.dispose();
+      environment.dispose();
       keyLight.shadow.map?.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
