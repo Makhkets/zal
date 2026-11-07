@@ -18,6 +18,7 @@ export interface Payment {
   provider: 'mock' | 'platega';
   status: 'CREATING' | 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'EXPIRED' | 'FAILED' | 'DISPUTED' | 'CHARGEBACKED' | 'PARTIALLY_REFUNDED' | 'UNKNOWN';
   payment_url: string | null; transaction_id: string | null;
+  qr_url?: string | null;
 }
 export interface Order {
   id: string; session_id: string; seat_id: string;

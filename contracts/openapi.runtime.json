@@ -2953,6 +2953,17 @@
             ],
             "title": "Payment Url"
           },
+          "qr_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qr Url"
+          },
           "transaction_id": {
             "anyOf": [
               {

@@ -5,6 +5,7 @@ import { api, ApiError } from '../lib/api';
 import type { Order, OrderPricing, Session, Seat, Ticket } from '../lib/types';
 import { money, sessionDate, sessionTime } from '../lib/format';
 import TicketCard from '../components/TicketCard';
+import PaymentQr from '../components/PaymentQr';
 import '../styles/checkout.css';
 
 function readToken(id: string) {
@@ -30,6 +31,15 @@ function remaining(expiresAt: string | null, clock: number) {
   if (!Number.isFinite(seconds)) return null;
   if (seconds <= 0) return 'Проверяем срок оплаты';
   return Math.floor(seconds / 60).toString().padStart(2, '0') + ':' + (seconds % 60).toString().padStart(2, '0');
+}
+
+function safeQrUrl(value: string | null | undefined) {
+  if (!value || value.length > 2048 || /[\s\x00-\x1f]/.test(value)) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && url.hostname === 'qr.nspk.ru' && !url.username &&
+      !url.password && !url.port && !url.hash && url.pathname.length > 1 ? value : null;
+  } catch { return null; }
 }
 
 const COPY = {
@@ -167,7 +177,8 @@ export default function OrderPage() {
   useEffect(() => {
     const update = () => { if (document.visibilityState === 'visible') setRefresh((value) => value + 1); };
     window.addEventListener('focus', update);
-    return () => window.removeEventListener('focus', update);
+    document.addEventListener('visibilitychange', update);
+    return () => { window.removeEventListener('focus', update); document.removeEventListener('visibilitychange', update); };
   }, []);
 
   const copy = order ? COPY[order.status] : null;
@@ -176,9 +187,11 @@ export default function OrderPage() {
   const priceBreakdown = pricing?.order_id === order?.id && pricing?.total_minor === order?.total_minor ? pricing : null;
   const terminal = order && ['canceled', 'expired', 'refunded'].includes(order.status);
   const countdown = order ? remaining(order.expires_at, clock) : null;
+  const paymentExpired = Boolean(order?.expires_at && new Date(order.expires_at).getTime() <= clock);
+  const showQr = order?.status === 'pending_payment' && order.payment.provider === 'platega' && hasPaymentQuote && !paymentExpired;
 
   return (
-    <div className="page-shell order-page">
+    <div className={'page-shell order-page' + (showQr ? ' order-page--payment' : '')}>
       <Link className="order-back-link" to={order ? '/sessions/' + encodeURIComponent(order.session_id) : '/'}><ArrowLeft size={17} aria-hidden="true" /> {order ? 'К выбору мест' : 'К афише'}</Link>
       {loading && !order ? <div className="order-loading" role="status"><LoaderCircle className="checkout-spin" size={32} aria-hidden="true" /><p>Находим ваш заказ…</p></div> : (
         <>
@@ -193,22 +206,25 @@ export default function OrderPage() {
           {ticket && order?.status === 'paid' ? <TicketCard ticket={ticket} mock={order.payment.provider === 'mock'} /> : order && (
             <section className="order-checkout-layout" aria-label="Состояние заказа">
               <div className="order-payment-panel">
-                <div className={'order-status-orbit' + (terminal ? ' order-status-orbit--terminal' : '')}>
+                <div className={'order-status-orbit' + (showQr ? ' order-status-orbit--compact' : '') + (terminal ? ' order-status-orbit--terminal' : '')}>
                   <span /><span />
                   {terminal ? <CircleAlert size={38} strokeWidth={1.3} aria-hidden="true" /> :
                     order.status === 'paid' ? <Check size={38} strokeWidth={1.5} aria-hidden="true" /> :
                     <img className="order-sbp-logo" src="/media/sbp-logo.svg" alt="СБП" width="96" height="48" />}
                 </div>
-                <h2>{terminal ? 'Платёж завершён' : order.status === 'paid' ? 'Готовим ваш билет' : order.status === 'payment_review' ? 'Проверяем подтверждение' : order.status === 'creating_payment' ? 'Создаём платёж' : 'Оплата через СБП'}</h2>
+                <h2>{terminal ? 'Платёж завершён' : order.status === 'paid' ? 'Готовим ваш билет' : order.status === 'payment_review' ? 'Проверяем подтверждение' : order.status === 'creating_payment' ? 'Создаём платёж' : showQr ? `${money(order.total_minor)} по СБП` : 'Оплата через СБП'}</h2>
                 <p>{terminal ? 'Вы можете вернуться к афише и выбрать другой сеанс.' :
                   order.status === 'paid' ? 'Оплата получена. Загружаем электронный билет.' :
                   order.status === 'payment_review' ? 'Место остаётся за вами на время проверки. Повторная оплата не требуется.' :
                   order.status === 'creating_payment' ? 'Платёжная ссылка появится после ответа банка.' :
-                  'Выберите свой банк на странице оплаты. После подтверждения возвращайтесь сюда.'}</p>
+                  paymentExpired ? 'Срок QR истёк. Уточняем итоговый статус у банка — повторно платить не нужно.' :
+                  showQr ? 'Оплатите по QR, сохранив эту страницу открытой.' : 'Откройте платёжную форму. Эта страница автоматически проверит результат.'}</p>
+
+                {showQr && <PaymentQr url={safeQrUrl(order.payment.qr_url)} />}
 
                 {order.status === 'pending_payment' && priceBreakdown && <p className="order-payment-quote">Место {money(priceBreakdown.seat_price_minor)} · комиссия {money(priceBreakdown.service_fee_minor)}{priceBreakdown.insurance_upsell_minor > 0 ? ` · страхование ${money(priceBreakdown.insurance_upsell_minor)}` : ''}</p>}
-                {order.status === 'pending_payment' && paymentUrl && hasPaymentQuote && <a className="button button--primary order-payment-link" href={paymentUrl} rel="noreferrer">
-                  {order.payment.provider === 'mock' ? 'Открыть демо-оплату' : `Оплатить ${money(order.total_minor)} по СБП`} <ExternalLink size={17} aria-hidden="true" />
+                {order.status === 'pending_payment' && !paymentExpired && paymentUrl && hasPaymentQuote && <a className="button button--primary order-payment-link" href={paymentUrl} target="_blank" rel="noopener noreferrer">
+                  {order.payment.provider === 'mock' ? 'Открыть демо-оплату' : `Открыть форму оплаты · ${money(order.total_minor)}`} <ExternalLink size={17} aria-hidden="true" />
                 </a>}
                 {order.status === 'pending_payment' && order.payment.payment_url && !paymentUrl && <p className="checkout-field-error">Не удалось безопасно открыть ссылку оплаты. Повторите проверку заказа.</p>}
                 {terminal ? <Link className="button button--primary" to="/#sessions">Выбрать сеанс <ArrowRight size={18} aria-hidden="true" /></Link> : (

@@ -133,6 +133,7 @@ class Payment(StrictModel):
     provider: Literal["mock", "platega"]
     status: ProviderPaymentStatus
     payment_url: str | None = None
+    qr_url: str | None = None
     transaction_id: str | None = None
 
 

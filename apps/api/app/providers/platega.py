@@ -32,6 +32,21 @@ from app.providers.base import (
 _PAYMENT_DETAILS_STR_RE = re.compile(r"^\s*([0-9]+(?:[.,][0-9]+)?)\s*([A-Za-z]{3})\s*$")
 
 
+def safe_sbp_qr(value: Any) -> str | None:
+    """Accept only the bank payment URI, never HTML, images or arbitrary redirects."""
+    if not isinstance(value, str) or len(value) > 2048 or any(c.isspace() or ord(c) < 32 for c in value):
+        return None
+    try:
+        url = urlparse(value)
+        if (url.scheme == "https" and url.hostname == "qr.nspk.ru" and
+                not url.username and not url.password and url.port in (None, 443) and
+                url.path.strip("/") and not url.fragment):
+            return value
+    except ValueError:
+        pass
+    return None
+
+
 def _encode_decimal_json(value: Any) -> str:
     """Emit Decimal as a JSON number without passing through binary float."""
     if isinstance(value, Decimal):
@@ -289,6 +304,7 @@ class PlategaPaymentProvider:
             refund_id=refund_id,
             refund_status=refund_status,
             refunded_amount_minor=refunded_minor,
+            qr_url=safe_sbp_qr(data.get("qr")),
         )
 
     async def forward_foreign_callback(self, raw_body: bytes) -> bool:

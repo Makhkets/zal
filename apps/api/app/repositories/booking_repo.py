@@ -85,6 +85,8 @@ class BookingRepository:
                 conn.execute(
                     "ALTER TABLE payment_attempts ADD COLUMN request_sent INTEGER NOT NULL DEFAULT 0;"
                 )
+            if "qr_url" not in cols:
+                conn.execute("ALTER TABLE payment_attempts ADD COLUMN qr_url TEXT;")
 
     def create_or_replay_reservation(
         self,
@@ -666,6 +668,7 @@ class BookingRepository:
         verified_currency: str,
         refunded_amount_minor: int | None = None,
         refund_confirmed: bool = False,
+        qr_url: str | None = None,
     ) -> tuple[StoredOrderRecord, str | None]:
         """Single atomic handler called by BOTH webhook callbacks and status polling/reconciliation.
 
@@ -707,11 +710,12 @@ class BookingRepository:
                 """
                 UPDATE payment_attempts
                 SET provider_transaction_id = COALESCE(provider_transaction_id, ?),
+                    qr_url = ?,
                     request_sent = 1,
                     updated_at = ?
                 WHERE order_id = ?;
                 """,
-                (transaction_id, now_iso, order_id),
+                (transaction_id, qr_url, now_iso, order_id),
             )
 
             existing_ticket_row = conn.execute(
@@ -1032,6 +1036,7 @@ class BookingRepository:
                 o.created_at, o.expires_at, o.last_reconciled_at, o.catalog_price_minor,
                 pa.status AS payment_status,
                 pa.payment_url AS payment_url,
+                pa.qr_url AS qr_url,
                 pa.provider_transaction_id AS transaction_id,
                 pa.request_sent AS request_sent,
                 pa.amount_minor AS requested_amount_minor,
@@ -1060,6 +1065,7 @@ class BookingRepository:
                 provider=row["provider"],
                 status=ProviderPaymentStatus(str(row["payment_status"] or "CREATING")),
                 payment_url=row["payment_url"],
+                qr_url=row["qr_url"] if str(row["status"]) == "pending_payment" else None,
                 transaction_id=row["transaction_id"],
             ),
             ticket_id=row["ticket_id"],
