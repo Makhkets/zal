@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Check, CircleAlert, Clock3, ExternalLink, LoaderCircle, LockKeyhole, RefreshCw, ShieldCheck, Ticket as TicketIcon } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, CircleAlert, Clock3, ExternalLink, LoaderCircle, LockKeyhole, RefreshCw, ShieldCheck } from 'lucide-react';
 import { api, ApiError } from '../lib/api';
 import type { Order, Session, Seat, Ticket } from '../lib/types';
 import { money, sessionDate, sessionTime } from '../lib/format';
@@ -177,7 +177,7 @@ export default function OrderPage() {
                   <span /><span />
                   {terminal ? <CircleAlert size={38} strokeWidth={1.3} aria-hidden="true" /> :
                     order.status === 'paid' ? <Check size={38} strokeWidth={1.5} aria-hidden="true" /> :
-                    <TicketIcon size={38} strokeWidth={1.3} aria-hidden="true" />}
+                    <img className="order-sbp-logo" src="/media/sbp-logo.svg" alt="СБП" width="96" height="48" />}
                 </div>
                 <h2>{terminal ? 'Платёж завершён' : order.status === 'paid' ? 'Готовим ваш билет' : order.status === 'payment_review' ? 'Проверяем подтверждение' : order.status === 'creating_payment' ? 'Создаём платёж' : 'Оплата через СБП'}</h2>
                 <p>{terminal ? 'Вы можете вернуться к афише и выбрать другой сеанс.' :

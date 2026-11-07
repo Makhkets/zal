@@ -269,7 +269,7 @@ def create_app(
                 )
             if full_path:
                 candidate = (dist_root / full_path).resolve()
-                if str(candidate).startswith(str(dist_root)) and candidate.is_file():
+                if candidate.is_relative_to(dist_root) and candidate.is_file():
                     return FileResponse(candidate)
             return FileResponse(index_html)
 

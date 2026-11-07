@@ -52,39 +52,33 @@ class CatalogRepository:
         )
 
     def ensure_future_schedule(self) -> None:
-        """If a persistent DB is opened days later and a cinema has zero future sessions,
-        rolls forward unpurchased past sessions or clones fresh tomorrow sessions automatically.
+        """Roll an exhausted demo schedule forward without moving any purchased session.
+
+        Each cinema is checked separately and one common offset preserves its session spacing.
         """
         now = utc_now()
         now_iso = to_iso_utc(now)
-        with self._db.read_connection() as conn:
-            future_row = conn.execute(
-                "SELECT COUNT(*) AS cnt FROM sessions WHERE starts_at > ?;",
-                (now_iso,),
-            ).fetchone()
-            if future_row and int(future_row["cnt"]) > 0:
-                return
-
         with self._db.immediate_transaction() as conn:
             rows = conn.execute(
                 """
-                SELECT s.id, s.starts_at,
-                       EXISTS(SELECT 1 FROM orders o WHERE o.session_id = s.id) AS has_orders
+                SELECT s.id, s.cinema_id, s.starts_at
                 FROM sessions s
+                WHERE NOT EXISTS(SELECT 1 FROM orders o WHERE o.session_id = s.id)
+                  AND NOT EXISTS(
+                      SELECT 1 FROM sessions future
+                      WHERE future.cinema_id = s.cinema_id AND future.starts_at > ?
+                  )
                 ORDER BY s.starts_at ASC;
-                """
+                """, (now_iso,),
             ).fetchall()
-            tomorrow_base = (now + timedelta(days=1)).replace(minute=0, second=0, microsecond=0)
-            for idx, row in enumerate(rows):
-                if row["has_orders"]:
-                    continue
+            offsets: dict[str, timedelta] = {}
+            for row in rows:
                 old_dt = datetime.fromisoformat(str(row["starts_at"]).replace("Z", "+00:00"))
-                shifted = tomorrow_base.replace(hour=old_dt.hour, minute=old_dt.minute)
-                if shifted <= now + timedelta(hours=1):
-                    shifted = now + timedelta(hours=3 + idx * 2)
+                if row["cinema_id"] not in offsets:
+                    offsets[row["cinema_id"]] = timedelta(days=(now.date() - old_dt.date()).days + 1)
                 conn.execute(
                     "UPDATE sessions SET starts_at = ? WHERE id = ?;",
-                    (to_iso_utc(shifted), row["id"]),
+                    (to_iso_utc(old_dt + offsets[row["cinema_id"]]), row["id"]),
                 )
 
     def list_sessions(self, cinema_id: str, *, future_only: bool = True) -> list[Session]:

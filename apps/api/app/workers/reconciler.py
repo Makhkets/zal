@@ -39,9 +39,9 @@ class PaymentReconciliationWorker:
                 await self._payment_service.run_reconciliation_cycle()
             except asyncio.CancelledError:
                 raise
-            except Exception:
+            except Exception as exc:
                 # Never log customer emails or secret keys
-                logger.exception("Unhandled error during payment reconciliation cycle")
+                logger.error("Payment reconciliation cycle failed (%s)", type(exc).__name__)
             try:
                 await asyncio.wait_for(self._stop_event.wait(), timeout=self._interval)
             except TimeoutError:

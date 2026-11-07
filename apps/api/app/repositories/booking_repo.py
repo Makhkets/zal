@@ -237,6 +237,27 @@ class BookingRepository:
                 needs_provider_call=True,
             )
 
+    def claim_provider_request(self, order_id: str) -> bool:
+        """Durably claim dispatch BEFORE network I/O; concurrent retries may never both POST."""
+        with self._db.immediate_transaction() as conn:
+            cur = conn.execute(
+                """UPDATE payment_attempts SET request_sent = 1, updated_at = ?
+                   WHERE order_id = ? AND request_sent = 0 AND provider_transaction_id IS NULL
+                   AND EXISTS (SELECT 1 FROM orders WHERE id = ? AND status = 'creating_payment');""",
+                (utc_now_iso(), order_id, order_id),
+            )
+            return cur.rowcount == 1
+
+    def reset_definitely_unsent_request(self, order_id: str) -> None:
+        """Only use after a proven pre-dispatch failure or an explicit provider rejection."""
+        with self._db.immediate_transaction() as conn:
+            conn.execute(
+                """UPDATE payment_attempts SET request_sent = 0, updated_at = ?
+                   WHERE order_id = ? AND provider_transaction_id IS NULL
+                   AND EXISTS (SELECT 1 FROM orders WHERE id = ? AND status = 'creating_payment');""",
+                (utc_now_iso(), order_id, order_id),
+            )
+
     def mark_provider_payment_created(
         self,
         *,
@@ -254,10 +275,15 @@ class BookingRepository:
             current = self._fetch_order_record_in_tx(conn, order_id)
             if current is None:
                 raise not_found_error("Заказ не найден.")
+            if current.order.payment.transaction_id and current.order.payment.transaction_id != transaction_id:
+                # A callback may have won the race. Never overwrite an already verified binding.
+                if current.order.status not in (OrderStatus.PAID, OrderStatus.REFUNDED):
+                    conn.execute("UPDATE orders SET status = 'payment_review', updated_at = ? WHERE id = ?;", (now_iso, order_id))
+                return self._fetch_order_record_in_tx(conn, order_id) or current
 
-            # If a fast callback already confirmed the order before POST response arrived,
-            # never downgrade `paid` back to `pending_payment`!
-            if current.order.status in (OrderStatus.PAID, OrderStatus.REFUNDED):
+            # A verified callback may bind any status before the POST response arrives.
+            # A late creation response is metadata only, never a newer payment state.
+            if current.order.payment.transaction_id or current.order.status in (OrderStatus.PAID, OrderStatus.REFUNDED):
                 conn.execute(
                     """
                     UPDATE payment_attempts
@@ -333,7 +359,7 @@ class BookingRepository:
             current = self._fetch_order_record_in_tx(conn, order_id)
             if current is None:
                 raise not_found_error("Заказ не найден.")
-            if current.order.status in (OrderStatus.PAID, OrderStatus.REFUNDED):
+            if current.order.payment.transaction_id or current.order.status in (OrderStatus.PAID, OrderStatus.REFUNDED):
                 return current
 
             conn.execute(
@@ -511,8 +537,8 @@ class BookingRepository:
                 """
                 SELECT id
                 FROM orders
-                WHERE status IN ('creating_payment', 'pending_payment', 'payment_review')
-                ORDER BY updated_at ASC
+                WHERE status IN ('creating_payment', 'pending_payment', 'payment_review', 'paid')
+                ORDER BY COALESCE(last_reconciled_at, created_at) ASC, id ASC
                 LIMIT ?;
                 """,
                 (limit,),
@@ -629,15 +655,6 @@ class BookingRepository:
                         "UPDATE orders SET status = ?, last_reconciled_at = ?, updated_at = ? WHERE id = ?;",
                         (OrderStatus.PAYMENT_REVIEW.value, now_iso, now_iso, order_id),
                     )
-                    conn.execute(
-                        """
-                        UPDATE payment_attempts
-                        SET provider_transaction_id = COALESCE(provider_transaction_id, ?),
-                            updated_at = ?
-                        WHERE order_id = ?;
-                        """,
-                        (transaction_id, now_iso, order_id),
-                    )
                 updated = self._fetch_order_record_in_tx(conn, order_id)
                 assert updated is not None
                 return updated, None
@@ -666,6 +683,11 @@ class BookingRepository:
                     effective_status = ProviderPaymentStatus.CHARGEBACKED
                 elif refunded_amount_minor > 0 and effective_status == ProviderPaymentStatus.CONFIRMED:
                     effective_status = ProviderPaymentStatus.PARTIALLY_REFUNDED
+
+            # A successful partial refund cannot be undone by a stale CONFIRMED poll.
+            # Disputes may resolve to CONFIRMED; partial refunds require manual resolution.
+            if order.payment.status == ProviderPaymentStatus.PARTIALLY_REFUNDED and effective_status != ProviderPaymentStatus.CHARGEBACKED:
+                effective_status = ProviderPaymentStatus.PARTIALLY_REFUNDED
 
             # 1. CONFIRMED -> issue at most ONE ticket, transition seat to SOLD
             if effective_status == ProviderPaymentStatus.CONFIRMED:

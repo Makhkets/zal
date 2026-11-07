@@ -40,6 +40,11 @@ def seed_from_fixtures(db: Database, fixtures_dir: Path) -> dict[str, int]:
     halls_data = json.loads(halls_path.read_text(encoding="utf-8"))["items"]
     availability_data = json.loads(availability_path.read_text(encoding="utf-8"))["items"]
     avail_by_session = {item["session_id"]: item for item in availability_data}
+    # Move an expired demo schedule as one block: preserve film durations, intervals and days.
+    fixture_starts = [datetime.fromisoformat(item["starts_at"].replace("Z", "+00:00")) for item in catalog["sessions"]]
+    schedule_shift = timedelta(0)
+    if fixture_starts and min(fixture_starts) <= utc_now() + timedelta(hours=1):
+        schedule_shift = timedelta(days=(utc_now().date() - min(fixture_starts).date()).days + 1)
 
     inserted_counts = {"cinemas": 0, "movies": 0, "halls": 0, "sessions": 0, "session_seats": 0}
     now_iso = utc_now_iso()
@@ -51,7 +56,12 @@ def seed_from_fixtures(db: Database, fixtures_dir: Path) -> dict[str, int]:
                 """
                 INSERT INTO cinemas (id, name, address, timezone)
                 VALUES (?, ?, ?, ?)
-                ON CONFLICT(id) DO NOTHING;
+                ON CONFLICT(id) DO UPDATE SET
+                    name = excluded.name, address = excluded.address, timezone = excluded.timezone
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM orders o JOIN sessions s ON s.id = o.session_id
+                    WHERE s.cinema_id = cinemas.id
+                );
                 """,
                 (cinema.id, cinema.name, cinema.address, cinema.timezone),
             )
@@ -63,7 +73,13 @@ def seed_from_fixtures(db: Database, fixtures_dir: Path) -> dict[str, int]:
                 """
                 INSERT INTO movies (id, title, duration_minutes, age_rating, poster_url)
                 VALUES (?, ?, ?, ?, ?)
-                ON CONFLICT(id) DO NOTHING;
+                ON CONFLICT(id) DO UPDATE SET
+                    title = excluded.title, duration_minutes = excluded.duration_minutes,
+                    age_rating = excluded.age_rating, poster_url = excluded.poster_url
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM orders o JOIN sessions s ON s.id = o.session_id
+                    WHERE s.movie_id = movies.id
+                );
                 """,
                 (
                     movie.id,
@@ -77,11 +93,25 @@ def seed_from_fixtures(db: Database, fixtures_dir: Path) -> dict[str, int]:
 
         for item in halls_data:
             hall = Hall.model_validate(item)
+            existing = conn.execute("SELECT geometry_json FROM halls WHERE id = ?", (hall.id,)).fetchone()
+            has_orders = conn.execute(
+                "SELECT 1 FROM orders o JOIN sessions s ON s.id = o.session_id WHERE s.hall_id = ? LIMIT 1",
+                (hall.id,),
+            ).fetchone()
+            if existing:
+                previous_hall = Hall.model_validate_json(existing["geometry_json"])
+                # Preserve the physical seat identity of every existing purchase/hold.
+                # Non-additive room changes need an explicit migration, never an automatic seed.
+                removed_ids = {seat.id for seat in previous_hall.seats} - {seat.id for seat in hall.seats}
+                if has_orders or removed_ids:
+                    hall = previous_hall
             cur = conn.execute(
                 """
                 INSERT INTO halls (id, cinema_id, name, geometry_json, seat_count)
                 VALUES (?, ?, ?, ?, ?)
-                ON CONFLICT(id) DO NOTHING;
+                ON CONFLICT(id) DO UPDATE SET
+                    name = excluded.name, geometry_json = excluded.geometry_json,
+                    seat_count = excluded.seat_count;
                 """,
                 (
                     hall.id,
@@ -99,7 +129,10 @@ def seed_from_fixtures(db: Database, fixtures_dir: Path) -> dict[str, int]:
                         hall_id, seat_id, row_num, seat_number, seat_type, zone, sort_order, seat_json
                     )
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(hall_id, seat_id) DO NOTHING;
+                    ON CONFLICT(hall_id, seat_id) DO UPDATE SET
+                        row_num = excluded.row_num, seat_number = excluded.seat_number,
+                        seat_type = excluded.seat_type, zone = excluded.zone,
+                        sort_order = excluded.sort_order, seat_json = excluded.seat_json;
                     """,
                     (
                         hall.id,
@@ -120,7 +153,7 @@ def seed_from_fixtures(db: Database, fixtures_dir: Path) -> dict[str, int]:
                 (session_id,),
             ).fetchone()
             if not exists:
-                starts_at = _ensure_future_starts_at(session_item["starts_at"], idx)
+                starts_at = to_iso_utc(fixture_starts[idx] + schedule_shift)
                 movie_id = session_item["movie"]["id"]
                 cur = conn.execute(
                     """
@@ -142,9 +175,20 @@ def seed_from_fixtures(db: Database, fixtures_dir: Path) -> dict[str, int]:
                 )
                 inserted_counts["sessions"] += cur.rowcount
 
+            # Existing session times, films, prices and payment-related rows stay immutable.
+            # Availability must always correspond to the geometry actually stored for this session.
+            session_hall = conn.execute("SELECT hall_id FROM sessions WHERE id = ?", (session_id,)).fetchone()
+            seat_ids = {
+                row["seat_id"] for row in conn.execute(
+                    "SELECT seat_id FROM hall_seats WHERE hall_id = ?", (session_hall["hall_id"],)
+                )
+            }
+
             avail_fixture = avail_by_session.get(session_id)
             if avail_fixture:
                 for seat_idx, seat_avail in enumerate(avail_fixture["seats"]):
+                    if seat_avail["seat_id"] not in seat_ids:
+                        continue
                     cur = conn.execute(
                         """
                         INSERT INTO session_seats (

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Check, ChevronLeft, CreditCard, LoaderCircle, LockKeyhole, Mail, X } from 'lucide-react';
+import { ArrowRight, Check, ChevronLeft, LoaderCircle, LockKeyhole, Mail, X } from 'lucide-react';
 import { api, ApiError } from '../lib/api';
 import type { Cinema, Seat, Session } from '../lib/types';
 import { money, sessionDate, sessionTime } from '../lib/format';
@@ -182,12 +182,12 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
           </button>
         </div>
         <div className="checkout-heading">
-          <div className="checkout-heading__mark"><CreditCard size={24} strokeWidth={1.5} aria-hidden="true" /></div>
+          <div className="checkout-heading__mark"><img src="/media/sbp-logo.svg" width="80" height="40" alt="СБП" /></div>
           <h2 id="checkout-title">Остался один шаг.</h2>
           <p id="checkout-description">Ваше место — в следующей истории.</p>
         </div>
 
-        {isMock && <div className="checkout-mode"><span /> Демо-оплата. Деньги не списываются.</div>}
+        <div className="checkout-mode"><span />{isMock ? 'Демо-оплата. Деньги не списываются.' : 'Демонстрационный сеанс ZAL. Оплата настоящая; билет действует в рамках проекта.'}</div>
         <div className="checkout-summary">
           <div className="checkout-summary__film">
             <span className="checkout-summary__eyebrow">{cinema?.name || 'Ваш кинотеатр'}</span>
@@ -236,7 +236,7 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
           </div>
 
           <div className="checkout-payment-method">
-            <span className="checkout-sbp" aria-hidden="true"><i /><i /><i /></span>
+            <img className="checkout-sbp" src="/media/sbp-logo.svg" width="76" height="44" alt="СБП" />
             <div><strong>Система быстрых платежей</strong><span>Оплата в приложении вашего банка</span></div>
             <span className="checkout-method-check"><Check size={14} aria-hidden="true" /></span>
           </div>

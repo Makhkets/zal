@@ -4,6 +4,8 @@ import { MotionConfig } from 'motion/react';
 import { ArrowUpRight, RotateCcw, Ticket } from 'lucide-react';
 import { AppProvider, useApp } from './lib/AppContext';
 import Brand from './components/Brand';
+import ThemeToggle from './components/ThemeToggle';
+import './styles/themes.css';
 import { Loading } from './components/Feedback';
 import HomePage from './pages/HomePage';
 
@@ -72,6 +74,7 @@ function Header() {
           <Link to="/#sessions" aria-current={pathname === '/' && hash === '#sessions' ? 'location' : undefined}>Афиша и сеансы</Link>
           <Link to="/#how-it-works" aria-current={pathname === '/' && hash === '#how-it-works' ? 'location' : undefined}>Как это работает</Link>
         </nav>
+        <ThemeToggle />
         <Link className="header-ticket" to="/tickets"><Ticket size={18} strokeWidth={1.6} aria-hidden="true" /><span>Мои билеты</span></Link>
       </div>
     </header>

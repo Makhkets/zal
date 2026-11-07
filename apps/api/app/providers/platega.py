@@ -8,10 +8,11 @@ Never logs or serializes API keys or merchant secrets.
 from __future__ import annotations
 
 from decimal import Decimal
+import hmac
 import json
 import re
 from typing import Any, Literal
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 import httpx
 
@@ -31,17 +32,25 @@ from app.providers.base import (
 _PAYMENT_DETAILS_STR_RE = re.compile(r"^\s*([0-9]+(?:[.,][0-9]+)?)\s*([A-Za-z]{3})\s*$")
 
 
-class _DecimalEncoder(json.JSONEncoder):
-    def default(self, o: Any) -> Any:
-        if isinstance(o, Decimal):
-            return float(o) if o != o.to_integral_value() else int(o)
-        return super().default(o)
+def _encode_decimal_json(value: Any) -> str:
+    """Emit Decimal as a JSON number without passing through binary float."""
+    if isinstance(value, Decimal):
+        if not value.is_finite():
+            raise ValueError("Non-finite JSON amount.")
+        return format(value, "f")
+    if isinstance(value, dict):
+        return "{" + ",".join(json.dumps(key) + ":" + _encode_decimal_json(item) for key, item in value.items()) + "}"
+    if isinstance(value, (list, tuple)):
+        return "[" + ",".join(_encode_decimal_json(item) for item in value) + "]"
+    return json.dumps(value, ensure_ascii=False, allow_nan=False)
 
 
 def _extract_payment_details(raw_details: Any, fallback_data: dict[str, Any]) -> tuple[int, str]:
     if isinstance(raw_details, dict):
         amt = raw_details.get("amount")
-        curr = str(raw_details.get("currency") or "RUB").strip().upper()
+        curr = str(raw_details.get("currency") or "").strip().upper()
+        if not re.fullmatch(r"[A-Z]{3}", curr):
+            raise ValueError("Missing or invalid currency.")
         return rub_to_minor_exact(amt), curr
     if isinstance(raw_details, str):
         match = _PAYMENT_DETAILS_STR_RE.match(raw_details)
@@ -50,7 +59,9 @@ def _extract_payment_details(raw_details: Any, fallback_data: dict[str, Any]) ->
             curr = match.group(2).upper()
             return rub_to_minor_exact(amt_str), curr
     if "amount" in fallback_data:
-        curr = str(fallback_data.get("currency") or "RUB").strip().upper()
+        curr = str(fallback_data.get("currency") or "").strip().upper()
+        if not re.fullmatch(r"[A-Z]{3}", curr):
+            raise ValueError("Missing or invalid currency.")
         return rub_to_minor_exact(fallback_data["amount"]), curr
     raise ProviderUnavailableError("Platega response missing valid paymentDetails.", status_code=502)
 
@@ -121,7 +132,7 @@ class PlategaPaymentProvider:
                 "userId": customer_id,
             },
         }
-        encoded_body = json.dumps(payload_body, cls=_DecimalEncoder, ensure_ascii=False).encode("utf-8")
+        encoded_body = _encode_decimal_json(payload_body).encode("utf-8")
 
         try:
             if self._external_client is not None:
@@ -130,6 +141,7 @@ class PlategaPaymentProvider:
                     content=encoded_body,
                     headers=headers,
                     timeout=self._timeout,
+                    follow_redirects=False,
                 )
             else:
                 async with httpx.AsyncClient(timeout=self._timeout) as client:
@@ -137,8 +149,9 @@ class PlategaPaymentProvider:
                         f"{self._base_url}/transaction/process",
                         content=encoded_body,
                         headers=headers,
+                        follow_redirects=False,
                     )
-        except httpx.ConnectError as exc:
+        except (httpx.ConnectError, httpx.ConnectTimeout, httpx.PoolTimeout) as exc:
             raise ProviderUnavailableError(
                 "Не удалось подключиться к платёжному шлюзу Platega.",
                 status_code=503,
@@ -146,15 +159,12 @@ class PlategaPaymentProvider:
         except (httpx.TimeoutException, httpx.RemoteProtocolError, httpx.ReadError, httpx.WriteError) as exc:
             raise ProviderAmbiguousError("Timeout or network drop while awaiting Platega /transaction/process.") from exc
         except httpx.HTTPError as exc:
-            raise ProviderUnavailableError(
-                "Сетевая ошибка при обращении к платёжному шлюзу.",
-                status_code=502,
-            ) from exc
+            raise ProviderAmbiguousError("Unknown transport outcome while creating Platega payment.") from exc
 
-        if resp.status_code in (500, 502, 504):
+        if resp.status_code >= 500 or resp.status_code in (408, 409, 429) or 300 <= resp.status_code < 400:
             # Gateway timeout / internal error after receiving POST: payment may have been created
             raise ProviderAmbiguousError(f"Platega returned ambiguous HTTP {resp.status_code} on create.")
-        if resp.status_code == 503 or resp.status_code >= 400:
+        if resp.status_code >= 400:
             raise ProviderUnavailableError(
                 "Платёжный шлюз отклонил создание платежа. Попробуйте позже.",
                 status_code=502 if resp.status_code != 503 else 503,
@@ -179,17 +189,16 @@ class PlategaPaymentProvider:
             raise ProviderAmbiguousError("Platega create response missing transactionId or redirect URL.")
 
         parsed_redirect = urlparse(redirect_url)
-        if parsed_redirect.scheme != "https":
-            raise ProviderUnavailableError(
-                "Платёжный провайдер вернул небезопасный адрес оплаты.",
-                status_code=502,
-            )
+        if parsed_redirect.scheme != "https" or not parsed_redirect.hostname or parsed_redirect.username or parsed_redirect.password:
+            # A successful POST may have created a transaction even if its URL is malformed.
+            raise ProviderAmbiguousError("Platega created a payment but returned an unsafe redirect.")
 
         now = utc_now()
-        expires_at = parse_expires_in_to_iso(data.get("expiresIn"), now)
+        try:
+            expires_at = parse_expires_in_to_iso(data.get("expiresIn"), now)
+        except (ValueError, OverflowError):
+            expires_at = None
         status = normalize_provider_status(str(data.get("status") or "PENDING"))
-        if status == ProviderPaymentStatus.UNKNOWN:
-            status = ProviderPaymentStatus.PENDING
 
         return ProviderCreateResult(
             transaction_id=tx_id,
@@ -204,15 +213,17 @@ class PlategaPaymentProvider:
         try:
             if self._external_client is not None:
                 resp = await self._external_client.get(
-                    f"{self._base_url}/transaction/{transaction_id}",
+                    f"{self._base_url}/transaction/{quote(transaction_id, safe='')}",
                     headers=headers,
                     timeout=self._timeout,
+                    follow_redirects=False,
                 )
             else:
                 async with httpx.AsyncClient(timeout=self._timeout) as client:
                     resp = await client.get(
-                        f"{self._base_url}/transaction/{transaction_id}",
+                        f"{self._base_url}/transaction/{quote(transaction_id, safe='')}",
                         headers=headers,
+                        follow_redirects=False,
                     )
         except httpx.HTTPError as exc:
             raise ProviderUnavailableError(
@@ -222,32 +233,43 @@ class PlategaPaymentProvider:
 
         if resp.status_code == 404:
             raise ProviderNotFoundError(f"Transaction {transaction_id} not found at Platega.")
-        if resp.status_code >= 400:
+        if not 200 <= resp.status_code < 300:
             raise ProviderUnavailableError(
                 f"Platega status check failed with HTTP {resp.status_code}.",
                 status_code=502,
             )
 
         try:
-            data = resp.json()
+            data = json.loads(resp.content, parse_float=Decimal)
         except ValueError as exc:
             raise ProviderUnavailableError("Invalid JSON from Platega status endpoint.", status_code=502) from exc
 
         if not isinstance(data, dict):
             raise ProviderUnavailableError("Unexpected response shape from Platega status endpoint.", status_code=502)
 
-        tx_id = str(data.get("id") or data.get("transactionId") or transaction_id).strip()
+        tx_id = str(data.get("id") or data.get("transactionId") or "").strip()
+        if tx_id != transaction_id or (data.get("id") and data.get("transactionId") and data["id"] != data["transactionId"]):
+            raise ProviderUnavailableError("Platega returned a different or missing transaction ID.", status_code=502)
+        merchant = data.get("merchantId", data.get("mechantId"))
+        if merchant is not None and not hmac.compare_digest(str(merchant), self._merchant_id):
+            raise ProviderUnavailableError("Platega transaction merchant mismatch.", status_code=502)
+        method = data.get("paymentMethod")
+        if method is not None and str(method).upper() not in {"2", "SBPQR"}:
+            raise ProviderUnavailableError("Platega transaction payment method mismatch.", status_code=502)
         status = normalize_provider_status(str(data.get("status") or ""))
-        amount_minor, currency = _extract_payment_details(data.get("paymentDetails"), data)
+        try:
+            amount_minor, currency = _extract_payment_details(data.get("paymentDetails"), data)
+        except ValueError as exc:
+            raise ProviderUnavailableError("Invalid monetary details from Platega.", status_code=502) from exc
         payload = str(data["payload"]) if data.get("payload") is not None else None
 
         refund_id = str(data["refundId"]) if data.get("refundId") else None
         refund_status = str(data["refundStatus"]) if data.get("refundStatus") else None
-        refunded_minor = (
-            rub_to_minor_exact(data["refundedAmount"])
-            if data.get("refundedAmount") is not None
-            else None
-        )
+        try:
+            # refundedAmount is cumulative; refundAmount in callbacks is one operation, not a total.
+            refunded_minor = rub_to_minor_exact(data["refundedAmount"]) if data.get("refundedAmount") is not None else None
+        except ValueError as exc:
+            raise ProviderUnavailableError("Invalid refund details from Platega.", status_code=502) from exc
 
         return ProviderTransactionSnapshot(
             transaction_id=tx_id,
@@ -264,6 +286,9 @@ class PlategaPaymentProvider:
         """Optional safe routing if merchant shares callback across projects."""
         if not self._fallback_callback_url:
             return False
+        target = urlparse(self._fallback_callback_url)
+        if target.scheme != "https" or not target.hostname or target.username or target.password:
+            return False
         headers = self._auth_headers()
         try:
             if self._external_client is not None:
@@ -272,6 +297,7 @@ class PlategaPaymentProvider:
                     content=raw_body,
                     headers=headers,
                     timeout=5.0,
+                    follow_redirects=False,
                 )
             else:
                 async with httpx.AsyncClient(timeout=5.0) as client:
@@ -279,6 +305,7 @@ class PlategaPaymentProvider:
                         self._fallback_callback_url,
                         content=raw_body,
                         headers=headers,
+                        follow_redirects=False,
                     )
             return 200 <= resp.status_code < 300
         except httpx.HTTPError:

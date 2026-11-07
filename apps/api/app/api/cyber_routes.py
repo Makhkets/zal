@@ -8,8 +8,6 @@ from app.domain.cyber_models import (
     CryptographicTicketPassResponse,
     ExternalCatalogSearchResponse,
     GroupSeatFinderResponse,
-    ImportExternalSessionRequest,
-    ImportExternalSessionResponse,
     MovieEnrichmentResponse,
     MovieTrailerAsset,
     SeatWaitlistCreateRequest,
@@ -113,17 +111,8 @@ async def get_movie_enrichment_and_reviews(
     )
 
 
-@cyber_router.post(
-    "/catalog/import-session",
-    response_model=ImportExternalSessionResponse,
-    status_code=201,
-    tags=["External Catalog & Real Reviews"],
-)
-async def import_external_movie_into_session(
-    payload: ImportExternalSessionRequest,
-    container: AppContainer = Depends(get_container),
-) -> ImportExternalSessionResponse:
-    return container.cinema_media_service.import_external_movie_session(payload)
+# Catalog writes are intentionally not exposed until administrator authentication exists.
+# The import service can still be used by a trusted maintenance script.
 
 
 @cyber_router.get(

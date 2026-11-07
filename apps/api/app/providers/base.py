@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from decimal import Decimal, DecimalException
 import re
 from typing import Any, Literal, Protocol
 
@@ -16,7 +16,7 @@ class ProviderError(Exception):
 
 
 class ProviderUnavailableError(ProviderError):
-    """Raised when request definitely did NOT create a payment (e.g. ConnectError, missing config, 4xx/503 before creation)."""
+    """Create failed before dispatch / was explicitly rejected, or a read-only GET is unavailable."""
 
     def __init__(self, message: str, *, status_code: int = 503) -> None:
         super().__init__(message)
@@ -71,8 +71,8 @@ class PaymentProvider(Protocol):
 
 
 def minor_to_rub_decimal(amount_minor: int) -> Decimal:
-    if amount_minor < 0:
-        raise ValueError("amount_minor must be non-negative.")
+    if isinstance(amount_minor, bool) or not isinstance(amount_minor, int) or amount_minor < 0:
+        raise ValueError("amount_minor must be a non-negative integer.")
     return (Decimal(amount_minor) / Decimal(100)).quantize(Decimal("0.01"))
 
 
@@ -90,15 +90,14 @@ def rub_to_minor_exact(raw_amount: Any) -> int:
         raise ValueError("Amount is missing or invalid.")
     try:
         dec = Decimal(str(raw_amount).strip())
-    except InvalidOperation as exc:
-        raise ValueError(f"Cannot parse amount {raw_amount!r} as Decimal.") from exc
-    if dec < 0:
-        raise ValueError("Amount cannot be negative.")
-    minor = dec * Decimal(100)
-    rounded = minor.quantize(Decimal("1"), rounding=ROUND_HALF_UP)
-    if abs(minor - rounded) > Decimal("0.0001"):
-        raise ValueError(f"Amount {raw_amount!r} has sub-kopek precision.")
-    return int(rounded)
+        if not dec.is_finite() or dec < 0:
+            raise ValueError("Amount must be finite and non-negative.")
+        minor = dec * Decimal(100)
+        if minor != minor.to_integral_value():
+            raise ValueError("Amount has sub-kopek precision.")
+        return int(minor)
+    except (DecimalException, OverflowError) as exc:
+        raise ValueError("Invalid monetary amount.") from exc
 
 
 _HMS_RE = re.compile(r"^(?:(?P<days>\d+)[.:])?(?P<hours>\d{1,2}):(?P<minutes>\d{2}):(?P<seconds>\d{2})$")

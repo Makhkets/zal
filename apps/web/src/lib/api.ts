@@ -37,6 +37,14 @@ export const api = {
   session: (id: string, signal?: AbortSignal) => request<Session>('/sessions/' + encodeURIComponent(id), { signal }),
   hall: (id: string, signal?: AbortSignal) => request<Hall>('/halls/' + encodeURIComponent(id), { signal }),
   seats: (id: string, signal?: AbortSignal) => request<Availability>('/sessions/' + encodeURIComponent(id) + '/seats', { signal }),
+  watchSeats: (id: string, onChange: () => void) => {
+    const stream = new EventSource(base + '/sessions/' + encodeURIComponent(id) + '/stream');
+    stream.addEventListener('connected', onChange);
+    stream.addEventListener('seat_update', onChange);
+    // Polling remains active if the connection drops or a proxy cannot stream.
+    stream.onerror = () => stream.close();
+    return () => stream.close();
+  },
   createOrder: (body: CreateOrderRequest, key: string) => request<CreateOrderResponse>('/orders', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(body) }),
   order: (id: string, token: string, signal?: AbortSignal) => request<Order>('/orders/' + encodeURIComponent(id), { signal, headers: auth(token) }),
   orderTicket: (id: string, token: string, signal?: AbortSignal) => request<Ticket>('/orders/' + encodeURIComponent(id) + '/ticket', { signal, headers: auth(token) }),

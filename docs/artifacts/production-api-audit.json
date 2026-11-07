@@ -1,0 +1,92 @@
+{
+  "checked_at_utc": "2026-11-07T10:15:11.351215+00:00",
+  "checks": {
+    "effective_production_config": {
+      "pass": true,
+      "app_env": "production",
+      "provider": "platega"
+    },
+    "background_worker_enabled": {
+      "pass": true,
+      "interval_seconds": "15"
+    },
+    "background_worker_lifespan": {
+      "pass": true
+    },
+    "public_payment_return_url": {
+      "pass": true
+    },
+    "health_live": {
+      "pass": true,
+      "status": 200
+    },
+    "catalog_models_and_relations": {
+      "pass": true,
+      "cinemas": 2,
+      "sessions": 32,
+      "halls": 2,
+      "distinct_films": 8
+    },
+    "future_sessions": {
+      "pass": true
+    },
+    "availability_models_geometry_prices": {
+      "pass": true,
+      "checked_sessions": 32,
+      "seat_counts": [
+        282
+      ]
+    },
+    "private_order_no_token_order": {
+      "pass": true,
+      "status": 401,
+      "no_store": true,
+      "no_referrer": true
+    },
+    "private_order_no_token_ticket": {
+      "pass": true,
+      "status": 401,
+      "no_store": true,
+      "no_referrer": true
+    },
+    "private_order_no_token_pricing": {
+      "pass": true,
+      "status": 401,
+      "no_store": true,
+      "no_referrer": true
+    },
+    "unknown_public_ticket_denied": {
+      "pass": true,
+      "status": 404
+    },
+    "mock_route_disabled_GET_/__mock/pay/00000000-0000-4000-8000-000000000000": {
+      "pass": true,
+      "status": 404
+    },
+    "mock_route_disabled_POST_/__mock/orders/00000000-0000-4000-8000-000000000000/confirm": {
+      "pass": true,
+      "status": 405
+    },
+    "mock_route_disabled_POST_/__mock/confirm": {
+      "pass": true,
+      "status": 405
+    },
+    "no_mock_routes_in_openapi": {
+      "pass": true
+    },
+    "callback_wrong_secret": {
+      "pass": true,
+      "status": 401
+    },
+    "sqlite_persistent_schema": {
+      "pass": true,
+      "orders": 0,
+      "tickets": 0,
+      "payment_events": 0
+    },
+    "platega_readonly_authorization": {
+      "pass": true,
+      "status": 200
+    }
+  }
+}

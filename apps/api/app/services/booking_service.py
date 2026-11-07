@@ -1,11 +1,9 @@
 """Booking, order lifecycle, ticket access, and transparent RF pricing/cancellation service."""
 from __future__ import annotations
 
-from datetime import datetime
 import hashlib
 import json
 
-from app.db.connection import utc_now
 from app.domain.enums import OrderStatus, ProviderPaymentStatus
 from app.domain.models import (
     CreateOrderRequest,
@@ -100,6 +98,10 @@ class BookingService:
             # Safe idempotency replay: never issue a duplicate POST to payment provider
             return CreateOrderResponse(order=record.order, access_token=access_token), 200
 
+        if not self._repo.claim_provider_request(record.order.id):
+            current = self._repo.get_order_record(record.order.id) or record
+            return CreateOrderResponse(order=current.order, access_token=access_token), 200
+
         try:
             created = await self._provider.create_payment(
                 order_id=record.order.id,
@@ -117,6 +119,7 @@ class BookingService:
             status_code = 200 if reservation.replayed else 202
             return CreateOrderResponse(order=ambiguous_record.order, access_token=access_token), status_code
         except ProviderUnavailableError as exc:
+            self._repo.reset_definitely_unsent_request(record.order.id)
             raise payment_unavailable_error(str(exc), status_code=exc.status_code) from exc
 
         updated = self._repo.mark_provider_payment_created(
@@ -219,8 +222,6 @@ class BookingService:
         record = self._authenticate_order(order_id, bearer_token)
         session = self._catalog_repo.get_session(record.order.session_id)
         starts_at = session.starts_at if session else record.order.created_at
-        starts_dt = datetime.fromisoformat(starts_at.replace("Z", "+00:00"))
-        before_show = starts_dt > utc_now()
 
         can_cancel_hold = (
             record.order.status in (OrderStatus.CREATING_PAYMENT, OrderStatus.PENDING_PAYMENT)
@@ -228,11 +229,8 @@ class BookingService:
         )
         policy = (
             "Сервисный сбор 0 ₽ — вы платите ровно тариф выбранной зоны зала без скрытых комиссий и страховок. "
-            + (
-                "По ПП РФ № 1338 и ст. 32 ЗоЗПП возврат полной стоимости возможен до начала сеанса."
-                if before_show
-                else "Сеанс уже начался; автоматический возврат по правилам кинопоказа закрыт."
-            )
+            "Автоматический возврат в проекте не предусмотрен. "
+            "Для проверки платежа обратитесь к организатору демонстрации."
         )
         return OrderPriceBreakdownResponse(
             order_id=record.order.id,
