@@ -8,6 +8,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { addLuxurySeating, makeLeatherTexture, seatFamily, upholstery } from '../lib/cinemaInterior';
 import type { Availability, Hall, Seat } from '../lib/types';
 import './cinema-scene.css';
+import { comfortColor } from '../lib/seatExperience';
 
 interface CinemaSceneProps {
   hall: Hall;
@@ -25,6 +26,8 @@ interface CinemaSceneProps {
   videoPoster?: string;
   videoAspect?: number;
   audience?: boolean;
+  lightsOn?: boolean;
+  comfortScores?: ReadonlyMap<string, number>;
   lookAround?: boolean;
   resetViewKey?: number;
 }
@@ -111,14 +114,16 @@ export default function CinemaScene({
   videoPoster,
   videoAspect,
   audience = true,
+  lightsOn = true,
+  comfortScores,
   lookAround = true,
   resetViewKey = 0,
 }: CinemaSceneProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const hoverLabelRef = useRef<HTMLDivElement>(null);
   const syncRef = useRef<(() => void) | null>(null);
-  const propsRef = useRef({ seat, availability, overview, paused, onError, interactive, onSeatSelect, onHoverSeat, view, videoElement, videoPoster, videoAspect, audience, lookAround, resetViewKey });
-  propsRef.current = { seat, availability, overview, paused, onError, interactive, onSeatSelect, onHoverSeat, view, videoElement, videoPoster, videoAspect, audience, lookAround, resetViewKey };
+  const propsRef = useRef({ seat, availability, overview, paused, onError, interactive, onSeatSelect, onHoverSeat, view, videoElement, videoPoster, videoAspect, audience, lightsOn, comfortScores, lookAround, resetViewKey });
+  propsRef.current = { seat, availability, overview, paused, onError, interactive, onSeatSelect, onHoverSeat, view, videoElement, videoPoster, videoAspect, audience, lightsOn, comfortScores, lookAround, resetViewKey };
   const [unavailable, setUnavailable] = useState(false);
 
   useEffect(() => {
@@ -226,6 +231,8 @@ export default function CinemaScene({
     const bronzeMaterial = new THREE.MeshStandardMaterial({ color: '#786049', roughness: 0.38, metalness: 0.75 });
     const glowMaterial = new THREE.MeshBasicMaterial({ color: '#ffd09a', toneMapped: false });
     const ceilingLightMaterial = new THREE.MeshBasicMaterial({ color: '#ffe4bc', toneMapped: false });
+    const houseLights: { light: THREE.Light; intensity: number }[] = [];
+    let lightLevel = propsRef.current.lightsOn ? 1 : 0;
     const room = new THREE.Group();
     const backWall = new THREE.Group();
     const ceiling = new THREE.Group();
@@ -264,6 +271,7 @@ export default function CinemaScene({
         const warm = new THREE.PointLight('#ffbd7e', 22, 9, 2);
         warm.position.set(side * (roomWidth / 2 - 0.7), 1.5, z);
         scene.add(warm);
+        houseLights.push({ light: warm, intensity: warm.intensity });
       }
     }
     cube(backWall, 0, roomHeight / 2, roomDepth + 0.3, roomWidth, roomHeight, 0.24, panelMaterial);
@@ -366,7 +374,9 @@ export default function CinemaScene({
     for (const speaker of hall.speakers) {
       cube(scene, speaker.position.x, speaker.position.y, speaker.position.z, 0.6, 1.2, 0.5, speakersMaterial);
     }
-    scene.add(new THREE.HemisphereLight('#d9dde2', '#282018', 0.48));
+    const ambientLight = new THREE.HemisphereLight('#d9dde2', '#282018', 0.48);
+    scene.add(ambientLight);
+    houseLights.push({ light: ambientLight, intensity: ambientLight.intensity });
     const keyLight = new THREE.DirectionalLight('#ffe2c2', 1.45);
     keyLight.position.set(-roomWidth * 0.22, roomHeight + 5, roomDepth * 0.5);
     keyLight.castShadow = true;
@@ -376,6 +386,7 @@ export default function CinemaScene({
     keyLight.shadow.normalBias = 0.03;
     keyLight.target.position.set(0, 0, roomDepth * 0.5);
     scene.add(keyLight, keyLight.target);
+    houseLights.push({ light: keyLight, intensity: keyLight.intensity });
     RectAreaLightUniformsLib.init();
     const screenLight = new THREE.RectAreaLight('#e4e9ef', 2.3, hall.screen.width, hall.screen.height);
     screenLight.position.set(screenCenter.x, screenCenter.y, screenCenter.z + 0.15);
@@ -386,6 +397,7 @@ export default function CinemaScene({
       cove.position.set(side * (roomWidth / 2 - 0.4), roomHeight * 0.7, roomDepth * 0.52);
       cove.lookAt(0, 0, roomDepth * 0.52);
       scene.add(cove);
+      houseLights.push({ light: cove, intensity: cove.intensity });
     }
     const accentLight = new THREE.PointLight('#ff4b2b', 4.5, 5, 2);
     scene.add(accentLight);
@@ -587,7 +599,8 @@ export default function CinemaScene({
           if (slot === undefined) continue;
           mesh.setMatrixAt(slot, hideOwnSeat ? hiddenMatrix : chairTransform);
           if (mesh.userData.upholstery) {
-            const fabricColor = upholstery[seatFamily(currentSeat)];
+            const score = current.comfortScores?.get(currentSeat.id);
+            const fabricColor = score !== undefined && statuses.get(currentSeat.id) === 'available' ? new THREE.Color(comfortColor(score)) : upholstery[seatFamily(currentSeat)];
             chairColor.copy(isSelected ? ACCENT : hoveredId === currentSeat.id ? HOVER : fabricColor);
             if (!isSelected && hoveredId !== currentSeat.id && statuses.get(currentSeat.id) === 'sold') chairColor.lerp(OCCUPIED, 0.45);
             chairColor.multiplyScalar(mesh.userData.tint || 1);
@@ -645,6 +658,14 @@ export default function CinemaScene({
       }
       const dt = Math.min(0.033, previousTime ? (timestamp - previousTime) / 1000 : 1 / 60);
       previousTime = timestamp;
+      const lightTarget = propsRef.current.lightsOn ? 1 : 0;
+      lightLevel = reduced.matches ? lightTarget : THREE.MathUtils.lerp(lightLevel, lightTarget, 1 - Math.exp(-7 * dt));
+      const lightingSettled = Math.abs(lightLevel - lightTarget) < 0.002;
+      if (lightingSettled) lightLevel = lightTarget;
+      for (const { light, intensity } of houseLights) light.intensity = intensity * (0.025 + lightLevel * 0.975);
+      scene.environmentIntensity = 0.025 + 0.275 * lightLevel;
+      ceilingLightMaterial.color.set('#ffe4bc').multiplyScalar(0.012 + 0.988 * lightLevel);
+      glowMaterial.color.set('#ffd09a').multiplyScalar(0.13 + 0.87 * lightLevel);
       const movingOverview = isOverview && !interactiveMode && !propsRef.current.paused && !reduced.matches;
       if (movingOverview) {
         orbitTime += dt;
@@ -681,6 +702,7 @@ export default function CinemaScene({
       if (import.meta.env.DEV) {
         renderer.domElement.dataset.cameraPosition = camera.position.toArray().map(value => value.toFixed(3)).join(',');
         renderer.domElement.dataset.cameraDirection = camera.getWorldDirection(force).toArray().map(value => value.toFixed(3)).join(',');
+        renderer.domElement.dataset.lightLevel = lightLevel.toFixed(3);
         renderer.domElement.dataset.cameraFov = String(camera.fov);
         renderer.domElement.dataset.cameraMode = isOverview ? propsRef.current.view : 'seated';
         renderer.domElement.dataset.renderCount = String(renderedFrames);
@@ -689,11 +711,11 @@ export default function CinemaScene({
       }
       const playingVideo = video && !video.paused && !video.ended && video.readyState >= 2 && !propsRef.current.paused;
       if (interactiveMode) {
-        if (!controlsChanged && !playingVideo) renderer.setAnimationLoop(null);
+        if (!controlsChanged && !playingVideo && lightingSettled) renderer.setAnimationLoop(null);
         return;
       }
       const settled = camera.position.distanceToSquared(targetPosition) < 0.00001 && velocity.lengthSq() < 0.0001 && currentLookAt.distanceToSquared(targetLookAt) < 0.00001;
-      if (!movingOverview && !playingVideo && (settled || reduced.matches)) renderer.setAnimationLoop(null);
+      if (!movingOverview && !playingVideo && lightingSettled && (settled || reduced.matches)) renderer.setAnimationLoop(null);
     }
 
     function invalidate() {
@@ -888,7 +910,7 @@ export default function CinemaScene({
     };
   }, [hall]);
 
-  useEffect(() => { syncRef.current?.(); }, [seat, availability, overview, paused, interactive, view, videoElement, videoPoster, videoAspect, audience, lookAround, resetViewKey]);
+  useEffect(() => { syncRef.current?.(); }, [seat, availability, overview, paused, interactive, view, videoElement, videoPoster, videoAspect, audience, lightsOn, comfortScores, lookAround, resetViewKey]);
 
   return (
     <div className={'cinema-scene ' + className} data-interactive={interactive || undefined} role={interactive || (!overview && lookAround) ? 'group' : 'img'} aria-label={interactive ? 'Интерактивный 3D-зал: нажмите на кресло для выбора, перетаскивайте для вращения. Для выбора с клавиатуры используйте схему 2D.' : overview || !seat ? 'Объёмная модель кинозала с подсвеченным выбранным креслом' : 'Вид на экран: ряд ' + seat.row + ', ' + (seat.type === 'sofa' ? 'диван ' : 'место ') + seat.number}>
