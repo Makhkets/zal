@@ -200,12 +200,21 @@ class PlategaPaymentProvider:
             expires_at = None
         status = normalize_provider_status(str(data.get("status") or "PENDING"))
 
+        try:
+            quoted_minor, quoted_currency = _extract_payment_details(data.get("paymentDetails"), data)
+        except (ValueError, ProviderUnavailableError) as exc:
+            raise ProviderAmbiguousError("Platega create response missing an exact payment quote.") from exc
+        if quoted_currency != currency or quoted_minor < amount_minor:
+            raise ProviderAmbiguousError("Platega create quote currency or amount does not match the request.")
+
         return ProviderCreateResult(
             transaction_id=tx_id,
             payment_url=redirect_url,
             status=status,
             expires_at=expires_at,
             raw_response=data,
+            amount_minor=quoted_minor,
+            currency=quoted_currency,
         )
 
     async def get_transaction(self, transaction_id: str) -> ProviderTransactionSnapshot:

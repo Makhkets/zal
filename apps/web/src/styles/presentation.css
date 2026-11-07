@@ -134,9 +134,11 @@
 .deck-demo-button svg { width: 1.8cqw; height: 1.8cqw; }
 .deck-demo-button:hover { background: #ff6348; transform: translateY(-1px); }
 .deck-demo-button:active { transform: translateY(1px) scale(.985); }
-.deck-finale-seat { position: absolute; right: 9%; top: 28%; display: flex; flex-direction: column; align-items: center; gap: 2cqw; }
-.deck-finale-seat > svg { width: 16cqw; height: 16cqw; color: var(--deck-accent); stroke-width: 1.5; }
-.deck-finale-seat > span { color: var(--deck-muted); font-size: 1.05cqw; line-height: 1.55; text-align: center; }
+.deck-finale-qr { position: absolute; right: 6.2%; top: 27%; display: flex; flex-direction: column; align-items: center; gap: 1.3cqw; }
+.deck-finale-qr > div { width: 20cqw; height: 20cqw; padding: .5cqw; border-radius: .9cqw; background: #fff; }
+.deck-site-qr { display: block; width: 100%; height: 100%; }
+.deck-finale-qr > span { color: var(--deck-muted); font-size: 1.15cqw; line-height: 1.6; text-align: center; }
+.deck-finale-qr strong { color: var(--deck-paper); font-weight: 600; }
 .deck-finale-footer { position: absolute; bottom: 5%; left: 4.2%; right: 4.2%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3cqw; border-top: 1px solid var(--deck-border); padding-top: 1.5cqw; align-items: center; }
 .deck-finale-footer strong { display: block; font-size: 1.3cqw; font-weight: 600; }
 .deck-finale-footer div > span { display: block; font-size: .95cqw; margin-top: .5cqw; color: var(--deck-muted); }

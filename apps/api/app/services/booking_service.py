@@ -129,7 +129,12 @@ class BookingService:
             provider_status=created.status,
             expires_at=created.expires_at,
             raw_response=created.raw_response,
+            quoted_amount_minor=created.amount_minor,
+            quoted_currency=created.currency,
         )
+        # A callback may arrive before the POST quote is persisted. Verify again now;
+        # neither the creation response nor the browser return can issue a ticket.
+        updated = await self._payment_service.reconcile_order(updated, force=True)
         status_code = 200 if reservation.replayed else 201
         return CreateOrderResponse(order=updated.order, access_token=access_token), status_code
 
@@ -228,18 +233,18 @@ class BookingService:
             and (isinstance(self._provider, SandboxPaymentProvider) or not record.provider_request_sent)
         )
         policy = (
-            "Сервисный сбор 0 ₽ — вы платите ровно тариф выбранной зоны зала без скрытых комиссий и страховок. "
+            "Цена места и комиссия платёжного провайдера показаны отдельно. "
             "Автоматический возврат в проекте не предусмотрен. "
             "Для проверки платежа обратитесь к организатору демонстрации."
         )
         return OrderPriceBreakdownResponse(
             order_id=record.order.id,
-            seat_price_minor=record.order.total_minor,
-            service_fee_minor=0,
+            seat_price_minor=record.requested_amount_minor,
+            service_fee_minor=max(0, record.order.total_minor - record.requested_amount_minor),
             insurance_upsell_minor=0,
             total_minor=record.order.total_minor,
             currency="RUB",
-            zero_hidden_fees=True,
+            zero_hidden_fees=record.order.total_minor == record.requested_amount_minor,
             refund_policy_ru=policy,
             can_cancel_unpaid_hold=can_cancel_hold,
             session_starts_at=starts_at,

@@ -52,7 +52,7 @@ CI выполняет backend-тесты с временными SQLite-база
 | Сборка frontend | `apps/web/dist`, отдаётся приложением или nginx |
 | Callback приложения | `/api/v1/payments/platega/callback` |
 
-В `/etc/zal/zal.env` требуются `APP_ENV=production`, `PAYMENT_PROVIDER=platega`, `DATABASE_PATH=/var/lib/zal/zal.db`, `PUBLIC_APP_URL=https://cinema.makhkets.ru`, `PUBLIC_API_URL=https://cinema.makhkets.ru`, `CORS_ORIGINS=https://cinema.makhkets.ru`, `ENABLE_BACKGROUND_RECONCILER=1`, а также приватные `PLATEGA_MERCHANT_ID`, `PLATEGA_API_KEY` и постоянный `ORDER_TOKEN_SECRET`. Значения секретов здесь намеренно не приводятся. Дополнительная сеть для внешних каталогов продукту не требуется: `ENABLE_EXTERNAL_MEDIA_NETWORK=0`.
+В `/etc/zal/zal.env` требуются `APP_ENV=production`, `PAYMENT_PROVIDER=platega`, `DATABASE_PATH=/var/lib/zal/zal.db`, `PUBLIC_APP_URL=https://cinema.makhkets.ru`, `PUBLIC_API_URL=https://cinema.makhkets.ru`, `CORS_ORIGINS=https://cinema.makhkets.ru`, `ENABLE_BACKGROUND_RECONCILER=1`, а также приватные `PLATEGA_MERCHANT_ID`, `PLATEGA_API_KEY` и постоянный `ORDER_TOKEN_SECRET`. Значения секретов здесь намеренно не приводятся. Для внешнего каталога iTunes включено `ENABLE_EXTERNAL_MEDIA_NETWORK=1`; ключ не требуется. Основная афиша и тестовый трейлер остаются локальными.
 
 Сервис работает от системного пользователя `zal`; конфигурация читается systemd из root-only файла. Полный unit: [deploy/zal.service](../deploy/zal.service). Текущий release выбирается симлинком `/opt/zal/current`:
 
@@ -99,3 +99,9 @@ deploy/release.sh root@31.59.190.14
 Конфигурация nginx — [deploy/nginx.conf](../deploy/nginx.conf). Существующий сервис TLS сохранён: его сертификат теперь содержит IP и `cinema.makhkets.ru`; acme.sh автоматически обновляет оба имени по действующему cron. Сертификат подхватывается горячим обновлением, сторонний сервис не перезапускался. Резервная копия прежнего сертификата хранится только у root в `/root/zal-deploy-backups`.
 
 Callback мерчанта не изменялся. Заказы регулярно сверяются через серверный GET Platega; один worker выполняет сверку каждые 15 секунд, страница заказа также запрашивает актуальный статус.
+
+## Недорогая проверка оплаты
+
+Сеанс `session_payment_test_1r` добавлен отдельно: 1 ₽ до комиссии. Авторизованный POST Platega вернул 1,03 ₽, рабочую ссылку и QR СБП. Исходный заказ на 900 ₽ восстановлен без повторного POST: его точная котировка составляет 927 ₽. Проверка GET сравнивает сумму с сохранённой котировкой; исходная цена и комиссия отображаются отдельно. Билет выдаётся только после CONFIRMED.
+
+Чат сеанса использует SSE и историю последних 50 сообщений в памяти. История чата сбрасывается при перезапуске; SQLite-заказы и билеты сохраняются.

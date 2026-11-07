@@ -24,6 +24,11 @@ export interface Order {
   status: 'creating_payment' | 'pending_payment' | 'paid' | 'canceled' | 'expired' | 'payment_review' | 'refunded';
   total_minor: number; currency: 'RUB'; created_at: string; expires_at: string | null; payment: Payment; ticket_id: string | null;
 }
+export interface OrderPricing {
+  order_id: string; seat_price_minor: number; service_fee_minor: number; insurance_upsell_minor: number;
+  total_minor: number; currency: 'RUB'; zero_hidden_fees: boolean; refund_policy_ru: string;
+  can_cancel_unpaid_hold: boolean; session_starts_at: string;
+}
 export interface CreateOrderRequest { session_id: string; seat_id: string; customer_email: string }
 export type CreateOrder = CreateOrderRequest;
 export interface CreateOrderResponse { order: Order; access_token: string }

@@ -1,4 +1,4 @@
-import type { Availability, Cinema, CreateOrderRequest, CreateOrderResponse, Hall, Health, Order, Session, Ticket } from './types';
+import type { Availability, Cinema, CreateOrderRequest, CreateOrderResponse, Hall, Health, Order, OrderPricing, Session, Ticket } from './types';
 
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string, public retryable = false) {
@@ -47,6 +47,7 @@ export const api = {
   },
   createOrder: (body: CreateOrderRequest, key: string) => request<CreateOrderResponse>('/orders', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(body) }),
   order: (id: string, token: string, signal?: AbortSignal) => request<Order>('/orders/' + encodeURIComponent(id), { signal, headers: auth(token) }),
+  orderPricing: (id: string, token: string, signal?: AbortSignal) => request<OrderPricing>('/orders/' + encodeURIComponent(id) + '/pricing', { signal, headers: auth(token) }),
   orderTicket: (id: string, token: string, signal?: AbortSignal) => request<Ticket>('/orders/' + encodeURIComponent(id) + '/ticket', { signal, headers: auth(token) }),
   ticket: (token: string, signal?: AbortSignal) => request<Ticket>('/tickets/' + encodeURIComponent(token), { signal }),
 };

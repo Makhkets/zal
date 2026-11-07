@@ -22,7 +22,7 @@ from app.providers.base import (
     ProviderUnavailableError,
     rub_to_minor_exact,
 )
-from app.providers.platega import PlategaPaymentProvider
+from app.providers.platega import PlategaPaymentProvider, _extract_payment_details
 from app.repositories.booking_repo import BookingRepository, StoredOrderRecord
 from app.security import verify_platega_headers
 from app.services.realtime_service import RealtimeSeatBroker
@@ -133,6 +133,19 @@ class PaymentService:
             self._verification_locks[order_id] = lock
         return lock
 
+    def _restore_creation_quote(self, record: StoredOrderRecord) -> StoredOrderRecord:
+        raw = record.provider_response
+        tx = record.order.payment.transaction_id
+        if record.order.payment.provider != "platega" or not isinstance(raw, dict) or not tx:
+            return record
+        if str(raw.get("transactionId") or raw.get("id") or "") != tx:
+            return record
+        try:
+            amount, currency = _extract_payment_details(raw.get("paymentDetails"), raw)
+        except (ValueError, ProviderUnavailableError):
+            return record
+        return self._repo.restore_provider_quote(record.order.id, tx, amount, currency)
+
     async def handle_platega_callback(
         self,
         *,
@@ -209,6 +222,7 @@ class PaymentService:
             self._repo.update_payment_event_status(event_id, "ignored_unknown_order")
             return
 
+        record = self._restore_creation_quote(record)
         order = record.order
         if order.payment.provider != self._provider.name or (not order.payment.transaction_id and not record.provider_request_sent):
             self._repo.update_payment_event_status(event_id, "verification_failed", error_note="Unclaimed or foreign payment attempt")
@@ -222,7 +236,7 @@ class PaymentService:
             return
 
         if (
-            callback_amount_minor is not None and callback_amount_minor != order.total_minor
+            callback_amount_minor is not None and callback_amount_minor not in (order.total_minor, record.requested_amount_minor)
         ) or (
             callback_currency is not None and callback_currency.upper() != order.currency
         ):
@@ -252,6 +266,10 @@ class PaymentService:
             self._repo.update_payment_event_status(
                 event_id, "verification_failed", error_note="Provider GET payload mismatch"
             )
+            return
+
+        if snapshot.status == ProviderPaymentStatus.CONFIRMED and order.status == OrderStatus.CREATING_PAYMENT and not record.provider_response:
+            self._repo.update_payment_event_status(event_id, "retry_pending", error_note="Awaiting authenticated creation quote")
             return
 
         # A signed callback is a notification, not a substitute for the authoritative GET.
@@ -299,6 +317,7 @@ class PaymentService:
         min_interval_seconds: float = 2.5,
     ) -> StoredOrderRecord:
         """Reconciles an order with the payment provider via authoritative GET /transaction/{id}."""
+        record = self._restore_creation_quote(record)
         order = record.order
         now = utc_now()
         if order.payment.provider != self._provider.name:

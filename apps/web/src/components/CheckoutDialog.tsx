@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Check, ChevronLeft, LoaderCircle, LockKeyhole, Mail, X } from 'lucide-react';
 import { api, ApiError } from '../lib/api';
 import type { Cinema, Seat, Session } from '../lib/types';
@@ -19,6 +19,10 @@ function readIntent(): PendingIntent | null {
       typeof data.body.customer_email !== 'string') return null;
     return data;
   } catch { return null; }
+}
+
+function hasOrderAccess(id: string | undefined) {
+  try { return Boolean(id && sessionStorage.getItem('zal:order:' + id)); } catch { return false; }
 }
 
 export interface CheckoutDialogProps {
@@ -48,6 +52,7 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
   const differentIntent = lockedIntent && Boolean(previousIntent && (
     previousIntent.body.session_id !== session.id || previousIntent.body.seat_id !== seat.id
   ));
+  const canChooseCurrentSeat = differentIntent && hasOrderAccess(previousIntent?.orderId);
   const emailValid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim()) && email.trim().length <= 254;
 
   useEffect(() => {
@@ -73,6 +78,18 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
   }, []);
 
   useEffect(() => { if (error) errorRef.current?.focus(); }, [error]);
+
+  function chooseCurrentSeat() {
+    // Only a known, recoverable OTHER order may be detached. Unknown requests retain their idempotency key.
+    if (pending || sendingRef.current || !differentIntent || !hasOrderAccess(intentRef.current?.orderId)) return;
+    try { sessionStorage.removeItem(PENDING_KEY); }
+    catch { setError('Не получилось обновить сохранённый запрос. Попробуйте ещё раз.'); return; }
+    intentRef.current = null;
+    setLockedIntent(false);
+    setEmailTouched(false);
+    setError('');
+    requestAnimationFrame(() => emailRef.current?.focus());
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -197,14 +214,22 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
           <div className="checkout-summary__seats">
             <div><span>Ряд</span><strong>{seat.row.toString().padStart(2, '0')}</strong></div>
             <div><span>{seat.type === 'sofa' ? 'Диван' : 'Место'}</span><strong>{seat.number.toString().padStart(2, '0')}</strong></div>
-            <div className="checkout-summary__total"><span>Итого</span><strong>{money(priceMinor)}</strong></div>
+            <div className="checkout-summary__total"><span>Стоимость места</span><strong>{money(priceMinor)}</strong></div>
           </div>
         </div>
+        <p className="checkout-fee-note">Итог с комиссией платёжной системы покажем перед оплатой.</p>
 
         <form className="checkout-form" onSubmit={submit} noValidate>
           {differentIntent && (
             <div className="checkout-notice">
-              Вы уже оформляли другое место. Сначала восстановим прежний запрос, чтобы не создать две покупки.
+              {canChooseCurrentSeat ? <>
+                <strong>У вас есть другой заказ</strong>
+                <p>Он сохранён в «Моих билетах». Можно вернуться к нему или оформить выбранное место.</p>
+                <div className="checkout-intent-actions">
+                  <Link to={'/orders/' + encodeURIComponent(previousIntent!.orderId!)}>Открыть предыдущий заказ</Link>
+                  <button type="button" onClick={chooseCurrentSeat} disabled={pending}>Оформить это место<ArrowRight size={16} aria-hidden="true" /></button>
+                </div>
+              </> : 'Ответ по предыдущему запросу ещё не получен. Сначала проверим эту покупку, чтобы не создать повторный платёж.'}
             </div>
           )}
           {error && <div ref={errorRef} className="checkout-error" role="alert" tabIndex={-1}>{error}</div>}
@@ -240,10 +265,10 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
             <div><strong>Система быстрых платежей</strong><span>Оплата в приложении вашего банка</span></div>
             <span className="checkout-method-check"><Check size={14} aria-hidden="true" /></span>
           </div>
-          <button type="submit" className="button button--primary checkout-pay" disabled={pending}>
+          {!canChooseCurrentSeat && <button type="submit" className="button button--primary checkout-pay" disabled={pending}>
             {pending ? <><LoaderCircle className="checkout-spin" size={20} aria-hidden="true" /> Сохраняем ваше место</>
-              : <>{lockedIntent ? 'Проверить запрос' : 'Перейти к оплате'} <ArrowRight size={19} aria-hidden="true" /></>}
-          </button>
+              : <>{lockedIntent ? hasOrderAccess(previousIntent?.orderId) ? 'Открыть заказ' : 'Проверить запрос' : 'Перейти к оплате'} <ArrowRight size={19} aria-hidden="true" /></>}
+          </button>}
           <p className="checkout-secure"><LockKeyhole size={13} aria-hidden="true" /> Билет появится после подтверждения оплаты</p>
           <button type="button" className="checkout-back" onClick={onClose}><ChevronLeft size={16} aria-hidden="true" /> Вернуться к выбору места</button>
         </form>

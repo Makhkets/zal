@@ -35,6 +35,8 @@ class StoredOrderRecord:
     customer_email: str
     last_reconciled_at: str | None
     provider_request_sent: bool
+    requested_amount_minor: int
+    provider_response: dict[str, Any] | None
 
 
 @dataclass(slots=True)
@@ -258,6 +260,32 @@ class BookingRepository:
                 (utc_now_iso(), order_id, order_id),
             )
 
+    def _apply_provider_quote_in_tx(self, conn: sqlite3.Connection, record: StoredOrderRecord, transaction_id: str, amount_minor: int, currency: str | None) -> bool:
+        """Persist the authenticated creation quote, keeping the original seat tariff in the attempt."""
+        order = record.order
+        if (
+            order.status not in (OrderStatus.CREATING_PAYMENT, OrderStatus.PENDING_PAYMENT, OrderStatus.PAYMENT_REVIEW)
+            or order.ticket_id is not None
+            or order.payment.status in (ProviderPaymentStatus.DISPUTED, ProviderPaymentStatus.PARTIALLY_REFUNDED, ProviderPaymentStatus.CHARGEBACKED)
+            or (order.payment.transaction_id and order.payment.transaction_id != transaction_id)
+            or not record.provider_request_sent
+            or isinstance(amount_minor, bool) or not isinstance(amount_minor, int)
+            or amount_minor < record.requested_amount_minor or currency != order.currency
+        ):
+            return False
+        if order.total_minor != amount_minor:
+            conn.execute("UPDATE orders SET total_minor = ?, updated_at = ? WHERE id = ?;", (amount_minor, utc_now_iso(), order.id))
+        return True
+
+    def restore_provider_quote(self, order_id: str, transaction_id: str, amount_minor: int, currency: str) -> StoredOrderRecord:
+        with self._db.immediate_transaction() as conn:
+            record = self._fetch_order_record_in_tx(conn, order_id)
+            if record is None:
+                raise not_found_error("Заказ не найден.")
+            if record.order.payment.transaction_id == transaction_id:
+                self._apply_provider_quote_in_tx(conn, record, transaction_id, amount_minor, currency)
+            return self._fetch_order_record_in_tx(conn, order_id) or record
+
     def mark_provider_payment_created(
         self,
         *,
@@ -267,6 +295,8 @@ class BookingRepository:
         provider_status: ProviderPaymentStatus,
         expires_at: str | None,
         raw_response: dict[str, Any] | None = None,
+        quoted_amount_minor: int | None = None,
+        quoted_currency: str | None = None,
     ) -> StoredOrderRecord:
         now_iso = utc_now_iso()
         raw_json = json.dumps(raw_response, ensure_ascii=False) if raw_response is not None else None
@@ -280,6 +310,9 @@ class BookingRepository:
                 if current.order.status not in (OrderStatus.PAID, OrderStatus.REFUNDED):
                     conn.execute("UPDATE orders SET status = 'payment_review', updated_at = ? WHERE id = ?;", (now_iso, order_id))
                 return self._fetch_order_record_in_tx(conn, order_id) or current
+
+            if quoted_amount_minor is not None:
+                self._apply_provider_quote_in_tx(conn, current, transaction_id, quoted_amount_minor, quoted_currency)
 
             # A verified callback may bind any status before the POST response arrives.
             # A late creation response is metadata only, never a newer payment state.
@@ -881,8 +914,8 @@ class BookingRepository:
                     )
                 else:
                     conn.execute(
-                        "UPDATE orders SET last_reconciled_at = ? WHERE id = ?;",
-                        (now_iso, order_id),
+                        "UPDATE orders SET last_reconciled_at = ?, status = CASE WHEN ? THEN 'pending_payment' ELSE status END WHERE id = ?;",
+                        (now_iso, effective_status == ProviderPaymentStatus.PENDING and existing_ticket_row is None and order.status in (OrderStatus.CREATING_PAYMENT, OrderStatus.PENDING_PAYMENT, OrderStatus.PAYMENT_REVIEW), order_id),
                     )
                 conn.execute(
                     "UPDATE payment_attempts SET status = ?, updated_at = ? WHERE order_id = ?;",
@@ -991,6 +1024,8 @@ class BookingRepository:
                 pa.payment_url AS payment_url,
                 pa.provider_transaction_id AS transaction_id,
                 pa.request_sent AS request_sent,
+                pa.amount_minor AS requested_amount_minor,
+                pa.raw_response_json AS provider_response,
                 t.id AS ticket_id
             FROM orders o
             LEFT JOIN payment_attempts pa ON pa.order_id = o.id
@@ -1026,6 +1061,8 @@ class BookingRepository:
             customer_email=str(row["customer_email"]),
             last_reconciled_at=row["last_reconciled_at"],
             provider_request_sent=bool(row["request_sent"]),
+            requested_amount_minor=int(row["requested_amount_minor"]),
+            provider_response=json.loads(row["provider_response"]) if row["provider_response"] else None,
         )
 
     def _row_to_ticket(self, row: sqlite3.Row) -> Ticket:

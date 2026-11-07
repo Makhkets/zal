@@ -35,6 +35,12 @@
 .checkout-summary__seats strong { font-size: 24px; font-weight: 500; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
 .checkout-summary__seats .checkout-summary__total { margin-left: auto; text-align: right; }
 .checkout-form { display: grid; gap: 19px; }
+.checkout-fee-note { margin: -12px 0 24px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.checkout-notice > strong { display: block; color: var(--text); font-size: 15px; }
+.checkout-notice > p { margin: 6px 0 12px; font-size: 13px; line-height: 1.6; }
+.checkout-intent-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.checkout-intent-actions a { display: inline-flex; align-items: center; min-height: 44px; color: var(--text); font-size: 13px; text-underline-offset: 4px; }
+.checkout-intent-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 46px; padding: 10px 15px; border: 0; border-radius: 8px; background: var(--accent); color: #180e0a; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
 .checkout-field label { display: block; font-size: 13px; margin-bottom: 9px; }
 .checkout-input-wrap { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 14px; border: 1px solid #45453c; border-radius: 10px; color: #85857a; background: var(--bg, #10100e); transition: border-color 150ms, box-shadow 150ms; }
 .checkout-input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px #ff4b2b13; }
@@ -88,6 +94,7 @@
 .order-payment-panel h2 { font-size: 25px; font-weight: 600; letter-spacing: -.04em; margin: 0 0 12px; }
 .order-payment-panel > p { color: var(--muted); font-size: 13px; line-height: 1.8; max-width: 335px; margin: 0 0 26px; }
 .order-payment-link { min-width: min(100%, 285px); justify-content: center; }
+.order-payment-panel > .order-payment-quote { margin: -8px 0 14px; font-size: 13px; line-height: 1.6; color: var(--text); }
 .order-refresh { display: inline-flex; justify-content: center; align-items: center; gap: 8px; font: inherit; font-size: 11px; min-height: 44px; color: #cbc9bd; border: 0; background: transparent; cursor: pointer; margin-top: 12px; }
 .order-refresh:hover { color: var(--text); }
 .order-refresh:disabled { color: var(--muted); cursor: wait; }
@@ -104,6 +111,11 @@
 .order-total { display: flex; align-items: baseline; justify-content: space-between; gap: 15px; padding: 24px 0; border-top: 1px dashed var(--line); border-bottom: 1px dashed var(--line); }
 .order-total > span { font-size: 12px; color: var(--muted); }
 .order-total strong { font-size: 30px; font-weight: 500; letter-spacing: -.06em; }
+.order-price-breakdown { display: grid; gap: 13px; margin: 0; padding: 0 0 22px; }
+.order-price-breakdown > div { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; }
+.order-price-breakdown dt { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.order-price-breakdown dd { margin: 0; flex: none; color: var(--text); font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.order-quote-note { margin: 13px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .order-countdown { display: flex; align-items: center; gap: 7px; padding-top: 22px; color: var(--muted); font-size: 10px; }
 .order-countdown strong { margin-left: auto; color: var(--text); font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .order-reassurance { display: flex; gap: 10px; color: var(--muted); margin-top: 22px; }

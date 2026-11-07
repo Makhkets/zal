@@ -42,6 +42,7 @@ class FakeProvider:
         self.get_error = None
         self.gate = None
         self.entered = asyncio.Event()
+        self.quoted_minor = None
 
     async def create_payment(self, **order):
         self.create_calls += 1
@@ -49,10 +50,12 @@ class FakeProvider:
         if self.error:
             raise self.error
         tx = str(uuid.uuid4())
-        self.snapshots[tx] = ProviderTransactionSnapshot(tx, Status.PENDING, order["amount_minor"], order["currency"], order["order_id"])
+        amount = self.quoted_minor if self.quoted_minor is not None else order["amount_minor"]
+        self.snapshots[tx] = ProviderTransactionSnapshot(tx, Status.PENDING, amount, order["currency"], order["order_id"])
         if self.gate:
             await self.gate.wait()
-        return ProviderCreateResult(tx, "https://pay.example.test/one", Status.PENDING, None, {})
+        raw = {"transactionId": tx, "paymentDetails": {"amount": str(Decimal(amount) / 100), "currency": order["currency"]}}
+        return ProviderCreateResult(tx, "https://pay.example.test/one", Status.PENDING, None, raw, amount, order["currency"])
 
     async def get_transaction(self, tx):
         self.get_calls += 1
@@ -170,6 +173,7 @@ class PaymentFlowTests(unittest.IsolatedAsyncioTestCase):
         self.provider.snapshots[tx] = replace(snapshot, status=Status.CONFIRMED)
         record = self.repo.get_order_record(snapshot.payload)
         await self.callback(self.callback_body(record, id=tx))
+        self.assert_state(record.order.id, OrderStatus.CREATING_PAYMENT, "held")
         self.provider.gate.set()
         response, _ = await create
         self.assertEqual(response.order.status, OrderStatus.PAID)
@@ -305,6 +309,75 @@ class PaymentFlowTests(unittest.IsolatedAsyncioTestCase):
         self.repo.mark_provider_payment_created(order_id=record.order.id, transaction_id="other", payment_url="https://pay.example.test/other", provider_status=Status.PENDING, expires_at=None)
         self.assertEqual(self.repo.get_order_record(record.order.id).order.payment.transaction_id, original)
 
+    async def test_exact_provider_quote_fee_is_shown_and_ticket_uses_gross_amount(self):
+        with self.db.immediate_transaction() as conn:
+            conn.execute("UPDATE session_seats SET price_minor=90000 WHERE session_id=? AND seat_id=?", (self.payload.session_id, self.payload.seat_id))
+        self.provider.quoted_minor = 92700
+        response, _ = await self.booking.create_order(idempotency_key=self.key, payload=self.payload)
+        record = self.repo.get_order_record(response.order.id)
+        self.assertEqual(record.order.total_minor, 92700)
+        self.assert_state(record.order.id, OrderStatus.PENDING_PAYMENT, "held")
+        pricing = self.booking.get_price_breakdown(record.order.id, response.access_token)
+        self.assertEqual((pricing.seat_price_minor, pricing.service_fee_minor, pricing.total_minor), (90000, 2700, 92700))
+        self.assertFalse(pricing.zero_hidden_fees)
+        paid = await self.confirm(record)
+        self.assert_state(paid.order.id, OrderStatus.PAID, "sold", TicketStatus.VALID)
+        self.assertEqual(self.repo.get_ticket_by_order_id(paid.order.id).paid_minor, 92700)
+
+    async def test_one_ruble_quote_is_103_kopeks_and_mismatch_still_fails(self):
+        with self.db.immediate_transaction() as conn:
+            conn.execute("UPDATE session_seats SET price_minor=100 WHERE session_id=? AND seat_id=?", (self.payload.session_id, self.payload.seat_id))
+        self.provider.quoted_minor = 103
+        record = await self.create()
+        self.assertEqual(record.order.total_minor, 103)
+        tx = record.order.payment.transaction_id
+        snapshot = self.provider.snapshots[tx]
+        self.provider.snapshots[tx] = replace(snapshot, status=Status.CONFIRMED, amount_minor=104)
+        await self.payments.reconcile_order(record, force=True)
+        self.assert_state(record.order.id, OrderStatus.PAYMENT_REVIEW, "held")
+        self.provider.snapshots[tx] = replace(snapshot, status=Status.CONFIRMED)
+        await self.payments.reconcile_order(record, force=True)
+        self.assert_state(record.order.id, OrderStatus.PAID, "sold", TicketStatus.VALID)
+
+    async def test_legacy_unpaid_order_recovers_quote_from_saved_post_without_repost(self):
+        self.provider.quoted_minor = 92700
+        record = await self.create()
+        with self.db.immediate_transaction() as conn:
+            conn.execute("UPDATE orders SET total_minor=?,status='payment_review' WHERE id=?", (record.requested_amount_minor, record.order.id))
+        recovered = await self.payments.reconcile_order(self.repo.get_order_record(record.order.id), force=True)
+        self.assertEqual(recovered.order.total_minor, 92700)
+        self.assert_state(record.order.id, OrderStatus.PENDING_PAYMENT, "held")
+        self.assertEqual(self.provider.create_calls, 1)
+
+    async def test_gross_callback_before_post_quote_waits_then_reverifies(self):
+        with self.db.immediate_transaction() as conn:
+            conn.execute("UPDATE session_seats SET price_minor=90000 WHERE session_id=? AND seat_id=?", (self.payload.session_id, self.payload.seat_id))
+        self.provider.quoted_minor = 92700
+        self.provider.gate = asyncio.Event()
+        create = asyncio.create_task(self.booking.create_order(idempotency_key=self.key, payload=self.payload))
+        await self.provider.entered.wait()
+        tx, snapshot = next(iter(self.provider.snapshots.items()))
+        self.provider.snapshots[tx] = replace(snapshot, status=Status.CONFIRMED)
+        record = self.repo.get_order_record(snapshot.payload)
+        await self.callback(self.callback_body(record, id=tx, amount="927.00"))
+        self.assert_state(record.order.id, OrderStatus.PAYMENT_REVIEW, "held")
+        self.provider.gate.set()
+        response, _ = await create
+        self.assertEqual(response.order.total_minor, 92700)
+        self.assert_state(record.order.id, OrderStatus.PAID, "sold", TicketStatus.VALID)
+
+    async def test_quote_restore_never_changes_paid_or_disputed_orders(self):
+        record = await self.confirm(await self.create())
+        total = record.order.total_minor
+        tx = record.order.payment.transaction_id
+        self.repo.restore_provider_quote(record.order.id, tx, total + 1, "RUB")
+        self.assertEqual(self.repo.get_order_record(record.order.id).order.total_minor, total)
+        self.provider.snapshots[tx] = replace(self.provider.snapshots[tx], status=Status.DISPUTED)
+        await self.payments.reconcile_order(record, force=True)
+        self.repo.restore_provider_quote(record.order.id, tx, total + 1, "RUB")
+        self.assertEqual(self.repo.get_order_record(record.order.id).order.total_minor, total)
+        self.assert_state(record.order.id, OrderStatus.PAYMENT_REVIEW, "sold", TicketStatus.SUSPENDED)
+
 
 class AdapterTests(unittest.IsolatedAsyncioTestCase):
     def adapter(self, handler):
@@ -319,7 +392,7 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
         captured = []
         def handler(request):
             captured.append(request)
-            return httpx.Response(200, json={"transactionId": "tx-test", "redirect": "https://pay.example.test/one", "status": "PENDING", "expiresIn": "00:15:00"})
+            return httpx.Response(200, json={"transactionId": "tx-test", "redirect": "https://pay.example.test/one", "status": "PENDING", "expiresIn": "00:15:00", "paymentDetails": "550.01 RUB"})
         result = await self.create(self.adapter(handler))
         body = json.loads(captured[0].content, parse_float=Decimal)
         self.assertEqual(body["paymentMethod"], 2)
@@ -333,6 +406,12 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
         for status in (500, 501, 502, 503, 504, 599):
             with self.subTest(status=status), self.assertRaises(ProviderAmbiguousError):
                 await self.create(self.adapter(lambda request: httpx.Response(status)))
+
+    async def test_success_quote_must_be_exact_same_currency_and_not_underpriced(self):
+        for details in ({"amount": 550, "currency": "RUB"}, {"amount": 550.01, "currency": "USD"}, "550.001 RUB", None):
+            body = {"transactionId": "tx-test", "redirect": "https://pay.example.test/one", "status": "PENDING", "paymentDetails": details}
+            with self.subTest(details=details), self.assertRaises(ProviderAmbiguousError):
+                await self.create(self.adapter(lambda request: httpx.Response(200, json=body)))
 
     async def test_malformed_success_and_unsafe_redirect_do_not_allow_retry(self):
         for body in ({}, {"transactionId": "tx", "redirect": "http://pay.example.test"}, {"transactionId": "tx", "redirect": "https://user:password@pay.example.test"}):

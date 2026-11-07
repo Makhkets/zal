@@ -10,8 +10,11 @@ import { DEMO_TRAILER, getMovieMedia } from '../lib/catalogMedia';
 import '../styles/session-v2.css';
 import SeatMap from '../components/SeatMap';
 import SeatFinder from '../components/SeatFinder';
+import RoomChat from '../components/RoomChat';
 import PreviewDialog from '../components/PreviewDialog';
 import CheckoutDialog from '../components/CheckoutDialog';
+import FullscreenButton from '../components/FullscreenButton';
+import { useFullscreen } from '../hooks/useFullscreen';
 import { ErrorState, Loading } from '../components/Feedback';
 
 const CinemaScene = lazy(() => import('../components/CinemaScene'));
@@ -39,6 +42,8 @@ export default function SessionPage() {
   const [sceneError, setSceneError] = useState(false);
   const [audience, setAudience] = useState(true);
   const [hoveredSeat, setHoveredSeat] = useState<Seat | null>(null);
+  const hallFullscreenRef = useRef<HTMLDivElement>(null);
+  const hallFullscreen = useFullscreen(hallFullscreenRef);
   const availabilityRequest = useRef(0);
   const reduce = useReducedMotion();
   useEffect(() => {
@@ -111,8 +116,8 @@ export default function SessionPage() {
     {expired && <div className="inline-notice" role="alert">Этот сеанс уже начался. <Link to="/#sessions">Выберите другое время.</Link></div>}
     {refreshError && <div className="inline-notice" role="status">Не удалось обновить места. Доступность проверится ещё раз при покупке.</div>}
     <div className="booking-layout">
-      <div className="hall-panel">
-        <div className="hall-panel-head"><div><h2>{hall.name}</h2><span className="hall-name">{hall.seats.length} мест · 3 ценовые зоны</span></div><div className="hall-mode-toggle" role="group" aria-label="Отображение зала"><button aria-pressed={hallMode === '3d'} onClick={() => setHallMode('3d')}><Box size={16}/>3D-зал</button><button aria-pressed={hallMode === '2d'} onClick={() => setHallMode('2d')}><Grid2X2 size={16}/>Схема</button></div></div>
+      <div ref={hallFullscreenRef} className={'hall-panel' + (hallFullscreen.active ? ' is-fullscreen' : '')} data-fullscreen-mode={hallFullscreen.mode} role={hallFullscreen.active ? 'dialog' : undefined} aria-modal={hallFullscreen.active || undefined} aria-label={hallFullscreen.active ? 'Зал на весь экран' : undefined}>
+        <div className="hall-panel-head"><div><h2>{hall.name}</h2><span className="hall-name">{hall.seats.length} мест · 3 ценовые зоны</span></div><div className="hall-panel-actions"><div className="hall-mode-toggle" role="group" aria-label="Отображение зала"><button aria-pressed={hallMode === '3d'} onClick={() => setHallMode('3d')}><Box size={16}/>3D-зал</button><button aria-pressed={hallMode === '2d'} onClick={() => setHallMode('2d')}><Grid2X2 size={16}/>Схема</button></div><FullscreenButton active={hallFullscreen.active} busy={hallFullscreen.busy} onToggle={hallFullscreen.toggle} label="Развернуть зал на весь экран" /></div></div>
         {hallMode === '3d' ? <div className="interactive-hall">
           <div className="hall-interaction-hint"><MousePointer2 size={13}/><span>Перетаскивайте для обзора · выберите кресло</span></div>
           <Suspense fallback={<Loading label="Включаем свет в зале…"/>}><CinemaScene key={cameraRevision} hall={hall} seat={selected} availability={availability} overview interactive videoPoster="/media/screen-still.jpg" onSeatSelect={select} onHoverSeat={setHoveredSeat} audience={audience} view={cameraView} paused={previewIds.length > 0 || checkout} onError={() => { setSceneError(true); setHallMode('2d'); }}/></Suspense>
@@ -121,6 +126,7 @@ export default function SessionPage() {
           <div className="hall-camera-bar" role="group" aria-label="Ракурс камеры">{([{ value: 'overview', label: 'Весь зал' }, { value: 'front', label: 'От экрана' }, { value: 'back', label: 'Сзади' }, { value: 'top', label: 'Сверху' }, { value: 'sofas', label: 'Диваны' }] as const).map(view => <button key={view.value} aria-pressed={cameraView === view.value} onClick={() => setCameraView(view.value)}>{view.label}</button>)}<button className="camera-reset" aria-label="Сбросить камеру" onClick={() => { setCameraView('overview'); setCameraRevision(v => v + 1); }}><RotateCcw size={16}/></button></div>
         </div> : <><SeatMap hall={hall} availability={availability} selectedId={selectedId} compareIds={compareIds} onSelect={select}/>{sceneError && <p className="map-hint" role="status">3D недоступен в этом браузере. Все места можно выбрать на схеме.</p>}</>}
         <div className="price-tiers">{tiers.map(t => <div key={t.zone}><span className={'tier-symbol tier-' + t.zone}/><div><strong>{money(t.price)}</strong><span>{t.zone === 'front' ? 'Первые ряды' : t.zone === 'middle' ? 'Середина зала' : 'Диваны'}</span></div></div>)}</div>
+        {hallFullscreen.active && <div className="fullscreen-seat-bar">{selected && selectedState ? <><div><strong>Ряд {selected.row} · {selected.type === 'sofa' ? 'диван' : 'место'} {selected.number}</strong><span>{money(selectedState.price_minor)}{selectedState.status !== 'available' ? ' · Занято' : ''}</span></div><button className="button button--primary" onClick={async () => { await hallFullscreen.exit(); setPreviewIds([selected.id]); }}><Eye size={17} aria-hidden="true"/>Вид и звук с места</button></> : <p>Выберите кресло, чтобы посмотреть на экран со своего места.</p>}</div>}
       </div>
       <aside className="booking-sidebar" aria-label="Выбранное место">
         <AnimatePresence mode="wait" initial={false}>{selected && selectedState ? <motion.div className="selection-card" key="selected-seat" initial={reduce ? false : { opacity: .3, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: .3 }} transition={{ duration: .12 }}>
@@ -145,6 +151,7 @@ export default function SessionPage() {
       const seat = hall.seats.find(s => s.id === compareIds[index]);
       return <div className={'compare-slot' + (!seat ? ' is-empty' : '')} key={index}><b>{index ? 'B' : 'A'}</b>{seat ? <><span>Ряд {seat.row} · место {seat.number}</span><button aria-label={'Убрать место ' + (index ? 'B' : 'A')} onClick={() => setCompareIds(ids => ids.filter(id => id !== seat.id))}><X size={14}/></button></> : <span>Выберите ещё одно</span>}</div>;
     })}</div><button className="button button--primary" disabled={compareIds.length !== 2} onClick={() => setPreviewIds(compareIds)}>Сравнить ракурсы<ArrowRight size={16}/></button></div>}
+    <RoomChat sessionId={session.id}/>
     {previewIds.length > 0 && <PreviewDialog trailer={DEMO_TRAILER} hall={hall} availability={availability} seats={previewIds.flatMap(id => { const seat = hall.seats.find(s => s.id === id); return seat ? [seat] : []; })} onClose={() => setPreviewIds([])} onSelect={select} onBuy={expired ? undefined : seat => { select(seat); setCheckout(true); }}/>}
     {checkout && selected && selectedState && <CheckoutDialog session={session} seat={selected} priceMinor={selectedState.price_minor} cinema={cinema} onClose={() => setCheckout(false)} onConflict={conflict}/>}
     {selected && selectedState && <div className="mobile-seat-bar"><button className="mobile-seat-detail" onClick={() => setPreviewIds([selected.id])}><Eye size={18}/><span><strong>Ряд {selected.row} · {selected.type === 'sofa' ? 'диван' : 'место'} {selected.number}</strong><small>Посмотреть с места</small></span></button><button className="button button--primary" disabled={selectedState.status !== 'available' || expired} onClick={() => setCheckout(true)}>{selectedState.status === 'available' ? money(selectedState.price_minor) : 'Занято'}<ArrowRight size={17}/><span className="sr-only"> — Купить билет</span></button></div>}

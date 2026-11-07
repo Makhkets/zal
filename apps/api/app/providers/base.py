@@ -38,6 +38,8 @@ class ProviderCreateResult:
     status: ProviderPaymentStatus
     expires_at: str | None
     raw_response: dict[str, Any]
+    amount_minor: int | None = None
+    currency: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

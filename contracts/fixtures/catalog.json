@@ -73,6 +73,22 @@
   ],
   "sessions": [
     {
+      "id": "session_payment_test_1r",
+      "cinema_id": "cinema_aurora",
+      "hall_id": "hall_1",
+      "movie": {
+        "id": "movie_orbit",
+        "title": "Интерстеллар",
+        "duration_minutes": 169,
+        "age_rating": "PG-13",
+        "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
+      },
+      "starts_at": "2026-11-08T06:00:00Z",
+      "format": "Тестовый билет",
+      "currency": "RUB",
+      "price_from_minor": 100
+    },
+    {
       "id": "session_aurora_1",
       "cinema_id": "cinema_aurora",
       "hall_id": "hall_1",

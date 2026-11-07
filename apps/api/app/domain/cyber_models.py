@@ -62,6 +62,7 @@ class SeatWebAudioDSPProfile(StrictCyberModel):
     reverb_wet_mix: float
     acoustic_sweet_spot: bool
     recommended_trailer_stream_url: str
+    recommended_trailer_title: str = "Тестовый ролик · Sintel"
     recommended_cue_sec: float
 
 
@@ -101,13 +102,22 @@ class ExternalMovieCatalogItem(StrictCyberModel):
     cast_summary: str | None = None
     poster_url: str | None = None
     synopsis_ru: str | None = None
-    playable_trailer_stream_url: str
+    playable_trailer_stream_url: str | None = None
+    source: str = "Apple iTunes"
+    source_url: str | None = None
+    genre: str | None = None
+    duration_minutes: int | None = None
+    description: str | None = None
+    content_rating: str | None = None
 
 
 class ExternalCatalogSearchResponse(StrictCyberModel):
     query: str
     sources_queried: list[str]
     items: list[ExternalMovieCatalogItem]
+    status: Literal["ok", "disabled", "unavailable", "rate_limited"] = "ok"
+    storefront: str = "US"
+    notice: str | None = None
 
 
 class MovieEnrichmentResponse(StrictCyberModel):

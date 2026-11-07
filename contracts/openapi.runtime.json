@@ -1,0 +1,4189 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ZAL API",
+    "description": "Cinema 3D ticketing API with shared 2D/3D hall geometry, 3D screen trailer streaming, external movie reviews, and Platega SBP.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Get Health",
+        "operationId": "get_health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cinemas": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "List Cinemas",
+        "operationId": "list_cinemas_api_v1_cinemas_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CinemaListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "List Sessions",
+        "operationId": "list_sessions_api_v1_sessions_get",
+        "parameters": [
+          {
+            "name": "cinema_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cinema Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Get Session",
+        "operationId": "get_session_api_v1_sessions__session_id__get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/halls": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "List Halls",
+        "operationId": "list_halls_api_v1_halls_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HallListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/halls/{hall_id}": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Get Hall",
+        "operationId": "get_hall_api_v1_halls__hall_id__get",
+        "parameters": [
+          {
+            "name": "hall_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hall Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Hall"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/seats": {
+      "get": {
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Get Session Seats",
+        "operationId": "get_session_seats_api_v1_sessions__session_id__seats_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Availability"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/insights": {
+      "get": {
+        "tags": [
+          "Seat Intelligence"
+        ],
+        "summary": "Get Session Insights",
+        "operationId": "get_session_insights_api_v1_sessions__session_id__insights_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInsightsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/compare": {
+      "get": {
+        "tags": [
+          "Seat Intelligence"
+        ],
+        "summary": "Compare Session Seats",
+        "operationId": "compare_session_seats_api_v1_sessions__session_id__compare_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "seat_a",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Seat A"
+            }
+          },
+          {
+            "name": "seat_b",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Seat B"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeatComparisonResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/recommendations": {
+      "get": {
+        "tags": [
+          "Seat Intelligence"
+        ],
+        "summary": "Get Session Recommendations",
+        "operationId": "get_session_recommendations_api_v1_sessions__session_id__recommendations_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeatRecommendationsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/stream": {
+      "get": {
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Stream Session Seats",
+        "operationId": "stream_session_seats_api_v1_sessions__session_id__stream_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Create Order",
+        "operationId": "create_order_api_v1_orders_post",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get Order",
+        "operationId": "get_order_api_v1_orders__order_id__get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}/pricing": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get Order Pricing",
+        "operationId": "get_order_pricing_api_v1_orders__order_id__pricing_get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPriceBreakdownResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}/cancel": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Cancel Unpaid Order",
+        "operationId": "cancel_unpaid_order_api_v1_orders__order_id__cancel_post",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}/ticket": {
+      "get": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "Get Order Ticket",
+        "operationId": "get_order_ticket_api_v1_orders__order_id__ticket_get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/{token}": {
+      "get": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "Get Public Ticket",
+        "operationId": "get_public_ticket_api_v1_tickets__token__get",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/platega/callback": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Platega Callback",
+        "operationId": "platega_callback_api_v1_payments_platega_callback_post",
+        "parameters": [
+          {
+            "name": "X-MerchantId",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Merchantid"
+            }
+          },
+          {
+            "name": "X-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Secret"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AckResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media/trailers": {
+      "get": {
+        "tags": [
+          "3D Screen & Spatial Audio"
+        ],
+        "summary": "List Available 3D Trailers",
+        "operationId": "list_available_3d_trailers_api_v1_media_trailers_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrailerCatalogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/movies/{movie_id}/trailer": {
+      "get": {
+        "tags": [
+          "3D Screen & Spatial Audio"
+        ],
+        "summary": "Get Movie 3D Trailer",
+        "operationId": "get_movie_3d_trailer_api_v1_movies__movie_id__trailer_get",
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Movie Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieTrailerAsset"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media/trailers/{movie_id}/stream": {
+      "get": {
+        "tags": [
+          "3D Screen & Spatial Audio"
+        ],
+        "summary": "Stream 3D Screen Trailer",
+        "operationId": "stream_3d_screen_trailer_api_v1_media_trailers__movie_id__stream_get",
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Movie Id"
+            }
+          },
+          {
+            "name": "Range",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Range"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/seats/{seat_id}/audio-profile": {
+      "get": {
+        "tags": [
+          "3D Screen & Spatial Audio"
+        ],
+        "summary": "Get Seat Webaudio Dsp Profile",
+        "operationId": "get_seat_webaudio_dsp_profile_api_v1_sessions__session_id__seats__seat_id__audio_profile_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "seat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Seat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeatWebAudioDSPProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalog/external/search": {
+      "get": {
+        "tags": [
+          "External Catalog & Real Reviews"
+        ],
+        "summary": "Search External Movie Catalog",
+        "operationId": "search_external_movie_catalog_api_v1_catalog_external_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 120,
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalCatalogSearchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/movies/{movie_id}/enrichment": {
+      "get": {
+        "tags": [
+          "External Catalog & Real Reviews"
+        ],
+        "summary": "Get Movie Enrichment And Reviews",
+        "operationId": "get_movie_enrichment_and_reviews_api_v1_movies__movie_id__enrichment_get",
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Movie Id"
+            }
+          },
+          {
+            "name": "letterboxd_slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Letterboxd Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieEnrichmentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/group-seats": {
+      "get": {
+        "tags": [
+          "Cyber Booking"
+        ],
+        "summary": "Find Group Together Seats",
+        "operationId": "find_group_together_seats_api_v1_sessions__session_id__group_seats_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "party_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 6,
+              "minimum": 1,
+              "default": 2,
+              "title": "Party Size"
+            }
+          },
+          {
+            "name": "prefer_zone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Prefer Zone"
+            }
+          },
+          {
+            "name": "max_budget_minor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Max Budget Minor"
+            }
+          },
+          {
+            "name": "avoid_orphan_gaps",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Avoid Orphan Gaps"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupSeatFinderResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/crowd-dynamics": {
+      "get": {
+        "tags": [
+          "Cyber Booking"
+        ],
+        "summary": "Get Session Crowd Dynamics",
+        "operationId": "get_session_crowd_dynamics_api_v1_sessions__session_id__crowd_dynamics_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionCrowdDynamicsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/waitlist": {
+      "post": {
+        "tags": [
+          "Cyber Booking"
+        ],
+        "summary": "Subscribe Seat Release Waitlist",
+        "operationId": "subscribe_seat_release_waitlist_api_v1_sessions__session_id__waitlist_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeatWaitlistCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeatWaitlistResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/{token}/pass-bundle": {
+      "get": {
+        "tags": [
+          "Cyber Booking"
+        ],
+        "summary": "Get Cryptographic Ticket Pass Bundle",
+        "operationId": "get_cryptographic_ticket_pass_bundle_api_v1_tickets__token__pass_bundle_get",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CryptographicTicketPassResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chat/emotes": {
+      "get": {
+        "tags": [
+          "Session chat"
+        ],
+        "summary": "Chat Emotes",
+        "operationId": "chat_emotes_api_v1_chat_emotes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/chat/stream": {
+      "get": {
+        "tags": [
+          "Session chat"
+        ],
+        "summary": "Chat Stream",
+        "operationId": "chat_stream_api_v1_sessions__session_id__chat_stream_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "visitor_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Visitor Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/chat/leave": {
+      "post": {
+        "tags": [
+          "Session chat"
+        ],
+        "summary": "Chat Leave",
+        "operationId": "chat_leave_api_v1_sessions__session_id__chat_leave_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatLeaveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/chat/messages": {
+      "post": {
+        "tags": [
+          "Session chat"
+        ],
+        "summary": "Chat Message",
+        "operationId": "chat_message_api_v1_sessions__session_id__chat_messages_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatMessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{session_id}/chat/reactions": {
+      "post": {
+        "tags": [
+          "Session chat"
+        ],
+        "summary": "Chat Reaction",
+        "operationId": "chat_reaction_api_v1_sessions__session_id__chat_reactions_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatReactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/__mock/pay/{order_id}": {
+      "get": {
+        "tags": [
+          "Local Sandbox"
+        ],
+        "summary": "Render Sandbox Payment Page",
+        "operationId": "render_sandbox_payment_page___mock_pay__order_id__get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Local Sandbox"
+        ],
+        "summary": "Submit Sandbox Payment Form",
+        "operationId": "submit_sandbox_payment_form___mock_pay__order_id__post",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/__mock/orders/{order_id}/confirm": {
+      "post": {
+        "tags": [
+          "Local Sandbox"
+        ],
+        "summary": "Confirm Sandbox Order Api",
+        "operationId": "confirm_sandbox_order_api___mock_orders__order_id__confirm_post",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AckResponse": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AckResponse"
+      },
+      "Availability": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Session Id"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          },
+          "seats": {
+            "items": {
+              "$ref": "#/components/schemas/SeatAvailability"
+            },
+            "type": "array",
+            "title": "Seats"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "updated_at",
+          "seats"
+        ],
+        "title": "Availability"
+      },
+      "ChatLeaveRequest": {
+        "properties": {
+          "visitor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Visitor Id"
+          },
+          "connection_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Connection Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "visitor_id",
+          "connection_id"
+        ],
+        "title": "ChatLeaveRequest"
+      },
+      "ChatMessageRequest": {
+        "properties": {
+          "visitor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Visitor Id"
+          },
+          "client_message_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Client Message Id"
+          },
+          "nickname": {
+            "type": "string",
+            "maxLength": 24,
+            "minLength": 1,
+            "title": "Nickname"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Text",
+            "default": ""
+          },
+          "emote_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{24}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emote Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "visitor_id",
+          "client_message_id",
+          "nickname"
+        ],
+        "title": "ChatMessageRequest"
+      },
+      "ChatReactionRequest": {
+        "properties": {
+          "visitor_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Visitor Id"
+          },
+          "message_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Message Id"
+          },
+          "emoji": {
+            "type": "string",
+            "maxLength": 8,
+            "minLength": 1,
+            "title": "Emoji"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "visitor_id",
+          "message_id",
+          "emoji"
+        ],
+        "title": "ChatReactionRequest"
+      },
+      "Cinema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "address": {
+            "type": "string",
+            "title": "Address"
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "address",
+          "timezone"
+        ],
+        "title": "Cinema"
+      },
+      "CinemaListResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Cinema"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "CinemaListResponse"
+      },
+      "CreateOrderRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Session Id"
+          },
+          "seat_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Seat Id"
+          },
+          "customer_email": {
+            "type": "string",
+            "maxLength": 254,
+            "minLength": 3,
+            "title": "Customer Email"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "seat_id",
+          "customer_email"
+        ],
+        "title": "CreateOrderRequest"
+      },
+      "CryptographicTicketPassResponse": {
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "title": "Ticket Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "valid",
+              "suspended",
+              "revoked"
+            ],
+            "title": "Status"
+          },
+          "film_title": {
+            "type": "string",
+            "title": "Film Title"
+          },
+          "cinema_name": {
+            "type": "string",
+            "title": "Cinema Name"
+          },
+          "hall_name": {
+            "type": "string",
+            "title": "Hall Name"
+          },
+          "starts_at": {
+            "type": "string",
+            "title": "Starts At"
+          },
+          "row": {
+            "type": "integer",
+            "title": "Row"
+          },
+          "number": {
+            "type": "integer",
+            "title": "Number"
+          },
+          "verification_url": {
+            "type": "string",
+            "title": "Verification Url"
+          },
+          "dynamic_totp_pulse": {
+            "type": "string",
+            "title": "Dynamic Totp Pulse"
+          },
+          "pulse_valid_for_seconds": {
+            "type": "integer",
+            "title": "Pulse Valid For Seconds"
+          },
+          "offline_signature_hmac": {
+            "type": "string",
+            "title": "Offline Signature Hmac"
+          },
+          "anti_screenshot_protected": {
+            "type": "boolean",
+            "title": "Anti Screenshot Protected",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "ticket_id",
+          "status",
+          "film_title",
+          "cinema_name",
+          "hall_name",
+          "starts_at",
+          "row",
+          "number",
+          "verification_url",
+          "dynamic_totp_pulse",
+          "pulse_valid_for_seconds",
+          "offline_signature_hmac"
+        ],
+        "title": "CryptographicTicketPassResponse"
+      },
+      "ExternalCatalogSearchResponse": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "sources_queried": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sources Queried"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ExternalMovieCatalogItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "disabled",
+              "unavailable",
+              "rate_limited"
+            ],
+            "title": "Status",
+            "default": "ok"
+          },
+          "storefront": {
+            "type": "string",
+            "title": "Storefront",
+            "default": "US"
+          },
+          "notice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notice"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "query",
+          "sources_queried",
+          "items"
+        ],
+        "title": "ExternalCatalogSearchResponse"
+      },
+      "ExternalMovieCatalogItem": {
+        "properties": {
+          "external_id": {
+            "type": "string",
+            "title": "External Id"
+          },
+          "imdb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imdb Id"
+          },
+          "letterboxd_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Letterboxd Slug"
+          },
+          "kinopoisk_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kinopoisk Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "original_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Title"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "cast_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cast Summary"
+          },
+          "poster_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Poster Url"
+          },
+          "synopsis_ru": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Synopsis Ru"
+          },
+          "playable_trailer_stream_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Playable Trailer Stream Url"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "Apple iTunes"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "genre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Genre"
+          },
+          "duration_minutes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Minutes"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "content_rating": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Rating"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "external_id",
+          "title"
+        ],
+        "title": "ExternalMovieCatalogItem"
+      },
+      "GroupSeatBlockOption": {
+        "properties": {
+          "row": {
+            "type": "integer",
+            "title": "Row"
+          },
+          "seat_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Seat Ids"
+          },
+          "seat_numbers": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Seat Numbers"
+          },
+          "zone": {
+            "type": "string",
+            "title": "Zone"
+          },
+          "total_price_minor": {
+            "type": "integer",
+            "title": "Total Price Minor"
+          },
+          "currency": {
+            "type": "string",
+            "const": "RUB",
+            "title": "Currency",
+            "default": "RUB"
+          },
+          "avg_comfort_score": {
+            "type": "integer",
+            "title": "Avg Comfort Score"
+          },
+          "min_sightline_clearance": {
+            "type": "number",
+            "title": "Min Sightline Clearance"
+          },
+          "avg_acoustic_score": {
+            "type": "integer",
+            "title": "Avg Acoustic Score"
+          },
+          "leaves_orphan_single_seat": {
+            "type": "boolean",
+            "title": "Leaves Orphan Single Seat"
+          },
+          "badge_ru": {
+            "type": "string",
+            "title": "Badge Ru"
+          },
+          "reason_ru": {
+            "type": "string",
+            "title": "Reason Ru"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "row",
+          "seat_ids",
+          "seat_numbers",
+          "zone",
+          "total_price_minor",
+          "avg_comfort_score",
+          "min_sightline_clearance",
+          "avg_acoustic_score",
+          "leaves_orphan_single_seat",
+          "badge_ru",
+          "reason_ru"
+        ],
+        "title": "GroupSeatBlockOption"
+      },
+      "GroupSeatFinderResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "party_size": {
+            "type": "integer",
+            "title": "Party Size"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/GroupSeatBlockOption"
+            },
+            "type": "array",
+            "title": "Options"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "party_size",
+          "options"
+        ],
+        "title": "GroupSeatFinderResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Hall": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "cinema_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Cinema Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "dimensions": {
+            "$ref": "#/components/schemas/HallDimensions"
+          },
+          "screen": {
+            "$ref": "#/components/schemas/HallScreen"
+          },
+          "camera": {
+            "$ref": "#/components/schemas/HallCamera"
+          },
+          "speakers": {
+            "items": {
+              "$ref": "#/components/schemas/HallSpeaker"
+            },
+            "type": "array",
+            "title": "Speakers"
+          },
+          "seats": {
+            "items": {
+              "$ref": "#/components/schemas/Seat"
+            },
+            "type": "array",
+            "title": "Seats"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "cinema_id",
+          "name",
+          "dimensions",
+          "screen",
+          "camera",
+          "speakers",
+          "seats"
+        ],
+        "title": "Hall"
+      },
+      "HallCamera": {
+        "properties": {
+          "eye_height": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Eye Height"
+          },
+          "fov_degrees": {
+            "type": "number",
+            "exclusiveMaximum": 180.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Fov Degrees"
+          },
+          "near": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Near"
+          },
+          "far": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Far"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "eye_height",
+          "fov_degrees",
+          "near",
+          "far"
+        ],
+        "title": "HallCamera"
+      },
+      "HallDimensions": {
+        "properties": {
+          "width": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Width"
+          },
+          "height": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Height"
+          },
+          "depth": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Depth"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "width",
+          "height",
+          "depth"
+        ],
+        "title": "HallDimensions"
+      },
+      "HallListResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/HallSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "HallListResponse"
+      },
+      "HallScreen": {
+        "properties": {
+          "center": {
+            "$ref": "#/components/schemas/Vector3"
+          },
+          "width": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Width"
+          },
+          "height": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Height"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "center",
+          "width",
+          "height"
+        ],
+        "title": "HallScreen"
+      },
+      "HallSpeaker": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Vector3"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "position"
+        ],
+        "title": "HallSpeaker"
+      },
+      "HallSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "cinema_id": {
+            "type": "string",
+            "title": "Cinema Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "seat_count": {
+            "type": "integer",
+            "title": "Seat Count"
+          },
+          "rows_count": {
+            "type": "integer",
+            "title": "Rows Count"
+          },
+          "screen_width_m": {
+            "type": "number",
+            "title": "Screen Width M"
+          },
+          "screen_height_m": {
+            "type": "number",
+            "title": "Screen Height M"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "cinema_id",
+          "name",
+          "seat_count",
+          "rows_count",
+          "screen_width_m",
+          "screen_height_m"
+        ],
+        "title": "HallSummary"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status",
+            "default": "ok"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "mock",
+              "live"
+            ],
+            "title": "Mode"
+          },
+          "api_version": {
+            "type": "string",
+            "const": "1.0.0",
+            "title": "Api Version",
+            "default": "1.0.0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "mode"
+        ],
+        "title": "HealthResponse"
+      },
+      "Movie": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Duration Minutes"
+          },
+          "age_rating": {
+            "type": "string",
+            "title": "Age Rating"
+          },
+          "poster_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Poster Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "duration_minutes",
+          "age_rating"
+        ],
+        "title": "Movie"
+      },
+      "MovieEnrichmentResponse": {
+        "properties": {
+          "movie_id": {
+            "type": "string",
+            "title": "Movie Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "original_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Title"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "synopsis_ru": {
+            "type": "string",
+            "title": "Synopsis Ru"
+          },
+          "director": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Director"
+          },
+          "genres": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Genres"
+          },
+          "ratings": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformRatingBadge"
+            },
+            "type": "array",
+            "title": "Ratings"
+          },
+          "reviews": {
+            "items": {
+              "$ref": "#/components/schemas/RealAudienceReview"
+            },
+            "type": "array",
+            "title": "Reviews"
+          },
+          "trailer": {
+            "$ref": "#/components/schemas/MovieTrailerAsset"
+          },
+          "sources_used": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sources Used"
+          },
+          "cached": {
+            "type": "boolean",
+            "title": "Cached",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "movie_id",
+          "title",
+          "synopsis_ru",
+          "genres",
+          "ratings",
+          "reviews",
+          "trailer",
+          "sources_used"
+        ],
+        "title": "MovieEnrichmentResponse"
+      },
+      "MovieTrailerAsset": {
+        "properties": {
+          "movie_id": {
+            "type": "string",
+            "title": "Movie Id"
+          },
+          "trailer_id": {
+            "type": "string",
+            "title": "Trailer Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "original_film_title": {
+            "type": "string",
+            "title": "Original Film Title"
+          },
+          "subtitle_ru": {
+            "type": "string",
+            "title": "Subtitle Ru"
+          },
+          "license": {
+            "type": "string",
+            "title": "License"
+          },
+          "duration_seconds": {
+            "type": "integer",
+            "title": "Duration Seconds"
+          },
+          "aspect_ratio": {
+            "type": "number",
+            "title": "Aspect Ratio"
+          },
+          "video_codec": {
+            "type": "string",
+            "title": "Video Codec",
+            "default": "avc1.64001F"
+          },
+          "audio_layout": {
+            "type": "string",
+            "enum": [
+              "stereo",
+              "surround_5_1"
+            ],
+            "title": "Audio Layout",
+            "default": "stereo"
+          },
+          "stream_proxy_url": {
+            "type": "string",
+            "title": "Stream Proxy Url"
+          },
+          "direct_mp4_url": {
+            "type": "string",
+            "title": "Direct Mp4 Url"
+          },
+          "poster_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Poster Url"
+          },
+          "default_start_sec": {
+            "type": "number",
+            "title": "Default Start Sec",
+            "default": 0.0
+          },
+          "webgl_cors_ready": {
+            "type": "boolean",
+            "title": "Webgl Cors Ready",
+            "default": true
+          },
+          "cue_points": {
+            "items": {
+              "$ref": "#/components/schemas/TrailerCuePoint"
+            },
+            "type": "array",
+            "title": "Cue Points"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "movie_id",
+          "trailer_id",
+          "title",
+          "original_film_title",
+          "subtitle_ru",
+          "license",
+          "duration_seconds",
+          "aspect_ratio",
+          "stream_proxy_url",
+          "direct_mp4_url",
+          "cue_points"
+        ],
+        "title": "MovieTrailerAsset"
+      },
+      "Order": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "session_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Session Id"
+          },
+          "seat_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Seat Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          },
+          "total_minor": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total Minor"
+          },
+          "currency": {
+            "type": "string",
+            "const": "RUB",
+            "title": "Currency",
+            "default": "RUB"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/Payment"
+          },
+          "ticket_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "session_id",
+          "seat_id",
+          "status",
+          "total_minor",
+          "created_at",
+          "payment"
+        ],
+        "title": "Order"
+      },
+      "OrderPriceBreakdownResponse": {
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "title": "Order Id"
+          },
+          "seat_price_minor": {
+            "type": "integer",
+            "title": "Seat Price Minor"
+          },
+          "service_fee_minor": {
+            "type": "integer",
+            "title": "Service Fee Minor",
+            "default": 0
+          },
+          "insurance_upsell_minor": {
+            "type": "integer",
+            "title": "Insurance Upsell Minor",
+            "default": 0
+          },
+          "total_minor": {
+            "type": "integer",
+            "title": "Total Minor"
+          },
+          "currency": {
+            "type": "string",
+            "const": "RUB",
+            "title": "Currency",
+            "default": "RUB"
+          },
+          "zero_hidden_fees": {
+            "type": "boolean",
+            "title": "Zero Hidden Fees",
+            "default": true
+          },
+          "refund_policy_ru": {
+            "type": "string",
+            "title": "Refund Policy Ru"
+          },
+          "can_cancel_unpaid_hold": {
+            "type": "boolean",
+            "title": "Can Cancel Unpaid Hold"
+          },
+          "session_starts_at": {
+            "type": "string",
+            "title": "Session Starts At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "order_id",
+          "seat_price_minor",
+          "total_minor",
+          "refund_policy_ru",
+          "can_cancel_unpaid_hold",
+          "session_starts_at"
+        ],
+        "title": "OrderPriceBreakdownResponse"
+      },
+      "OrderStatus": {
+        "type": "string",
+        "enum": [
+          "creating_payment",
+          "pending_payment",
+          "paid",
+          "canceled",
+          "expired",
+          "payment_review",
+          "refunded"
+        ],
+        "title": "OrderStatus"
+      },
+      "Payment": {
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": [
+              "mock",
+              "platega"
+            ],
+            "title": "Provider"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ProviderPaymentStatus"
+          },
+          "payment_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payment Url"
+          },
+          "transaction_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transaction Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "provider",
+          "status"
+        ],
+        "title": "Payment"
+      },
+      "PlatformRatingBadge": {
+        "properties": {
+          "platform": {
+            "type": "string",
+            "enum": [
+              "Letterboxd",
+              "IMDb",
+              "Кинопоиск",
+              "Internet Archive"
+            ],
+            "title": "Platform"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "scale_max": {
+            "type": "number",
+            "title": "Scale Max"
+          },
+          "normalized_10": {
+            "type": "number",
+            "title": "Normalized 10"
+          },
+          "votes_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Votes Count"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "platform",
+          "score",
+          "scale_max",
+          "normalized_10"
+        ],
+        "title": "PlatformRatingBadge"
+      },
+      "ProviderPaymentStatus": {
+        "type": "string",
+        "enum": [
+          "CREATING",
+          "PENDING",
+          "CONFIRMED",
+          "CANCELED",
+          "EXPIRED",
+          "FAILED",
+          "DISPUTED",
+          "CHARGEBACKED",
+          "PARTIALLY_REFUNDED",
+          "UNKNOWN"
+        ],
+        "title": "ProviderPaymentStatus"
+      },
+      "RealAudienceReview": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "Letterboxd",
+              "Кинопоиск",
+              "Internet Archive"
+            ],
+            "title": "Source"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
+          "scale_max": {
+            "type": "number",
+            "title": "Scale Max",
+            "default": 5.0
+          },
+          "sentiment": {
+            "type": "string",
+            "enum": [
+              "positive",
+              "neutral",
+              "negative"
+            ],
+            "title": "Sentiment"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "ru",
+              "en"
+            ],
+            "title": "Language",
+            "default": "en"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "source",
+          "author",
+          "sentiment",
+          "text"
+        ],
+        "title": "RealAudienceReview"
+      },
+      "RecommendedSeatBucket": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "title_ru": {
+            "type": "string",
+            "title": "Title Ru"
+          },
+          "reason_ru": {
+            "type": "string",
+            "title": "Reason Ru"
+          },
+          "seat": {
+            "$ref": "#/components/schemas/SeatInsight"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "category",
+          "title_ru",
+          "reason_ru",
+          "seat"
+        ],
+        "title": "RecommendedSeatBucket"
+      },
+      "Seat": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "row": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Row"
+          },
+          "number": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Number"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SeatType"
+          },
+          "zone": {
+            "$ref": "#/components/schemas/SeatZone"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Vector3"
+          },
+          "rotation_y": {
+            "type": "number",
+            "title": "Rotation Y"
+          },
+          "width": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Width"
+          },
+          "depth": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Depth"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "row",
+          "number",
+          "type",
+          "zone",
+          "position",
+          "rotation_y",
+          "width",
+          "depth"
+        ],
+        "title": "Seat"
+      },
+      "SeatAcousticMetrics": {
+        "properties": {
+          "left_distance_m": {
+            "type": "number",
+            "title": "Left Distance M"
+          },
+          "right_distance_m": {
+            "type": "number",
+            "title": "Right Distance M"
+          },
+          "spl_offset_db": {
+            "type": "number",
+            "title": "Spl Offset Db"
+          },
+          "stereo_pan": {
+            "type": "number",
+            "title": "Stereo Pan"
+          },
+          "itd_ms": {
+            "type": "number",
+            "title": "Itd Ms"
+          },
+          "acoustic_balance_score": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Acoustic Balance Score"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "left_distance_m",
+          "right_distance_m",
+          "spl_offset_db",
+          "stereo_pan",
+          "itd_ms",
+          "acoustic_balance_score"
+        ],
+        "title": "SeatAcousticMetrics"
+      },
+      "SeatAvailability": {
+        "properties": {
+          "seat_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Seat Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SeatStatus"
+          },
+          "price_minor": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Price Minor"
+          },
+          "currency": {
+            "type": "string",
+            "const": "RUB",
+            "title": "Currency",
+            "default": "RUB"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "seat_id",
+          "status",
+          "price_minor"
+        ],
+        "title": "SeatAvailability"
+      },
+      "SeatComparisonResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "seat_a": {
+            "$ref": "#/components/schemas/SeatInsight"
+          },
+          "seat_b": {
+            "$ref": "#/components/schemas/SeatInsight"
+          },
+          "price_delta_minor": {
+            "type": "integer",
+            "title": "Price Delta Minor"
+          },
+          "comfort_delta": {
+            "type": "integer",
+            "title": "Comfort Delta"
+          },
+          "recommended_seat_id": {
+            "type": "string",
+            "title": "Recommended Seat Id"
+          },
+          "verdict_ru": {
+            "type": "string",
+            "title": "Verdict Ru"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "seat_a",
+          "seat_b",
+          "price_delta_minor",
+          "comfort_delta",
+          "recommended_seat_id",
+          "verdict_ru"
+        ],
+        "title": "SeatComparisonResponse"
+      },
+      "SeatInsight": {
+        "properties": {
+          "seat_id": {
+            "type": "string",
+            "title": "Seat Id"
+          },
+          "row": {
+            "type": "integer",
+            "title": "Row"
+          },
+          "number": {
+            "type": "integer",
+            "title": "Number"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SeatType"
+          },
+          "zone": {
+            "$ref": "#/components/schemas/SeatZone"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SeatStatus"
+          },
+          "price_minor": {
+            "type": "integer",
+            "title": "Price Minor"
+          },
+          "currency": {
+            "type": "string",
+            "const": "RUB",
+            "title": "Currency",
+            "default": "RUB"
+          },
+          "comfort_score": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Comfort Score"
+          },
+          "badges": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Badges"
+          },
+          "summary_ru": {
+            "type": "string",
+            "title": "Summary Ru"
+          },
+          "view": {
+            "$ref": "#/components/schemas/SeatViewMetrics"
+          },
+          "acoustics": {
+            "$ref": "#/components/schemas/SeatAcousticMetrics"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "seat_id",
+          "row",
+          "number",
+          "type",
+          "zone",
+          "status",
+          "price_minor",
+          "comfort_score",
+          "badges",
+          "summary_ru",
+          "view",
+          "acoustics"
+        ],
+        "title": "SeatInsight"
+      },
+      "SeatQuietIslandItem": {
+        "properties": {
+          "seat_id": {
+            "type": "string",
+            "title": "Seat Id"
+          },
+          "row": {
+            "type": "integer",
+            "title": "Row"
+          },
+          "number": {
+            "type": "integer",
+            "title": "Number"
+          },
+          "zone": {
+            "type": "string",
+            "title": "Zone"
+          },
+          "price_minor": {
+            "type": "integer",
+            "title": "Price Minor"
+          },
+          "personal_space_score": {
+            "type": "integer",
+            "title": "Personal Space Score"
+          },
+          "occupied_adjacent_count": {
+            "type": "integer",
+            "title": "Occupied Adjacent Count"
+          },
+          "nearest_occupied_distance_m": {
+            "type": "number",
+            "title": "Nearest Occupied Distance M"
+          },
+          "comfort_score": {
+            "type": "integer",
+            "title": "Comfort Score"
+          },
+          "label_ru": {
+            "type": "string",
+            "title": "Label Ru"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "seat_id",
+          "row",
+          "number",
+          "zone",
+          "price_minor",
+          "personal_space_score",
+          "occupied_adjacent_count",
+          "nearest_occupied_distance_m",
+          "comfort_score",
+          "label_ru"
+        ],
+        "title": "SeatQuietIslandItem"
+      },
+      "SeatRecommendationsResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendedSeatBucket"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "items"
+        ],
+        "title": "SeatRecommendationsResponse"
+      },
+      "SeatStatus": {
+        "type": "string",
+        "enum": [
+          "available",
+          "held",
+          "sold"
+        ],
+        "title": "SeatStatus"
+      },
+      "SeatType": {
+        "type": "string",
+        "enum": [
+          "standard",
+          "sofa"
+        ],
+        "title": "SeatType"
+      },
+      "SeatViewMetrics": {
+        "properties": {
+          "eye_position": {
+            "$ref": "#/components/schemas/Vector3"
+          },
+          "distance_to_screen_m": {
+            "type": "number",
+            "title": "Distance To Screen M"
+          },
+          "horizontal_fov_occupancy_deg": {
+            "type": "number",
+            "title": "Horizontal Fov Occupancy Deg"
+          },
+          "lateral_off_axis_deg": {
+            "type": "number",
+            "title": "Lateral Off Axis Deg"
+          },
+          "vertical_tilt_center_deg": {
+            "type": "number",
+            "title": "Vertical Tilt Center Deg"
+          },
+          "vertical_tilt_top_deg": {
+            "type": "number",
+            "title": "Vertical Tilt Top Deg"
+          },
+          "distortion_index": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Distortion Index"
+          },
+          "head_occlusion_ratio": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Head Occlusion Ratio"
+          },
+          "occluding_sold_seat_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Occluding Sold Seat Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "eye_position",
+          "distance_to_screen_m",
+          "horizontal_fov_occupancy_deg",
+          "lateral_off_axis_deg",
+          "vertical_tilt_center_deg",
+          "vertical_tilt_top_deg",
+          "distortion_index",
+          "head_occlusion_ratio",
+          "occluding_sold_seat_ids"
+        ],
+        "title": "SeatViewMetrics"
+      },
+      "SeatWaitlistCreateRequest": {
+        "properties": {
+          "seat_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Seat Ids"
+          },
+          "customer_email": {
+            "type": "string",
+            "maxLength": 254,
+            "minLength": 3,
+            "title": "Customer Email"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "seat_ids",
+          "customer_email"
+        ],
+        "title": "SeatWaitlistCreateRequest"
+      },
+      "SeatWaitlistResponse": {
+        "properties": {
+          "subscription_id": {
+            "type": "string",
+            "title": "Subscription Id"
+          },
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "watched_seat_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Watched Seat Ids"
+          },
+          "currently_available_seat_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Currently Available Seat Ids"
+          },
+          "sse_stream_url": {
+            "type": "string",
+            "title": "Sse Stream Url"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "subscription_id",
+          "session_id",
+          "watched_seat_ids",
+          "currently_available_seat_ids",
+          "sse_stream_url",
+          "created_at"
+        ],
+        "title": "SeatWaitlistResponse"
+      },
+      "SeatWebAudioDSPProfile": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "seat_id": {
+            "type": "string",
+            "title": "Seat Id"
+          },
+          "row": {
+            "type": "integer",
+            "title": "Row"
+          },
+          "number": {
+            "type": "integer",
+            "title": "Number"
+          },
+          "distance_to_screen_m": {
+            "type": "number",
+            "title": "Distance To Screen M"
+          },
+          "distance_left_speaker_m": {
+            "type": "number",
+            "title": "Distance Left Speaker M"
+          },
+          "distance_right_speaker_m": {
+            "type": "number",
+            "title": "Distance Right Speaker M"
+          },
+          "delay_left_ms": {
+            "type": "number",
+            "title": "Delay Left Ms"
+          },
+          "delay_right_ms": {
+            "type": "number",
+            "title": "Delay Right Ms"
+          },
+          "gain_left": {
+            "type": "number",
+            "title": "Gain Left"
+          },
+          "gain_right": {
+            "type": "number",
+            "title": "Gain Right"
+          },
+          "pan_left": {
+            "type": "number",
+            "title": "Pan Left"
+          },
+          "pan_right": {
+            "type": "number",
+            "title": "Pan Right"
+          },
+          "air_absorption_lowpass_hz": {
+            "type": "number",
+            "title": "Air Absorption Lowpass Hz"
+          },
+          "subwoofer_lfe_gain": {
+            "type": "number",
+            "title": "Subwoofer Lfe Gain"
+          },
+          "reverb_wet_mix": {
+            "type": "number",
+            "title": "Reverb Wet Mix"
+          },
+          "acoustic_sweet_spot": {
+            "type": "boolean",
+            "title": "Acoustic Sweet Spot"
+          },
+          "recommended_trailer_stream_url": {
+            "type": "string",
+            "title": "Recommended Trailer Stream Url"
+          },
+          "recommended_trailer_title": {
+            "type": "string",
+            "title": "Recommended Trailer Title",
+            "default": "Тестовый ролик · Sintel"
+          },
+          "recommended_cue_sec": {
+            "type": "number",
+            "title": "Recommended Cue Sec"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "seat_id",
+          "row",
+          "number",
+          "distance_to_screen_m",
+          "distance_left_speaker_m",
+          "distance_right_speaker_m",
+          "delay_left_ms",
+          "delay_right_ms",
+          "gain_left",
+          "gain_right",
+          "pan_left",
+          "pan_right",
+          "air_absorption_lowpass_hz",
+          "subwoofer_lfe_gain",
+          "reverb_wet_mix",
+          "acoustic_sweet_spot",
+          "recommended_trailer_stream_url",
+          "recommended_cue_sec"
+        ],
+        "title": "SeatWebAudioDSPProfile"
+      },
+      "SeatZone": {
+        "type": "string",
+        "enum": [
+          "front",
+          "middle",
+          "sofa"
+        ],
+        "title": "SeatZone"
+      },
+      "Session": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "cinema_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Cinema Id"
+          },
+          "hall_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Hall Id"
+          },
+          "movie": {
+            "$ref": "#/components/schemas/Movie"
+          },
+          "starts_at": {
+            "type": "string",
+            "title": "Starts At"
+          },
+          "format": {
+            "type": "string",
+            "title": "Format"
+          },
+          "currency": {
+            "type": "string",
+            "const": "RUB",
+            "title": "Currency",
+            "default": "RUB"
+          },
+          "price_from_minor": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Price From Minor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "cinema_id",
+          "hall_id",
+          "movie",
+          "starts_at",
+          "format",
+          "price_from_minor"
+        ],
+        "title": "Session"
+      },
+      "SessionCrowdDynamicsResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "total_seats": {
+            "type": "integer",
+            "title": "Total Seats"
+          },
+          "available_seats": {
+            "type": "integer",
+            "title": "Available Seats"
+          },
+          "held_seats": {
+            "type": "integer",
+            "title": "Held Seats"
+          },
+          "sold_seats": {
+            "type": "integer",
+            "title": "Sold Seats"
+          },
+          "occupancy_percent": {
+            "type": "number",
+            "title": "Occupancy Percent"
+          },
+          "atmosphere_mode_ru": {
+            "type": "string",
+            "title": "Atmosphere Mode Ru"
+          },
+          "quiet_islands": {
+            "items": {
+              "$ref": "#/components/schemas/SeatQuietIslandItem"
+            },
+            "type": "array",
+            "title": "Quiet Islands"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "total_seats",
+          "available_seats",
+          "held_seats",
+          "sold_seats",
+          "occupancy_percent",
+          "atmosphere_mode_ru",
+          "quiet_islands"
+        ],
+        "title": "SessionCrowdDynamicsResponse"
+      },
+      "SessionInsightsResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "hall_id": {
+            "type": "string",
+            "title": "Hall Id"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          },
+          "sold_count": {
+            "type": "integer",
+            "title": "Sold Count"
+          },
+          "held_count": {
+            "type": "integer",
+            "title": "Held Count"
+          },
+          "available_count": {
+            "type": "integer",
+            "title": "Available Count"
+          },
+          "zones": {
+            "items": {
+              "$ref": "#/components/schemas/ZonePriceSummary"
+            },
+            "type": "array",
+            "title": "Zones"
+          },
+          "reference_seat_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Seat Id"
+          },
+          "seats": {
+            "items": {
+              "$ref": "#/components/schemas/SeatInsight"
+            },
+            "type": "array",
+            "title": "Seats"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "hall_id",
+          "updated_at",
+          "sold_count",
+          "held_count",
+          "available_count",
+          "zones",
+          "reference_seat_id",
+          "seats"
+        ],
+        "title": "SessionInsightsResponse"
+      },
+      "SessionListResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Session"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "SessionListResponse"
+      },
+      "Ticket": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "order_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Order Id"
+          },
+          "film_title": {
+            "type": "string",
+            "title": "Film Title"
+          },
+          "cinema_name": {
+            "type": "string",
+            "title": "Cinema Name"
+          },
+          "hall_name": {
+            "type": "string",
+            "title": "Hall Name"
+          },
+          "starts_at": {
+            "type": "string",
+            "title": "Starts At"
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone"
+          },
+          "row": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Row"
+          },
+          "number": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Number"
+          },
+          "seat_type": {
+            "$ref": "#/components/schemas/SeatType"
+          },
+          "paid_minor": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Paid Minor"
+          },
+          "currency": {
+            "type": "string",
+            "const": "RUB",
+            "title": "Currency",
+            "default": "RUB"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TicketStatus"
+          },
+          "verification_url": {
+            "type": "string",
+            "title": "Verification Url"
+          },
+          "issued_at": {
+            "type": "string",
+            "title": "Issued At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "order_id",
+          "film_title",
+          "cinema_name",
+          "hall_name",
+          "starts_at",
+          "timezone",
+          "row",
+          "number",
+          "seat_type",
+          "paid_minor",
+          "status",
+          "verification_url",
+          "issued_at"
+        ],
+        "title": "Ticket"
+      },
+      "TicketStatus": {
+        "type": "string",
+        "enum": [
+          "valid",
+          "suspended",
+          "revoked"
+        ],
+        "title": "TicketStatus"
+      },
+      "TrailerCatalogResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MovieTrailerAsset"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "TrailerCatalogResponse"
+      },
+      "TrailerCuePoint": {
+        "properties": {
+          "label_ru": {
+            "type": "string",
+            "title": "Label Ru"
+          },
+          "timestamp_sec": {
+            "type": "number",
+            "title": "Timestamp Sec"
+          },
+          "acoustic_focus": {
+            "type": "string",
+            "enum": [
+              "bass_lfe",
+              "stereo_pan",
+              "dialogue_center",
+              "wide_ambience"
+            ],
+            "title": "Acoustic Focus"
+          },
+          "description_ru": {
+            "type": "string",
+            "title": "Description Ru"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "label_ru",
+          "timestamp_sec",
+          "acoustic_focus",
+          "description_ru"
+        ],
+        "title": "TrailerCuePoint"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "Vector3": {
+        "properties": {
+          "x": {
+            "type": "number",
+            "title": "X"
+          },
+          "y": {
+            "type": "number",
+            "title": "Y"
+          },
+          "z": {
+            "type": "number",
+            "title": "Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "x",
+          "y",
+          "z"
+        ],
+        "title": "Vector3"
+      },
+      "ZonePriceSummary": {
+        "properties": {
+          "zone": {
+            "$ref": "#/components/schemas/SeatZone"
+          },
+          "label_ru": {
+            "type": "string",
+            "title": "Label Ru"
+          },
+          "rows": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Rows"
+          },
+          "price_minor": {
+            "type": "integer",
+            "title": "Price Minor"
+          },
+          "available_count": {
+            "type": "integer",
+            "title": "Available Count"
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "zone",
+          "label_ru",
+          "rows",
+          "price_minor",
+          "available_count",
+          "total_count"
+        ],
+        "title": "ZonePriceSummary"
+      }
+    }
+  }
+}

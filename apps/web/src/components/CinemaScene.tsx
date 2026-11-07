@@ -28,10 +28,10 @@ interface CinemaSceneProps {
 }
 
 const ACCENT = new THREE.Color('#ff4b2b');
-const UPHOLSTERY = new THREE.Color('#44413e');
+const UPHOLSTERY = new THREE.Color('#514941');
 const OCCUPIED = new THREE.Color('#24282d');
 const HOVER = new THREE.Color('#dfb091');
-const TERRACOTTA = new THREE.Color('#684438');
+const TERRACOTTA = new THREE.Color('#815244');
 
 function makeScreenTexture() {
   const canvas = document.createElement('canvas');
@@ -200,6 +200,7 @@ export default function CinemaScene({
     const force = new THREE.Vector3();
     const matrixObject = new THREE.Object3D();
     const chairTransform = new THREE.Matrix4();
+    const chairColor = new THREE.Color();
     const hiddenMatrix = new THREE.Matrix4().makeScale(0, 0, 0);
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     let disposed = false;
@@ -310,40 +311,60 @@ export default function CinemaScene({
       }
     }
 
-    const chairMaterial = new THREE.MeshPhysicalMaterial({ color: 'white', roughness: 0.87, metalness: 0, sheen: 0.45, sheenColor: '#b9afa1', sheenRoughness: 0.85, bumpMap: fabricTexture, bumpScale: 0.009 });
-    const chairTrimMaterial = new THREE.MeshStandardMaterial({ color: '#141a22', roughness: 0.42, metalness: 0.55 });
+    const chairMaterial = new THREE.MeshPhysicalMaterial({ color: 'white', roughness: 0.72, metalness: 0, sheen: 0.65, sheenColor: '#ddc9b3', sheenRoughness: 0.8, bumpMap: fabricTexture, bumpScale: 0.006 });
+    const chairTrimMaterial = new THREE.MeshStandardMaterial({ color: '#151619', roughness: 0.38, metalness: 0.62 });
+    const seamMaterial = new THREE.MeshStandardMaterial({ color: '#c7ae8e', roughness: 0.88 });
     const chairMeshes: THREE.InstancedMesh[] = [];
-    const chairParts = [
-      { dimensions: [0.84, 0.62, 0.16], position: [0, 0.76, 0.24], radius: 0.12, material: chairMaterial, curvedBack: true },
-      { dimensions: [0.84, 0.2, 0.7], position: [0, 0.47, -0.06], radius: 0.085, material: chairMaterial },
-      { dimensions: [0.14, 0.15, 0.75], position: [-0.47, 0.67, -0.04], radius: 0.06, material: chairMaterial },
-      { dimensions: [0.14, 0.15, 0.75], position: [0.47, 0.67, -0.04], radius: 0.06, material: chairMaterial },
-      { dimensions: [0.66, 0.32, 0.5], position: [0, 0.24, 0.02], radius: 0.045, material: chairTrimMaterial },
+    type ChairPart = { dimensions: number[]; position: number[]; radius: number; material: THREE.Material; curvedBack?: boolean; family?: 'standard' | 'sofa'; tint?: number };
+    const chairParts: ChairPart[] = [
+      // A soft shell, inset lumbar cushion and rounded headrest give each chair depth from every angle.
+      { dimensions: [0.84, 0.66, 0.18], position: [0, 0.78, 0.25], radius: 0.11, material: chairMaterial, curvedBack: true, family: 'standard' },
+      { dimensions: [0.71, 0.43, 0.12], position: [0, 0.77, 0.115], radius: 0.075, material: chairMaterial, family: 'standard', tint: 1.12 },
+      { dimensions: [0.61, 0.18, 0.14], position: [0, 1.035, 0.18], radius: 0.075, material: chairMaterial, family: 'standard', tint: 1.16 },
+      { dimensions: [0.82, 0.22, 0.65], position: [0, 0.49, -0.075], radius: 0.09, material: chairMaterial, family: 'standard', tint: 1.05 },
+      { dimensions: [0.15, 0.16, 0.73], position: [-0.46, 0.67, -0.045], radius: 0.065, material: chairMaterial, family: 'standard' },
+      { dimensions: [0.15, 0.16, 0.73], position: [0.46, 0.67, -0.045], radius: 0.065, material: chairMaterial, family: 'standard' },
+      { dimensions: [0.62, 0.27, 0.48], position: [0, 0.255, 0.035], radius: 0.04, material: chairTrimMaterial },
+      // Sofas have two separate cushions and slender side arms, rather than a stretched single chair.
+      { dimensions: [0.87, 0.56, 0.2], position: [0, 0.76, 0.25], radius: 0.08, material: chairMaterial, family: 'sofa' },
+      ...[-1, 1].flatMap(side => [
+        { dimensions: [0.405, 0.4, 0.13], position: [side * 0.213, 0.79, 0.105], radius: 0.055, material: chairMaterial, family: 'sofa' as const, tint: 1.12 },
+        { dimensions: [0.405, 0.22, 0.68], position: [side * 0.213, 0.49, -0.07], radius: 0.055, material: chairMaterial, family: 'sofa' as const, tint: 1.06 },
+        { dimensions: [0.08, 0.22, 0.77], position: [side * 0.477, 0.64, -0.035], radius: 0.036, material: chairMaterial, family: 'sofa' as const },
+      ]),
     ];
     for (const part of chairParts) {
-      const geometry = 'curvedBack' in part ? makeChairBack(part.dimensions[0], part.dimensions[1], part.dimensions[2]) : new RoundedBoxGeometry(part.dimensions[0], part.dimensions[1], part.dimensions[2], 3, part.radius);
+      const geometry = part.curvedBack ? makeChairBack(part.dimensions[0], part.dimensions[1], part.dimensions[2]) : new RoundedBoxGeometry(part.dimensions[0], part.dimensions[1], part.dimensions[2], 2, part.radius);
       geometry.translate(part.position[0], part.position[1], part.position[2]);
       const mesh = new THREE.InstancedMesh(geometry, part.material, hall.seats.length);
+      mesh.userData.family = part.family;
+      mesh.userData.tint = part.tint || 1;
       mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-      mesh.castShadow = true;
+      mesh.castShadow = part.curvedBack || part.material === chairTrimMaterial;
       mesh.receiveShadow = true;
       mesh.frustumCulled = false;
       chairMeshes.push(mesh);
       scene.add(mesh);
     }
+    // Brass cup rims and a recessed dark centre make the armrests legible from above.
     for (const side of [-1, 1]) {
-      const geometry = new THREE.CylinderGeometry(0.046, 0.037, 0.009, 12);
-      geometry.translate(side * 0.47, 0.749, -0.21);
-      const mesh = new THREE.InstancedMesh(geometry, chairTrimMaterial, hall.seats.length);
-      mesh.frustumCulled = false;
-      chairMeshes.push(mesh);
-      scene.add(mesh);
+      for (const family of ['standard', 'sofa'] as const) {
+        const geometry = new THREE.TorusGeometry(family === 'sofa' ? 0.019 : 0.044, 0.006, 6, 16);
+        geometry.rotateX(Math.PI / 2);
+        geometry.translate(side * (family === 'sofa' ? 0.477 : 0.46), family === 'sofa' ? 0.756 : 0.756, -0.23);
+        const mesh = new THREE.InstancedMesh(geometry, seamMaterial, hall.seats.length);
+        mesh.userData.family = family;
+        mesh.userData.tint = 1.1;
+        mesh.frustumCulled = false;
+        chairMeshes.push(mesh);
+        scene.add(mesh);
+      }
     }
     const headMaterial = new THREE.MeshStandardMaterial({ color: 'white', roughness: 0.96, transparent: true, opacity: 0.94 });
     const bodyMaterial = new THREE.MeshStandardMaterial({ color: 'white', roughness: 0.92 });
     const skinMaterial = new THREE.MeshStandardMaterial({ color: '#ab8064', roughness: 0.82 });
-    const heads = new THREE.InstancedMesh(new THREE.SphereGeometry(0.15, 16, 12), headMaterial, hall.seats.length);
-    const bodies = new THREE.InstancedMesh(new RoundedBoxGeometry(0.46, 0.52, 0.29, 3, 0.13), bodyMaterial, hall.seats.length);
+    const heads = new THREE.InstancedMesh(new THREE.SphereGeometry(0.14, 16, 12), headMaterial, hall.seats.length);
+    const bodies = new THREE.InstancedMesh(new RoundedBoxGeometry(0.43, 0.46, 0.27, 2, 0.12), bodyMaterial, hall.seats.length);
     const necks = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.065, 0.08, 0.16, 10), skinMaterial, hall.seats.length);
     heads.frustumCulled = bodies.frustumCulled = false;
     necks.frustumCulled = false;
@@ -554,22 +575,23 @@ export default function CinemaScene({
         matrixObject.updateMatrix();
         chairTransform.copy(matrixObject.matrix);
         for (const mesh of chairMeshes) {
-          mesh.setMatrixAt(index, hideOwnSeat ? hiddenMatrix : chairTransform);
-          const fabricColor = currentSeat.type === 'sofa' || (currentSeat.row + Math.floor((currentSeat.number - 1) / 3)) % 4 === 0 ? TERRACOTTA : UPHOLSTERY;
-          mesh.setColorAt(index, isSelected ? ACCENT : hoveredId === currentSeat.id ? HOVER : statuses.get(currentSeat.id) === 'sold' ? OCCUPIED : fabricColor);
+          mesh.setMatrixAt(index, hideOwnSeat || (mesh.userData.family && mesh.userData.family !== currentSeat.type) ? hiddenMatrix : chairTransform);
+          const fabricColor = currentSeat.type === 'sofa' || currentSeat.row % 3 === 0 ? TERRACOTTA : UPHOLSTERY;
+          chairColor.copy(isSelected ? ACCENT : hoveredId === currentSeat.id ? HOVER : statuses.get(currentSeat.id) === 'sold' ? OCCUPIED : fabricColor).multiplyScalar(mesh.userData.tint || 1);
+          mesh.setColorAt(index, chairColor);
         }
         const occupied = current.audience && statuses.get(currentSeat.id) === 'sold' && !hideOwnSeat;
-        matrixObject.scale.set(1, 1.12, 1);
-        matrixObject.position.set(currentSeat.position.x, currentSeat.position.y + hall.camera.eye_height + 0.1, currentSeat.position.z - 0.03);
+        matrixObject.scale.set(1, 1.08, 1);
+        matrixObject.position.set(currentSeat.position.x, currentSeat.position.y + hall.camera.eye_height - 0.04, currentSeat.position.z - 0.03);
         matrixObject.updateMatrix();
         heads.setMatrixAt(index, occupied ? matrixObject.matrix : hiddenMatrix);
         heads.setColorAt(index, hairColors[(currentSeat.number + currentSeat.row) % hairColors.length]);
         matrixObject.scale.set(1, 1, 1);
-        matrixObject.position.y = currentSeat.position.y + 0.88;
+        matrixObject.position.y = currentSeat.position.y + 0.8;
         matrixObject.updateMatrix();
         bodies.setMatrixAt(index, occupied ? matrixObject.matrix : hiddenMatrix);
         bodies.setColorAt(index, clothingColors[(currentSeat.number * 3 + currentSeat.row) % clothingColors.length]);
-        matrixObject.position.y = currentSeat.position.y + 1.09;
+        matrixObject.position.y = currentSeat.position.y + 1.025;
         matrixObject.updateMatrix();
         necks.setMatrixAt(index, occupied ? matrixObject.matrix : hiddenMatrix);
       });

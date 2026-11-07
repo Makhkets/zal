@@ -13,6 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.cyber_routes import cyber_router
+from app.api.chat_routes import chat_router
 from app.api.dependencies import AppContainer
 from app.api.routes import router as v1_router
 from app.api.sandbox_routes import sandbox_router
@@ -33,6 +34,7 @@ from app.services.cinema_media_service import CinemaMediaService
 from app.services.cyber_booking_service import CyberBookingService
 from app.services.payment_service import PaymentService
 from app.services.realtime_service import RealtimeSeatBroker
+from app.services.room_chat_service import RoomChatService
 from app.workers.reconciler import PaymentReconciliationWorker
 
 logger = logging.getLogger("zal.api")
@@ -158,6 +160,7 @@ def create_app(
         lifespan=lifespan,
     )
     application.state.container = container
+    application.state.room_chat = RoomChatService(network_enabled=cfg.enable_external_media_network)
 
     application.add_middleware(
         CORSMiddleware,
@@ -238,6 +241,7 @@ def create_app(
 
     application.include_router(v1_router)
     application.include_router(cyber_router)
+    application.include_router(chat_router)
 
     # Strict production guard: local mock checkout routes exist ONLY in non-production mock mode
     if cfg.payment_provider == "mock" and cfg.app_env != "production" and provider_override is None:

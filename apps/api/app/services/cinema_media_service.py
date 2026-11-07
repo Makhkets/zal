@@ -1,18 +1,13 @@
-"""3D Screen Trailer Streaming, Physics-Based Seat Web Audio DSP, and Real Movie Catalog/Reviews Aggregator.
+"""External Apple movie discovery and explicit open-film media assets.
 
-Integrates live keyless public APIs verified accessible from RF without VPN:
-- IMDb Public Catalog Suggestion API (`v3.sg.media-imdb.com`) — real movies, IDs, cast, high-res posters
-- Letterboxd Public Film Pages (`letterboxd.com/film/{slug}/`) — real AggregateRating (millions of votes) & real audience prose reviews
-- Russian Wikipedia REST Summary API (`ru.wikipedia.org/api/rest_v1/page/summary/...`) — localized Russian synopses
-- Internet Archive Open Cinema (`archive.org/download/...` & `archive.org/metadata/...`) — open-licensed CinemaScope HD H.264 MP4 streams + user reviews
-- Optional Kinopoisk Unofficial API (`kinopoiskapiunofficial.tech`) — activates automatically when KINOPOISK_API_KEY is configured
-
-Includes a Same-Origin HTTP 206 Byte-Range Streaming Proxy (`/api/v1/media/trailers/{movie_id}/stream`)
-with `Access-Control-Allow-Origin: *` and `Cross-Origin-Resource-Policy: cross-origin` so Three.js
-`THREE.VideoTexture` and Web Audio `AudioContext.createMediaElementSource` never hit CORS Tainted Canvas errors.
+The read-only catalog uses the official, keyless Apple iTunes Search API.
+Artwork and preview URLs are attributed to Apple; media is streamed by the browser.
+Legacy enrichment is limited to explicitly bound open-film presets. Network access
+is optional, and availability in any particular country is not guaranteed.
 """
 from __future__ import annotations
 
+import asyncio
 from collections.abc import AsyncIterator
 from datetime import datetime, timedelta
 import hashlib
@@ -21,7 +16,7 @@ import json
 import math
 import re
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 import uuid
 
 from fastapi.responses import Response, StreamingResponse
@@ -44,11 +39,12 @@ from app.domain.cyber_models import (
 )
 from app.errors import not_found_error, validation_error
 from app.repositories.catalog_repo import CatalogRepository
+from app.security import SlidingWindowRateLimiter
 
 SPEED_OF_SOUND_M_S = 343.0
 USER_AGENT = "ZAL-Cinema-3D/1.0 (+https://github.com/Makhkets/zal)"
 
-# Verified clean, open-licensed CinemaScope/HD MP4 reels on Internet Archive (HTTP 206 Range-capable from RF)
+# Explicit open-film presets; availability and Range support depend on the upstream host.
 CURATED_OPEN_TRAILERS: dict[str, dict[str, Any]] = {
     "movie_nord": {
         "trailer_id": "sintel_cinemascope",
@@ -198,6 +194,21 @@ _SLUG_CLEAN_RE = re.compile(r"[^a-z0-9]+")
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 
+def _apple_media_url(value: Any, kind: str) -> str | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = urlsplit(value)
+        host = parsed.hostname or ""
+        allowed = (host.endswith(".mzstatic.com") if kind == "image" else
+                   host == "itunes.apple.com" or host.endswith(".itunes.apple.com") or (kind == "source" and host == "tv.apple.com"))
+        if parsed.scheme != "https" or not allowed or parsed.username or parsed.password:
+            return None
+    except ValueError:
+        return None
+    return value
+
+
 def _slugify_english(title: str) -> str:
     return _SLUG_CLEAN_RE.sub("-", title.lower()).strip("-")
 
@@ -221,6 +232,8 @@ class CinemaMediaService:
         self._settings = settings
         self._catalog_repo = catalog_repo
         self._external_client = http_client
+        self._catalog_search_lock = asyncio.Lock()
+        self._catalog_limiter = SlidingWindowRateLimiter(18, 60.0)
         self._ensure_tables()
 
     def _ensure_tables(self) -> None:
@@ -277,7 +290,9 @@ class CinemaMediaService:
 
         if binding is not None:
             preset_key = str(binding["preset_key"])
-            preset = dict(CURATED_OPEN_TRAILERS.get(preset_key, CURATED_OPEN_TRAILERS["movie_lights"]))
+            if preset_key not in CURATED_OPEN_TRAILERS:
+                raise not_found_error("Трейлер для этого фильма не подключён.")
+            preset = dict(CURATED_OPEN_TRAILERS[preset_key])
             if binding["custom_mp4_url"]:
                 preset["direct_mp4_url"] = str(binding["custom_mp4_url"])
             if binding["letterboxd_slug"]:
@@ -299,15 +314,16 @@ class CinemaMediaService:
             if item["trailer_id"] == movie_or_trailer_id:
                 return key, dict(item), {"title": item["original_film_title"]}
 
-        if movie_row is not None:
-            fallback = dict(CURATED_OPEN_TRAILERS["movie_lights"])
-            return str(movie_row["id"]), fallback, {"title": str(movie_row["title"])}
-
-        raise not_found_error("Трейлер или фильм не найден.")
+        raise not_found_error("Трейлер для этого фильма не подключён.")
 
     def list_trailers(self) -> TrailerCatalogResponse:
         with self._db.read_connection() as conn:
-            movie_rows = conn.execute("SELECT id FROM movies ORDER BY id ASC;").fetchall()
+            movie_rows = conn.execute(
+                "SELECT movies.id FROM movies JOIN movie_media_bindings bindings "
+                "ON bindings.movie_id = movies.id WHERE bindings.preset_key IN (" +
+                ",".join("?" for _ in CURATED_OPEN_TRAILERS) + ") ORDER BY movies.id;",
+                tuple(CURATED_OPEN_TRAILERS),
+            ).fetchall()
         seen: set[str] = set()
         items: list[MovieTrailerAsset] = []
         for r in movie_rows:
@@ -498,7 +514,9 @@ class CinemaMediaService:
         itd_ms = abs(delay_left_ms - delay_right_ms)
         sweet_spot = itd_ms <= 2.2 and 0.32 <= (dist_screen / max(hall.dimensions.depth, 1.0)) <= 0.72
 
-        trailer = self.get_movie_trailer(session.movie.id)
+        # Spatial calibration always uses an explicitly named open test reel,
+        # never an unrelated preview presented as the scheduled movie's trailer.
+        trailer = self.get_movie_trailer("movie_nord")
         cue_sec = trailer.cue_points[0].timestamp_sec if trailer.cue_points else trailer.default_start_sec
 
         return SeatWebAudioDSPProfile(
@@ -555,128 +573,87 @@ class CinemaMediaService:
             )
 
     async def search_external_catalog(self, query: str) -> ExternalCatalogSearchResponse:
-        cleaned = query.strip()
-        if len(cleaned) < 2:
-            raise validation_error("Поисковый запрос должен содержать минимум 2 символа.")
+        """Read-only official Apple Search API; no invented sessions, reviews or trailer bindings.
 
-        cache_key = "ext_search:" + hashlib.sha256(cleaned.lower().encode("utf-8")).hexdigest()[:24]
+        Apple documentation: https://performance-partners.apple.com/search-api
+        Search all media, then filter feature-movie: the movie-only filter currently returns
+        empty responses for known available films. Cache metadata, never download preview media.
+        """
+        cleaned = " ".join(query.split())
+        if not 2 <= len(cleaned) <= 120:
+            raise validation_error("Введите от 2 до 120 символов.")
+        aliases = {
+            "интерстеллар": "Interstellar", "дюна": "Dune", "дюна 2": "Dune Part Two",
+            "начало": "Inception", "бэтмен": "The Batman", "оппенгеймер": "Oppenheimer",
+            "головоломка": "Inside Out", "головоломка 2": "Inside Out 2",
+            "нолан": "Christopher Nolan", "бегущий по лезвию": "Blade Runner",
+            "бегущий по лезвию 2049": "Blade Runner 2049",
+        }
+        term = aliases.get(cleaned.casefold(), cleaned)
+        cache_key = "apple_movies_v1:US:" + hashlib.sha256(term.casefold().encode()).hexdigest()[:24]
         cached = self._get_cached_json(cache_key)
         if cached is not None:
-            return ExternalCatalogSearchResponse.model_validate(cached)
+            result = ExternalCatalogSearchResponse.model_validate(cached)
+            return result.model_copy(update={"query": cleaned})
+        if not self._settings.enable_external_media_network:
+            return ExternalCatalogSearchResponse(query=cleaned, sources_queried=[], items=[], status="disabled", notice="Внешний каталог пока недоступен. Афиша ZAL работает в обычном режиме.")
 
-        items: list[ExternalMovieCatalogItem] = []
-        sources_queried: list[str] = []
-
-        if self._settings.enable_external_media_network:
-            client = self._external_client or httpx.AsyncClient(
-                timeout=6.5, follow_redirects=True, headers={"User-Agent": USER_AGENT}
-            )
-            owns_client = self._external_client is None
+        # One upstream request at a time avoids duplicate calls from concurrent identical searches.
+        async with self._catalog_search_lock:
+            cached = self._get_cached_json(cache_key)
+            if cached is not None:
+                return ExternalCatalogSearchResponse.model_validate(cached).model_copy(update={"query": cleaned})
+            if not self._catalog_limiter.allow("apple-search"):
+                return ExternalCatalogSearchResponse(query=cleaned, sources_queried=[], items=[], status="rate_limited", notice="Слишком много запросов к каталогу. Попробуйте через минуту.")
+            client = self._external_client or httpx.AsyncClient(timeout=8.0, headers={"User-Agent": USER_AGENT})
             try:
-                # 1. Optional Kinopoisk Unofficial API if key configured
-                if self._settings.kinopoisk_api_key:
-                    sources_queried.append("Kinopoisk API")
-                    try:
-                        kp_resp = await client.get(
-                            "https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword",
-                            params={"keyword": cleaned, "page": 1},
-                            headers={"X-API-KEY": self._settings.kinopoisk_api_key},
-                        )
-                        if kp_resp.status_code == 200:
-                            for film in kp_resp.json().get("films", [])[:6]:
-                                kp_id = int(film["filmId"])
-                                name_ru = film.get("nameRu") or film.get("nameEn") or cleaned
-                                name_en = film.get("nameEn")
-                                year_raw = str(film.get("year") or "")
-                                year_val = int(year_raw[:4]) if year_raw[:4].isdigit() else None
-                                slug = _slugify_english(name_en) if name_en else None
-                                items.append(
-                                    ExternalMovieCatalogItem(
-                                        external_id=f"kp_{kp_id}",
-                                        kinopoisk_id=kp_id,
-                                        letterboxd_slug=slug,
-                                        title=name_ru,
-                                        original_title=name_en,
-                                        year=year_val,
-                                        synopsis_ru=film.get("description"),
-                                        poster_url=film.get("posterUrlPreview") or film.get("posterUrl"),
-                                        playable_trailer_stream_url="/api/v1/media/trailers/movie_lights/stream",
-                                    )
-                                )
-                    except httpx.HTTPError:
-                        pass
-
-                # 2. Keyless IMDb Public Catalog Suggestion API (fast, works in RF without VPN)
-                sources_queried.append("IMDb Catalog")
-                ascii_q = re.sub(r"[^a-zA-Z0-9 ]+", "", cleaned).strip().lower()
-                search_term = ascii_q if len(ascii_q) >= 2 else cleaned.lower()
-                first_char = quote(search_term[0])
-                try:
-                    imdb_resp = await client.get(
-                        f"https://v3.sg.media-imdb.com/suggestion/{first_char}/{quote(search_term)}.json"
-                    )
-                    if imdb_resp.status_code == 200:
-                        for entry in imdb_resp.json().get("d", []):
-                            tt_id = str(entry.get("id") or "")
-                            if not tt_id.startswith("tt"):
-                                continue
-                            title_en = str(entry.get("l") or "").strip()
-                            if not title_en:
-                                continue
-                            year_val = entry.get("y") if isinstance(entry.get("y"), int) else None
-                            poster = (entry.get("i") or {}).get("imageUrl")
-                            items.append(
-                                ExternalMovieCatalogItem(
-                                    external_id=tt_id,
-                                    imdb_id=tt_id,
-                                    letterboxd_slug=_slugify_english(title_en),
-                                    title=title_en,
-                                    original_title=title_en,
-                                    year=year_val,
-                                    cast_summary=entry.get("s"),
-                                    poster_url=poster,
-                                    playable_trailer_stream_url="/api/v1/media/trailers/movie_lights/stream",
-                                )
-                            )
-                            if len(items) >= 8:
-                                break
-                except httpx.HTTPError:
-                    pass
+                response = await client.get("https://itunes.apple.com/search", params={"term": term, "country": "US", "limit": 40})
+                response.raise_for_status()
+                payload = response.json()
+                if not isinstance(payload, dict) or not isinstance(payload.get("results"), list):
+                    raise ValueError("Invalid Apple catalog response")
+                items: list[ExternalMovieCatalogItem] = []
+                seen: set[str] = set()
+                for entry in payload["results"]:
+                    if not isinstance(entry, dict) or entry.get("kind") != "feature-movie":
+                        continue
+                    track_id = entry.get("trackId")
+                    title = entry.get("trackName")
+                    source_url = _apple_media_url(entry.get("trackViewUrl"), "source")
+                    if not isinstance(track_id, int) or not isinstance(title, str) or not title.strip() or not source_url:
+                        continue
+                    external_id = "itunes_" + str(track_id)
+                    if external_id in seen:
+                        continue
+                    seen.add(external_id)
+                    year_text = str(entry.get("releaseDate") or "")[:4]
+                    duration = entry.get("trackTimeMillis")
+                    poster = _apple_media_url(entry.get("artworkUrl100"), "image")
+                    if poster:
+                        poster = re.sub(r"/\d+x\d+bb\.(jpg|png)$", r"/400x600bb.\1", poster)
+                    items.append(ExternalMovieCatalogItem(
+                        external_id=external_id,
+                        title=title.strip(),
+                        year=int(year_text) if year_text.isdigit() else None,
+                        cast_summary=str(entry.get("artistName") or "")[:180] or None,
+                        poster_url=poster,
+                        playable_trailer_stream_url=_apple_media_url(entry.get("previewUrl"), "video"),
+                        source="Apple iTunes", source_url=source_url,
+                        genre=str(entry.get("primaryGenreName") or "")[:80] or None,
+                        duration_minutes=round(duration / 60000) if isinstance(duration, (int, float)) and 0 < duration < 36000000 else None,
+                        description=str(entry.get("longDescription") or entry.get("shortDescription") or "")[:3000] or None,
+                        content_rating=str(entry.get("contentAdvisoryRating") or "")[:20] or None,
+                    ))
+                    if len(items) == 12:
+                        break
+                result = ExternalCatalogSearchResponse(query=cleaned, sources_queried=["Apple iTunes Search API"], items=items)
+                self._set_cached_json(cache_key, result.model_dump(mode="json"), ttl_hours=6)
+                return result
+            except (httpx.HTTPError, ValueError, TypeError):
+                return ExternalCatalogSearchResponse(query=cleaned, sources_queried=["Apple iTunes Search API"], items=[], status="unavailable", notice="Каталог временно не отвечает. Попробуйте ещё раз чуть позже.")
             finally:
-                if owns_client:
+                if self._external_client is None:
                     await client.aclose()
-
-        # Always include matching curated open-cinema HD titles if query matches or offline
-        q_low = cleaned.lower()
-        for key, preset in CURATED_OPEN_TRAILERS.items():
-            if (
-                not items
-                or q_low in preset["original_film_title"].lower()
-                or q_low in preset["wiki_ru_title"].lower()
-            ):
-                items.append(
-                    ExternalMovieCatalogItem(
-                        external_id=key,
-                        letterboxd_slug=preset["letterboxd_slug"],
-                        title=preset["wiki_ru_title"],
-                        original_title=preset["original_film_title"],
-                        year=preset["year"],
-                        poster_url=preset["poster_url"],
-                        synopsis_ru=preset["synopsis_fallback_ru"],
-                        playable_trailer_stream_url=f"/api/v1/media/trailers/{key}/stream",
-                    )
-                )
-
-        if "Open Cinema Archive" not in sources_queried:
-            sources_queried.append("Open Cinema Archive")
-
-        response = ExternalCatalogSearchResponse(
-            query=cleaned,
-            sources_queried=sources_queried,
-            items=items[:10],
-        )
-        self._set_cached_json(cache_key, response.model_dump(mode="json"), ttl_hours=6)
-        return response
 
     async def get_movie_enrichment(
         self,

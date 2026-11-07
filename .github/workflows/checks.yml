@@ -31,6 +31,7 @@ jobs:
         run: |
           python -m pip install openapi-spec-validator==0.7.2
           python -m openapi_spec_validator contracts/openapi.json
+          python -m openapi_spec_validator contracts/openapi.runtime.json
   web:
     runs-on: ubuntu-latest
     defaults:

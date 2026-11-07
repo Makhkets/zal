@@ -8,6 +8,7 @@ import { money, sessionDate, sessionTime } from '../lib/format';
 import { CINEMA_HERO, DEMO_TRAILER, getMovieMedia } from '../lib/catalogMedia';
 import type { Availability, Hall, Movie, Session } from '../lib/types';
 import FilmArt from '../components/FilmArt';
+import ExternalCatalog from '../components/ExternalCatalog';
 import { EmptyState, ErrorState, Loading } from '../components/Feedback';
 import '../styles/home-v2.css';
 
@@ -53,7 +54,7 @@ function FilmCard({ movie, sessions, timezone, onTrailer }: { movie: Movie; sess
       {media?.trailer && <button className="reel-play" onClick={() => onTrailer(media.trailer!, sessions[0])} aria-label={'Смотреть трейлер «' + movie.title + '»'}><Play size={17} fill="currentColor"/></button>}
     </div>
     <div className="reel-caption"><h3><Link to={'/sessions/' + sessions[0].id}>{movie.title}</Link></h3><p>{media?.genres?.slice(0, 2).join(' · ') || 'Кино'}<span>·</span>{movie.duration_minutes} мин<span>·</span>{movie.age_rating}</p></div>
-    <div className="reel-sessions">{sessions.slice(0, 3).map(session => <Link key={session.id} to={'/sessions/' + session.id} aria-label={movie.title + ', ' + sessionDate(session.starts_at, timezone) + ', ' + sessionTime(session.starts_at, timezone)}><strong>{sessionTime(session.starts_at, timezone)}</strong><span>{sessionDate(session.starts_at, timezone)}</span></Link>)}</div>
+    <div className="reel-sessions">{sessions.slice(0, 3).map(session => <Link key={session.id} to={'/sessions/' + session.id} aria-label={movie.title + ', ' + sessionDate(session.starts_at, timezone) + ', ' + sessionTime(session.starts_at, timezone)}><strong>{sessionTime(session.starts_at, timezone)}</strong><span>{session.format === 'Тестовый билет' ? 'Тест · ' + money(session.price_from_minor) : sessionDate(session.starts_at, timezone)}</span></Link>)}</div>
     <div className="reel-bottom"><span>от {money(Math.min(...sessions.map(session => session.price_from_minor)))}</span><Link to={'/sessions/' + sessions[0].id}><Eye size={14}/>Выбор места в 3D</Link></div>
   </article>;
 }
@@ -133,6 +134,8 @@ export default function HomePage() {
     </section>
 
     {pageCount > 1 && <div className="reel-pagination wrap"><span>Подборка {page + 1} из {pageCount}</span><div><button aria-label="Предыдущие фильмы" onClick={() => setPage(value => Math.max(0, value - 1))} disabled={page === 0}><ArrowLeft size={19}/></button><button aria-label="Следующие фильмы" onClick={() => setPage(value => Math.min(pageCount - 1, value + 1))} disabled={page >= pageCount - 1}><ArrowRight size={19}/></button></div></div>}
+
+    <ExternalCatalog/>
 
     <section className="seat-discovery" id="how-it-works" aria-labelledby="discovery-title">
       <div className="wrap seat-discovery-inner"><div className="seat-discovery-copy"><p className="reel-eyebrow">ПЕРЕД ПОКУПКОЙ — ПРИСЯДЬТЕ</p><h2 id="discovery-title">У каждого места<br/>своё кино.</h2><p>Размер экрана. Расстояние до колонок.<br/>Зрители впереди. Проверьте всё,<br/>что меняет впечатление от сеанса.</p><div className="discovery-features"><span><Eye size={19}/>Настоящий вид из кресла</span><span><Headphones size={19}/>Звук с учётом расстояния</span><span><Check size={19}/>Сравнение двух ракурсов</span></div><Link className="button button--primary" to={seatHref}>Открыть этот ракурс<ArrowUpRight size={20}/></Link></div>

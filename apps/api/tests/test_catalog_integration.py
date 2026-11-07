@@ -58,7 +58,7 @@ class CatalogIntegrationTests(unittest.TestCase):
             total = 0
             for cinema in cinemas:
                 sessions = client.get("/api/v1/sessions", params={"cinema_id": cinema["id"]}).json()["items"]
-                self.assertEqual(len(sessions), 16)
+                self.assertEqual(len(sessions), 17 if cinema["id"] == "cinema_aurora" else 16)
                 total += len(sessions)
                 for session in sessions:
                     movie_ids.add(session["movie"]["id"])
@@ -69,7 +69,7 @@ class CatalogIntegrationTests(unittest.TestCase):
                     self.assertEqual(hall["dimensions"], {"width": 31.0, "height": 11.8, "depth": 23.0})
                     self.assertEqual({s["id"] for s in hall["seats"]}, {s["seat_id"] for s in availability["seats"]})
                     self.assertEqual(session["price_from_minor"], min(s["price_minor"] for s in availability["seats"]))
-            self.assertEqual(total, 32)
+            self.assertEqual(total, 33)
             self.assertEqual(len(movie_ids), 8)
             for path, status, code in [
                 ("/api/v1/sessions", 422, "VALIDATION_ERROR"),
@@ -154,7 +154,7 @@ class CatalogIntegrationTests(unittest.TestCase):
         # Orbita still has future sessions; Aurora must nevertheless be recovered independently.
         repo.ensure_future_schedule()
         after = repo.list_sessions("cinema_aurora")
-        self.assertEqual(len(after), 16)
+        self.assertEqual(len(after), 17)
         def times(items):
             return [datetime.fromisoformat(s.starts_at.replace("Z", "+00:00")) for s in items]
         original_times, new_times = times(before), times(after)

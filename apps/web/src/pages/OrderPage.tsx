@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, CircleAlert, Clock3, ExternalLink, LoaderCircle, LockKeyhole, RefreshCw, ShieldCheck } from 'lucide-react';
 import { api, ApiError } from '../lib/api';
-import type { Order, Session, Seat, Ticket } from '../lib/types';
+import type { Order, OrderPricing, Session, Seat, Ticket } from '../lib/types';
 import { money, sessionDate, sessionTime } from '../lib/format';
 import TicketCard from '../components/TicketCard';
 import '../styles/checkout.css';
@@ -47,6 +47,7 @@ export default function OrderPage() {
   const [search] = useSearchParams();
   const orderId = paramId || search.get('order') || '';
   const [order, setOrder] = useState<Order | null>(null);
+  const [pricing, setPricing] = useState<OrderPricing | null>(null);
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [seat, setSeat] = useState<Seat | null>(null);
@@ -64,7 +65,7 @@ export default function OrderPage() {
   }, []);
 
   useEffect(() => {
-    setOrder(null); setTicket(null); setSession(null); setSeat(null); setTimezone(undefined); setError('');
+    setOrder(null); setPricing(null); setTicket(null); setSession(null); setSeat(null); setTimezone(undefined); setError(''); setLoading(true);
   }, [orderId]);
 
   useEffect(() => {
@@ -129,6 +130,23 @@ export default function OrderPage() {
   }, [orderId, refresh]);
 
   useEffect(() => {
+    const token = readToken(orderId);
+    if (!token || !order?.payment.payment_url || !order.payment.transaction_id) { setPricing(null); return; }
+    const controller = new AbortController();
+    let alive = true;
+    api.orderPricing(orderId, token, controller.signal).then(value => {
+      if (!alive) return;
+      const amounts = [value.seat_price_minor, value.service_fee_minor, value.insurance_upsell_minor, value.total_minor];
+      const valid = value.order_id === orderId && value.currency === order.currency &&
+        amounts.every(amount => Number.isSafeInteger(amount) && amount >= 0) &&
+        value.total_minor === order.total_minor &&
+        value.seat_price_minor + value.service_fee_minor + value.insurance_upsell_minor === value.total_minor;
+      setPricing(valid ? value : null);
+    }).catch(() => { if (alive) setPricing(null); });
+    return () => { alive = false; controller.abort(); };
+  }, [orderId, order?.total_minor, order?.payment.payment_url, order?.payment.transaction_id, refresh]);
+
+  useEffect(() => {
     const sessionId = order?.session_id;
     if (!sessionId) return;
     const controller = new AbortController();
@@ -154,6 +172,8 @@ export default function OrderPage() {
 
   const copy = order ? COPY[order.status] : null;
   const paymentUrl = order ? safePaymentUrl(order) : null;
+  const hasPaymentQuote = Boolean(order?.payment.payment_url && order.payment.transaction_id);
+  const priceBreakdown = pricing?.order_id === order?.id && pricing?.total_minor === order?.total_minor ? pricing : null;
   const terminal = order && ['canceled', 'expired', 'refunded'].includes(order.status);
   const countdown = order ? remaining(order.expires_at, clock) : null;
 
@@ -186,8 +206,9 @@ export default function OrderPage() {
                   order.status === 'creating_payment' ? 'Платёжная ссылка появится после ответа банка.' :
                   'Выберите свой банк на странице оплаты. После подтверждения возвращайтесь сюда.'}</p>
 
-                {order.status === 'pending_payment' && paymentUrl && <a className="button button--primary order-payment-link" href={paymentUrl} rel="noreferrer">
-                  {order.payment.provider === 'mock' ? 'Открыть демо-оплату' : 'Оплатить по СБП'} <ExternalLink size={17} aria-hidden="true" />
+                {order.status === 'pending_payment' && priceBreakdown && <p className="order-payment-quote">Место {money(priceBreakdown.seat_price_minor)} · комиссия {money(priceBreakdown.service_fee_minor)}{priceBreakdown.insurance_upsell_minor > 0 ? ` · страхование ${money(priceBreakdown.insurance_upsell_minor)}` : ''}</p>}
+                {order.status === 'pending_payment' && paymentUrl && hasPaymentQuote && <a className="button button--primary order-payment-link" href={paymentUrl} rel="noreferrer">
+                  {order.payment.provider === 'mock' ? 'Открыть демо-оплату' : `Оплатить ${money(order.total_minor)} по СБП`} <ExternalLink size={17} aria-hidden="true" />
                 </a>}
                 {order.status === 'pending_payment' && order.payment.payment_url && !paymentUrl && <p className="checkout-field-error">Не удалось безопасно открыть ссылку оплаты. Повторите проверку заказа.</p>}
                 {terminal ? <Link className="button button--primary" to="/#sessions">Выбрать сеанс <ArrowRight size={18} aria-hidden="true" /></Link> : (
@@ -205,7 +226,13 @@ export default function OrderPage() {
                   <div><span>Ряд</span><strong>{seat ? seat.row.toString().padStart(2, '0') : '—'}</strong></div>
                   <div><span>{seat?.type === 'sofa' ? 'Диван' : 'Место'}</span><strong>{seat ? seat.number.toString().padStart(2, '0') : '—'}</strong></div>
                 </div>
-                <div className="order-total"><span>К оплате</span><strong>{money(order.total_minor)}</strong></div>
+                {priceBreakdown && <dl className="order-price-breakdown" aria-label="Состав суммы к оплате">
+                  <div><dt>Стоимость места</dt><dd>{money(priceBreakdown.seat_price_minor)}</dd></div>
+                  <div><dt>Комиссия платёжной системы</dt><dd>{money(priceBreakdown.service_fee_minor)}</dd></div>
+                  {priceBreakdown.insurance_upsell_minor > 0 && <div><dt>Страхование</dt><dd>{money(priceBreakdown.insurance_upsell_minor)}</dd></div>}
+                </dl>}
+                <div className="order-total"><span>{hasPaymentQuote ? 'К оплате' : 'Стоимость места'}</span><strong>{money(order.total_minor)}</strong></div>
+                {!hasPaymentQuote && !terminal && <p className="order-quote-note">Итог с комиссией уточняется у платёжной системы.</p>}
                 {!terminal && order.status !== 'paid' && countdown && <div className="order-countdown"><Clock3 size={15} aria-hidden="true" /><span>Срок оплаты</span><strong>{countdown}</strong></div>}
                 <div className="order-reassurance"><ShieldCheck size={21} strokeWidth={1.5} aria-hidden="true" /><p>Билет появится только после подтверждения платежа.</p></div>
                 <span className="order-reference">Заказ № {order.id.slice(0, 8).toUpperCase()}</span>
