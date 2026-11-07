@@ -63,6 +63,11 @@ export function useCinemaMedia(hall: Hall, seat: Seat | null, mediaURL: string) 
   const speakerMix = useMemo(() => seat ? cinemaSpeakerMix(hall, seat) : [], [hall, seat]);
 
   useEffect(() => {
+    if (!mediaURL) {
+      setVideoElement(null); setPlaying(false); setStarting(false); setLoading(false); setReady(false);
+      setError(null); setCurrentTime(0); setDuration(0); setSample(false); setLevels([0, 0]);
+      return;
+    }
     const video = document.createElement('video');
     videoRef.current = video;
     video.crossOrigin = 'anonymous';

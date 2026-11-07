@@ -5,7 +5,7 @@ import '../styles/cinema-media.css';
 
 const time = (seconds: number) => `${Math.floor(seconds / 60)}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
 
-export default function CinemaMediaControls({ media, title, credit, listeningLabel }: { media: CinemaMedia; title: string; credit?: string; listeningLabel: string }) {
+export default function CinemaMediaControls({ media, title, credit, sourceUrl, listeningLabel }: { media: CinemaMedia; title: string; credit?: string; sourceUrl?: string; listeningLabel: string }) {
   const [details, setDetails] = useState(false);
   const id = useId();
   const busy = media.starting || (media.playing && media.loading);
@@ -28,6 +28,6 @@ export default function CinemaMediaControls({ media, title, credit, listeningLab
       <button className="cinema-media-details-button" onClick={() => setDetails((value) => !value)} aria-expanded={details} aria-controls={id + '-acoustics'}><AudioLines size={15} aria-hidden="true"/>Акустика места<ChevronDown size={14} className={details ? 'is-open' : ''} aria-hidden="true"/></button>
     </div>
     {details && <div className="cinema-acoustics" id={id + '-acoustics'}><div className="cinema-speaker-distances">{media.speakerMix.map((speaker, index) => <div key={speaker.id}><span>{speaker.id === 'left' ? 'Левая колонка' : speaker.id === 'right' ? 'Правая колонка' : `Колонка ${index + 1}`}</span><strong>{speaker.distance.toFixed(1)} <small>м</small></strong><i aria-hidden="true"><b style={{ width: `${Math.min(100, speaker.gain * media.speakerMix.length * 100)}%` }}/></i></div>)}</div><p>Звук настоящего трейлера меняет громкость и баланс по расстоянию до колонок. Это упрощённая модель акустики. Лучше слушать в наушниках.</p></div>}
-    {credit && <p className="cinema-media-credit"><a href="https://durian.blender.org/" target="_blank" rel="noreferrer">Blender Foundation</a><span>·</span><a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a><span>·</span>Тестовый ролик для оценки места</p>}
+    {credit && <p className="cinema-media-credit">{sourceUrl ? <a href={sourceUrl} target="_blank" rel="noreferrer">{credit}</a> : credit}<span>·</span>Видеопревью выбранного фильма</p>}
   </section>;
 }
