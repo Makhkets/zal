@@ -1,11 +1,11 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronDown, Eye, Headphones, MapPin, Pause, Play, Search, X } from 'lucide-react';
 import { useReducedMotion } from 'motion/react';
 import { useApp } from '../lib/AppContext';
 import { api } from '../lib/api';
 import { money, sessionDate, sessionTime } from '../lib/format';
-import { CINEMA_HERO, DEMO_TRAILER, getMovieMedia } from '../lib/catalogMedia';
+import { CINEMA_HERO, DEMO_TRAILER, getMovieMedia, screenTrailer } from '../lib/catalogMedia';
 import type { Availability, Hall, Movie, Session } from '../lib/types';
 import FilmArt from '../components/FilmArt';
 import ExternalCatalog from '../components/ExternalCatalog';
@@ -54,7 +54,7 @@ function FilmCard({ movie, sessions, timezone, onTrailer }: { movie: Movie; sess
       {media?.trailer && <button className="reel-play" onClick={() => onTrailer(media.trailer!, sessions[0])} aria-label={'Смотреть трейлер «' + movie.title + '»'}><Play size={17} fill="currentColor"/></button>}
     </div>
     <div className="reel-caption"><h3><Link to={'/sessions/' + sessions[0].id}>{movie.title}</Link></h3><p>{media?.genres?.slice(0, 2).join(' · ') || 'Кино'}<span>·</span>{movie.duration_minutes} мин<span>·</span>{movie.age_rating}</p></div>
-    <div className="reel-sessions">{sessions.slice(0, 3).map(session => <Link key={session.id} to={'/sessions/' + session.id} aria-label={movie.title + ', ' + sessionDate(session.starts_at, timezone) + ', ' + sessionTime(session.starts_at, timezone)}><strong>{sessionTime(session.starts_at, timezone)}</strong><span>{sessionDate(session.starts_at, timezone)}</span></Link>)}</div>
+    <div className="reel-sessions">{sessions.slice(0, 3).map(session => <Link key={session.id} to={'/sessions/' + session.id} aria-label={movie.title + ', ' + sessionDate(session.starts_at, timezone) + ', ' + sessionTime(session.starts_at, timezone)}>{session.id === 'session_payment_test_1r' && <em>Демо-оплата 1 ₽</em>}<strong>{sessionTime(session.starts_at, timezone)}</strong><span>{sessionDate(session.starts_at, timezone)}</span></Link>)}</div>
     <div className="reel-bottom"><span>от {money(Math.min(...sessions.map(session => session.price_from_minor)))}</span><Link to={'/sessions/' + sessions[0].id}><Eye size={14}/>Выбор места в 3D</Link></div>
   </article>;
 }
@@ -75,6 +75,8 @@ export default function HomePage() {
   const [heroPaused, setHeroPaused] = useState(false);
   const [page, setPage] = useState(0);
   const reduce = useReducedMotion();
+  const [searchParams] = useSearchParams();
+  const showDemo = searchParams.get('demo') === '1';
   const selectedCinema = cinemas.find(cinema => cinema.id === cinemaId);
 
   useEffect(() => { if (cinemas.length && !cinemas.some(cinema => cinema.id === cinemaId)) setCinemaId(cinemas[0].id); }, [cinemas, cinemaId]);
@@ -82,7 +84,7 @@ export default function HomePage() {
     if (!cinemaId) return;
     const controller = new AbortController();
     setLoading(true); setError(''); setSessions([]); setHall(null); setAvailability(undefined); setGenre('Все фильмы');
-    api.sessions(cinemaId, controller.signal).then(data => {
+    api.sessions(cinemaId, controller.signal, showDemo).then(data => {
       if (controller.signal.aborted) return;
       const future = data.items.filter(item => new Date(item.starts_at).getTime() > Date.now()).sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at));
       setSessions(future);
@@ -92,7 +94,7 @@ export default function HomePage() {
     }).catch((reason: Error) => { if (!controller.signal.aborted) setError(reason.message); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [cinemaId, version]);
+  }, [cinemaId, version, showDemo]);
   useEffect(() => { setPage(0); }, [genre, query, cinemaId]);
 
   const films = useMemo(() => Array.from(new Map(sessions.map(session => [session.movie.id, session.movie])).values()), [sessions]);
@@ -113,7 +115,7 @@ export default function HomePage() {
           <p className="cinema-hero-kicker"><span/>СНАЧАЛА — ВАШЕ МЕСТО</p>
           <h1 id="cinema-hero-title">Билет с видом<br/>на <em>ваше кино.</em></h1>
           <p>Примерьте кресло до покупки.<br/>Посмотрите на экран, включите трейлер<br className="cinema-desktop-break"/> и выберите свой лучший ракурс.</p>
-          <div className="cinema-hero-actions"><a className="button button--primary" href="#sessions">Выбрать фильм<ArrowUpRight size={21}/></a><button className="cinema-hero-secondary" onClick={() => setTrailer({ media: DEMO_TRAILER, session: firstSession })} aria-label="Смотреть тестовый трейлер Sintel"><span><Play size={15} fill="currentColor"/></span>Смотреть трейлер</button></div>
+          <div className="cinema-hero-actions"><a className="button button--primary" href="#sessions">Выбрать фильм<ArrowUpRight size={21}/></a><button className="cinema-hero-secondary" onClick={() => setTrailer({ media: firstSession ? screenTrailer(firstSession.movie) : DEMO_TRAILER, session: firstSession })} aria-label="Смотреть пример изображения на экране"><span><Play size={15} fill="currentColor"/></span>Смотреть трейлер</button></div>
           <div className="hero-benefits"><span><Eye size={15}/>Вид с любого кресла</span><span><Headphones size={15}/>Звук с вашего места</span></div>
         </div>
         <div className="hero-cinema-stage">

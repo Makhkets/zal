@@ -33,7 +33,7 @@ const auth = (token: string) => ({ Authorization: 'Bearer ' + token });
 export const api = {
   health: (signal?: AbortSignal) => request<Health>('/health', { signal }),
   cinemas: (signal?: AbortSignal) => request<{ items: Cinema[] }>('/cinemas', { signal }),
-  sessions: (cinemaId: string, signal?: AbortSignal) => request<{ items: Session[] }>('/sessions?cinema_id=' + encodeURIComponent(cinemaId), { signal }),
+  sessions: (cinemaId: string, signal?: AbortSignal, includeDemo = false) => request<{ items: Session[] }>('/sessions?cinema_id=' + encodeURIComponent(cinemaId) + (includeDemo ? '&demo=1' : ''), { signal }),
   session: (id: string, signal?: AbortSignal) => request<Session>('/sessions/' + encodeURIComponent(id), { signal }),
   hall: (id: string, signal?: AbortSignal) => request<Hall>('/halls/' + encodeURIComponent(id), { signal }),
   seats: (id: string, signal?: AbortSignal) => request<Availability>('/sessions/' + encodeURIComponent(id) + '/seats', { signal }),

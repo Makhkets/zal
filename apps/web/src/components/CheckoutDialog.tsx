@@ -218,8 +218,7 @@ export default function CheckoutDialog({ session, seat, priceMinor, cinema, onCl
             <div className="checkout-summary__total"><span>Стоимость места</span><strong>{money(priceMinor)}</strong></div>
           </div>
         </div>
-        {demoPrice > 0 && demoPrice < priceMinor && <div className="checkout-demo-price"><div><span>Демопокупка</span><strong>{money(demoPrice)}</strong></div><p>Для демонстрации любое место — за {money(demoPrice)}. Комиссию и точный итог покажем перед переходом в банк.</p></div>}
-        <p className="checkout-fee-note">Итог с комиссией платёжной системы покажем перед оплатой.</p>
+        {demoPrice > 0 && demoPrice < priceMinor ? <div className="checkout-demo-price"><div><span>Демопокупка</span><strong>{money(demoPrice)}</strong></div><p>Для демонстрации любое место — за {money(demoPrice)}. Комиссию и точный итог покажем перед переходом в банк.</p></div> : <p className="checkout-fee-note">Итог с комиссией платёжной системы покажем перед оплатой.</p>}
 
         <form className="checkout-form" onSubmit={submit} noValidate>
           {differentIntent && (

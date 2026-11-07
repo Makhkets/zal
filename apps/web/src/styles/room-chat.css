@@ -62,6 +62,12 @@
 @keyframes room-chat-enter{from{transform:translateY(8px);opacity:0}
 to{transform:translateY(0);opacity:1}
 }
+@media(max-width:480px){
+  .room-chat:not(.room-chat--open){left:auto;right:12px;bottom:auto;top:118px;width:auto;z-index:40}
+  .room-chat:not(.room-chat--open) .room-chat-launcher{position:relative;width:48px;height:48px;padding:0;justify-content:center;border-radius:16px}
+  .room-chat:not(.room-chat--open) .room-chat-launcher span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .room-chat-count{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:99px;background:var(--accent);color:#19120f;font-size:10px;line-height:18px}
+}
 @media(max-width:600px){.room-chat{right:12px;bottom:calc(110px + env(safe-area-inset-bottom));width:calc(100vw - 24px);gap:8px}
 .room-chat-launcher{padding:10px 14px}
 .room-chat-panel{max-height:calc(100dvh - 215px)}
@@ -70,7 +76,6 @@ to{transform:translateY(0);opacity:1}
 .room-chat-reactions button{min-height:32px;padding:4px 9px}
 .room-chat-name input,.room-chat-input textarea{font-size:16px!important}
 .room-chat-picker{max-height:150px}
-}
 @media(prefers-reduced-motion:reduce){.room-chat-panel{animation:none}
 }
 

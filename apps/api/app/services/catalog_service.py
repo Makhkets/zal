@@ -27,10 +27,10 @@ class CatalogService:
     def list_cinemas(self) -> list[Cinema]:
         return self._repo.list_cinemas()
 
-    def list_sessions(self, cinema_id: str | None) -> list[Session]:
+    def list_sessions(self, cinema_id: str | None, *, include_demo: bool = False) -> list[Session]:
         if cinema_id is None or not cinema_id.strip():
             raise validation_error("Параметр cinema_id обязателен.")
-        return self._repo.list_sessions(cinema_id.strip(), future_only=True)
+        return self._repo.list_sessions(cinema_id.strip(), future_only=True, include_demo=include_demo)
 
     def get_session(self, session_id: str) -> Session:
         session = self._repo.get_session(session_id)

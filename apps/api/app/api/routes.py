@@ -57,9 +57,12 @@ async def list_cinemas(container: AppContainer = Depends(get_container)) -> Cine
 @router.get("/sessions", response_model=SessionListResponse, tags=["Catalog"])
 async def list_sessions(
     cinema_id: str | None = Query(default=None),
+    demo: str | None = Query(default=None),
     container: AppContainer = Depends(get_container),
 ) -> SessionListResponse:
-    return SessionListResponse(items=container.catalog_service.list_sessions(cinema_id))
+    return SessionListResponse(
+        items=container.catalog_service.list_sessions(cinema_id, include_demo=demo == "1"),
+    )
 
 
 @router.get("/sessions/{session_id}", response_model=Session, tags=["Catalog"])
